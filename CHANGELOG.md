@@ -1,10 +1,11 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 - fixed different behaviour when adding new feed from toolbar [#42](https://github.com/Xyrio/RSSOwlnix/issues/42)
+- updated rssowl news to use RSSOwlnix's update.rss [PR#59](https://github.com/Xyrio/RSSOwlnix/pull/59)
 
 # 2.7.0-beta
 - updated eclipse rcp to 4.9.1 (last rcp supporting 32bit) (no babel localization for 4.9+)
-- Added Telegram to options for sharing links [#33](https://github.com/Xyrio/RSSOwlnix/issues/33) [@Tandagore](https://github.com/Tandagore) 
+- Added Telegram to options for sharing links [#33](https://github.com/Xyrio/RSSOwlnix/issues/33)
 
 # 2.6.1-beta
 - fixed wrong sticky news counting when doing a cleanup [#22](https://github.com/Xyrio/RSSOwlnix/issues/22)
@@ -28,7 +29,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.5.1-beta
 - added right to left sorting for title column of classic view (appends "<-" to Title column)
-- linux: do not force xulrunner [@sciamano](https://github.com/sciamano) [#21](https://github.com/Xyrio/RSSOwlnix/pull/21)
+- linux: do not force xulrunner [PR#21](https://github.com/Xyrio/RSSOwlnix/pull/21)
 
 # 2.5.0-beta
 - main program is now updateable (addons and translation available through Help/Install new Software...) * does not work correctly
