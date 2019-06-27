@@ -12,7 +12,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.6.0-beta
 - fixed some website authentication and authentication secure storage related bugs since updating httpclient to 4.x
-- added support for feed links using https like feed:https://host/rss.xml ( https://en.wikipedia.org/wiki/Feed_URI_scheme )
+- added support for feed links using https like `feed:https://host/rss.xml` ( https://en.wikipedia.org/wiki/Feed_URI_scheme )
 - added right to left sorting for search dialog title column too
 
 # 2.5.5-beta
