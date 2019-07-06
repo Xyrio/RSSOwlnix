@@ -4,6 +4,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 - updated rssowl news to use RSSOwlnix's update.rss [PR#59](https://github.com/Xyrio/RSSOwlnix/pull/59)
 
 # 2.7.0-beta
+- works with java 12
 - updated eclipse rcp to 4.9.1 (last rcp supporting 32bit) (no babel localization for 4.9+)
 - Added Telegram to options for sharing links [#33](https://github.com/Xyrio/RSSOwlnix/issues/33)
 
