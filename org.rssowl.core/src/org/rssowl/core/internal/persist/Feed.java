@@ -52,6 +52,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A Feed is the container of <code>News</code>. There can only be one Feed
@@ -110,7 +111,7 @@ public class Feed extends AbstractEntity implements IFeed {
     Assert.isNotNull(link, "The type Feed requires a Link that is not NULL"); //$NON-NLS-1$
     fLink = link;
     fLinkText = link.toString();
-    fNews = new ArrayList<INews>();
+    fNews = new ArrayList<>();
   }
 
   /**
@@ -147,7 +148,7 @@ public class Feed extends AbstractEntity implements IFeed {
    */
   @Override
   public synchronized List<INews> getNews() {
-    return new ArrayList<INews>(fNews);
+    return new ArrayList<>(fNews);
   }
 
   /**
@@ -171,7 +172,7 @@ public class Feed extends AbstractEntity implements IFeed {
       ++counts[news.getState().ordinal()];
     }
 
-    Map<State, Integer> stateToCountMap = new EnumMap<State, Integer>(State.class);
+    Map<State, Integer> stateToCountMap = new EnumMap<>(State.class);
     int ordinal = 0;
     for (int count : counts) {
       stateToCountMap.put(State.getState(ordinal), count);
@@ -381,7 +382,7 @@ public class Feed extends AbstractEntity implements IFeed {
    */
   @Override
   public synchronized List<INews> getNewsByStates(Set<INews.State> states) {
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     for (INews news : fNews) {
       if (states.contains(news.getState()))
           newsList.add(news);
@@ -435,7 +436,7 @@ public class Feed extends AbstractEntity implements IFeed {
   @Override
   public synchronized void addCategory(ICategory category) {
     if (fCategories == null)
-      fCategories = new ArrayList<ICategory>();
+      fCategories = new ArrayList<>();
 
     fCategories.add(category);
   }
@@ -504,7 +505,7 @@ public class Feed extends AbstractEntity implements IFeed {
           && (fLastBuildDate == null ? f.fLastBuildDate == null : fLastBuildDate.equals(f.fLastBuildDate))
           && (fLastModifiedDate == null ? f.fLastModifiedDate == null : fLastModifiedDate.equals(f.fLastModifiedDate))
           && (getLink() == null ? f.getLink() == null : getLink().toString().equals(f.getLink() != null ? f.getLink().toString() : null))
-          && (fNews == null ? f.fNews == null : new HashSet<INews>(fNews).equals(new HashSet<INews>(f.fNews)))
+          && (fNews == null ? f.fNews == null : new HashSet<>(fNews).equals(new HashSet<>(f.fNews)))
           && (fPublishDate == null ? f.fPublishDate == null : fPublishDate.equals(f.fPublishDate))
           && (fTitle == null ? f.fTitle == null : fTitle.equals(f.fTitle))
           && fTTL == f.fTTL
@@ -634,9 +635,9 @@ public class Feed extends AbstractEntity implements IFeed {
   @Override
   public synchronized List<ICategory> getCategories() {
     if (fCategories == null)
-      return new ArrayList<ICategory>(0);
+      return new ArrayList<>(0);
 
-    return new ArrayList<ICategory>(fCategories);
+    return new ArrayList<>(fCategories);
   }
 
   /**
@@ -841,7 +842,7 @@ public class Feed extends AbstractEntity implements IFeed {
     if (SyncUtils.isSynchronized(fLinkText)) {
 
       /* Map unique GUID to Pair of Index/News */
-      Map<String, INews> mapGuidToIncomingNews = new HashMap<String, INews>(newsListCopy.size());
+      Map<String, INews> mapGuidToIncomingNews = new HashMap<>(newsListCopy.size());
       for (int i = 0; i < newsListCopy.size(); i++) {
         INews news = newsListCopy.get(i);
         if (news.getGuid() != null)
@@ -941,7 +942,7 @@ public class Feed extends AbstractEntity implements IFeed {
       return copyWithoutDuplicatesSynced(newsList);
 
     /* Otherwise search rawly */
-    List<INews> newsListCopy = new ArrayList<INews>(newsList.size());
+    List<INews> newsListCopy = new ArrayList<>(newsList.size());
     for (INews outerNews : newsList) {
       boolean containsNews = false;
       for (INews innerNews : newsListCopy) {
@@ -959,8 +960,8 @@ public class Feed extends AbstractEntity implements IFeed {
   }
 
   private List<INews> copyWithoutDuplicatesSynced(List<INews> newsList) {
-    Set<String> guids= new HashSet<String>(newsList.size());
-    List<INews> newsListCopy = new ArrayList<INews>(newsList.size());
+    Set<String> guids= new HashSet<>(newsList.size());
+    List<INews> newsListCopy = new ArrayList<>(newsList.size());
     for (INews news : newsList) {
       IGuid guid = news.getGuid();
       if (guid == null)
@@ -981,6 +982,10 @@ public class Feed extends AbstractEntity implements IFeed {
   @Override
   public synchronized boolean removeNews(INews news) {
     return fNews.remove(news);
+  }
+
+  public synchronized void removeNewsNull() {
+    fNews = fNews.stream().filter(e -> e != null).collect(Collectors.toList());
   }
 
   /*
