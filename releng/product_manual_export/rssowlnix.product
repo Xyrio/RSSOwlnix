@@ -8,8 +8,8 @@
       <text>
          RSSOwlnix fork of RSSOwl
 
-Version: 2.7.0-beta
-Build Id: 2019-02-09
+Version: 2.7.1-beta
+Build Id: 2019-08-08
 
 RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.
 http://www.rssowl.org/legal/epl-v10.html
@@ -30,7 +30,6 @@ http://www.rssowl.org/legal/epl-v10.html
    </launcherArgs>
 
    <windowImages i16="/org.rssowl.ui/icons/product/16x16.png" i32="/org.rssowl.ui/icons/product/32x32.png" i48="/org.rssowl.ui/icons/product/48x48.png" i64="/org.rssowl.ui/icons/product/64x64.png" i128="/org.rssowl.ui/icons/product/128x128.png" i256="/org.rssowl.ui/icons/product/256x256.png"/>
-
 
    <launcher name="RSSOwlnix">
       <linux icon="../../org.rssowl.ui/icons/product/rssowl.xpm"/>

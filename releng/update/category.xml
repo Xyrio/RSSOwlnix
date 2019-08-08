@@ -6,7 +6,7 @@
    <feature url="features/org.rssowl.dependencies_2.7.0.qualifier.jar" id="org.rssowl.dependencies" version="2.7.0.qualifier">
       <category name="rssowlnix.program"/>
    </feature>
-   <feature url="features/org.rssowl_2.7.0.qualifier.jar" id="org.rssowl" version="2.7.0.qualifier">
+   <feature url="features/org.rssowl_2.7.1.qualifier.jar" id="org.rssowl" version="2.7.1.qualifier">
       <category name="rssowlnix.program"/>
    </feature>
    <category-def name="rssowlnix.program" label="RSSOwlnix Update"/>
