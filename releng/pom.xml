@@ -12,9 +12,10 @@
 	</parent>
 
 	<modules>
-		<module>update</module>
-		<module>product</module>
+<!-- 		<module>org.rssowl.libs.p2</module> -->
 		<module>target_platform</module>
+		<module>product</module>
+		<module>update</module>
 	</modules>
 
 </project>
