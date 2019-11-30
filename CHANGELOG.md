@@ -2,13 +2,13 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 
 # 2.7.1-beta
-- works with java 13
+- runs also with java 13
 - fix null news in feed when doing cleanup [#64](https://github.com/Xyrio/RSSOwlnix/issues/64)
 - fixed different behaviour when adding new feed from toolbar [#42](https://github.com/Xyrio/RSSOwlnix/issues/42)
 - updated rssowl news to use RSSOwlnix's update.rss [PR#59](https://github.com/Xyrio/RSSOwlnix/pull/59)
 
 # 2.7.0-beta
-- works with java 12
+- runs also with java 12
 - updated eclipse rcp to 4.9.1 (last rcp supporting 32bit) (no babel localization for 4.9+)
 - Added Telegram to options for sharing links [#33](https://github.com/Xyrio/RSSOwlnix/issues/33)
 
@@ -46,7 +46,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 - removed old update manager and added new p2 one (addons work so far)
 
 # 2.3.0-beta
-- runs with java 9
+- runs also with java 9
 - https websites which needed JCE should work without it when jre 9+ is used. https://sourceforge.net/p/rssowl/discussion/296910/thread/6dc4a203/
 - updated eclipse rcp to 4.7
 - updated httpclient to 4.5.3
