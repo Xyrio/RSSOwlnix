@@ -1,8 +1,9 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
+- added shell:// protocol for feed links to retrieve or transform rss using external scripts or programs. example shell://python html2rss.py https://website/
 
 # 2.7.1-beta
-- runs also with java 13
+- runs also with java 13, 14
 - fix null news in feed when doing cleanup [#64](https://github.com/Xyrio/RSSOwlnix/issues/64)
 - fixed different behaviour when adding new feed from toolbar [#42](https://github.com/Xyrio/RSSOwlnix/issues/42)
 - updated rssowl news to use RSSOwlnix's update.rss [PR#59](https://github.com/Xyrio/RSSOwlnix/pull/59)

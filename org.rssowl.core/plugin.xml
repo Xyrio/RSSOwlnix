@@ -110,16 +110,16 @@
             protocol="file"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.DefaultProtocolHandler"
-            protocol="feed">
-      </protocolHandler>
+            protocol="feed"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.ReaderProtocolHandler"
-            protocol="reader">
-      </protocolHandler>
+            protocol="reader"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.ReaderProtocolHandler"
-            protocol="readers">
-      </protocolHandler>
+            protocol="readers"/>
+      <protocolHandler
+            class="org.rssowl.core.internal.connection.ShellProtocolHandler"
+            protocol="shell"/>
    </extension>
    <extension
          point="org.rssowl.core.DAOService">

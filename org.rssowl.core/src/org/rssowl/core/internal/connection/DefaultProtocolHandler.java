@@ -175,12 +175,23 @@ public class DefaultProtocolHandler implements IProtocolHandler {
 //  private static boolean fgSSLInitialized;
 //  private static boolean fgFeedProtocolInitialized;
 
+  @FunctionalInterface
+  public interface SupplierConnectionException<T> {
+
+    T get() throws ConnectionException;
+  }
+
   /*
    * @see org.rssowl.core.connection.IProtocolHandler#reload(java.net.URI,
    * org.eclipse.core.runtime.IProgressMonitor, java.util.Map)
    */
   @Override
   public Triple<IFeed, IConditionalGet, URI> reload(URI link, IProgressMonitor monitor, Map<Object, Object> properties) throws CoreException {
+    return reload(null, link, monitor, properties);
+  }
+
+  protected Triple<IFeed, IConditionalGet, URI> reload(SupplierConnectionException<InputStream> inSSOptional, URI link, IProgressMonitor monitor, Map<Object, Object> properties) throws CoreException {
+
     IModelFactory typesFactory = Owl.getModelFactory();
 
     /* Create a new empty feed from the existing one */
@@ -192,7 +203,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
 
     /* Retrieve the InputStream out of the Feed's Link */
-    InputStream inS = openStream(link, properties);
+    InputStream inS = inSSOptional != null ? inSSOptional.get() : openStream(link, properties);
 
     /* Retrieve Conditional Get if present */
     IConditionalGet conditionalGet = getConditionalGet(link, inS);
@@ -215,7 +226,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
       }
 
       /* Re-retrieve InputStream from the Feed's Link */
-      inS = openStream(link, properties);
+      inS = inSSOptional != null ? inSSOptional.get() : openStream(link, properties);
 
       /* Re-retrieve Conditional Get if present */
       conditionalGet = getConditionalGet(link, inS);
@@ -301,7 +312,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     try {
 
       /* Define Properties for Connection */
-      Map<Object, Object> properties = new HashMap<Object, Object>();
+      Map<Object, Object> properties = new HashMap<>();
       properties.put(IConnectionPropertyConstants.CON_TIMEOUT, FAVICON_CON_TIMEOUT);
       properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
 
@@ -345,7 +356,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
   private URI getFavicon(URI link, IProgressMonitor monitor) throws ConnectionException {
 
     /* Define Properties for Connection */
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
     properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
     properties.put(IConnectionPropertyConstants.CON_TIMEOUT, FAVICON_CON_TIMEOUT);
 
@@ -390,9 +401,19 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     /* Add Monitor to support early cancelation */
     if (monitor != null) {
       if (properties == null)
-        properties = new HashMap<Object, Object>();
+        properties = new HashMap<>();
       properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
     }
+
+    return openStream(link, properties);
+  }
+
+  protected InputStream openStream(URI link, IProgressMonitor monitor) throws ConnectionException {
+
+    /* Define Properties for Connection */
+    Map<Object, Object> properties = new HashMap<>();
+    properties.put(IConnectionPropertyConstants.CON_TIMEOUT, FEED_LABEL_CON_TIMEOUT);
+    properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
 
     return openStream(link, properties);
   }
@@ -610,11 +631,11 @@ public class DefaultProtocolHandler implements IProtocolHandler {
 
         if (authCredentials.getDomain() != null) {
           credentialsProvider.setCredentials( //
-              new AuthScope(authLink.getHost(), authLink.getPort(), authRealm, AuthSchemes.NTLM),
+              new AuthScope(authLink.getHost(), authLink.getPort(), authRealm, AuthSchemes.NTLM), //
               new NTCredentials(authCredentials.getUsername(), authCredentials.getPassword(), authLink.getHost(), authCredentials.getDomain()));
         } else {
           credentialsProvider.setCredentials( //
-              new AuthScope(authLink.getHost(), authLink.getPort(), authRealm, AuthSchemes.BASIC),
+              new AuthScope(authLink.getHost(), authLink.getPort(), authRealm, AuthSchemes.BASIC), //
               new UsernamePasswordCredentials(authCredentials.getUsername(), authCredentials.getPassword()));
         }
 
@@ -941,17 +962,13 @@ public class DefaultProtocolHandler implements IProtocolHandler {
    */
   @Override
   public String getLabel(URI link, IProgressMonitor monitor) throws ConnectionException {
+    InputStream inS = openStream(link, monitor);
+    return getLabel(inS, monitor);
+  }
+
+  protected String getLabel(InputStream inS, IProgressMonitor monitor) {
     String title = ""; //$NON-NLS-1$
-
-    /* Define Properties for Connection */
-    Map<Object, Object> properties = new HashMap<Object, Object>();
-    properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
-    properties.put(IConnectionPropertyConstants.CON_TIMEOUT, FEED_LABEL_CON_TIMEOUT);
-
-    /* Open Stream */
-    InputStream inS = openStream(link, properties);
     try {
-
       /* Return on Cancelation or Shutdown */
       if (monitor.isCanceled())
         return null;
@@ -988,10 +1005,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     } catch (IOException e) {
       if (!(e instanceof MonitorCanceledException))
         Activator.safeLogError(e.getMessage(), e);
-    }
-
-    /* Finally close the Stream */
-    finally {
+    } finally {
       closeStream(inS, true); //Abort the stream to avoid downloading the full content
     }
 
@@ -1096,19 +1110,15 @@ public class DefaultProtocolHandler implements IProtocolHandler {
    * org.eclipse.core.runtime.IProgressMonitor)
    */
   @Override
-  public URI getFeed(final URI website, IProgressMonitor monitor) throws ConnectionException {
+  public URI getFeed(URI website, IProgressMonitor monitor) throws ConnectionException {
+    InputStream inS = openStream(website, monitor);
+    return getFeed(inS, website, monitor);
+  }
 
-    /* Define Properties for Connection */
-    Map<Object, Object> properties = new HashMap<Object, Object>();
-    properties.put(IConnectionPropertyConstants.PROGRESS_MONITOR, monitor);
-    properties.put(IConnectionPropertyConstants.CON_TIMEOUT, FEED_LABEL_CON_TIMEOUT);
-
-    /* Open Stream */
-    InputStream inS = openStream(website, properties);
+  protected URI getFeed(InputStream inS, URI website, IProgressMonitor monitor) {
     BufferedInputStream bufIns = new BufferedInputStream(inS);
     BufferedReader reader = new BufferedReader(new InputStreamReader(bufIns));
     try {
-
       /* Our HttpConnectionInputStream */
       if (inS instanceof HttpConnectionInputStream) {
 
@@ -1127,10 +1137,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
 
       /* Normal Stream (use request URI) */
       return CoreUtils.findFeed(reader, website, monitor);
-    }
-
-    /* Finally close the Stream */
-    finally {
+    } finally {
       closeStream(inS, true); //Abort the stream to avoid downloading the full content
     }
   }
