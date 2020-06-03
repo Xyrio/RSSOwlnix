@@ -1,6 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.8.0-beta
+- improved favico search
 - updated httpclient to 4.5.12
 - added shell:// protocol for feed links to retrieve or transform rss using external scripts or programs. example shell://python html2rss.py https://website/
 
