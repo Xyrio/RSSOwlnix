@@ -4,7 +4,7 @@
 	
 	<groupId>org.rssowl.lib</groupId>
 	<artifactId>org.rssowl.lib.httpclient.p2</artifactId>
-	<version>4.5.6</version>
+	<version>4.5.12</version>
 	<packaging>pom</packaging>
 
 	<!-- http://www.vogella.com/tutorials/EclipseJarToPlugin/article.html#convert-jar-files-to-osgi-bundles-with-the-p2-maven-plugin -->
@@ -25,7 +25,7 @@
 								<!-- groupId:artifactId:version -->
 								<artifact>
 									<!-- see here for latest version: https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-									<id>org.apache.httpcomponents:httpclient:4.5.6</id>
+									<id>org.apache.httpcomponents:httpclient:4.5.12</id>
 									<source>true</source>
 								</artifact>
 							</artifacts>
