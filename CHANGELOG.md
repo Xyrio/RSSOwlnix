@@ -1,5 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
+- fixed missing Overview/Network Connections in Preferrences
+
 # 2.8.0-beta
 - improved favico search
 - updated httpclient to 4.5.12
