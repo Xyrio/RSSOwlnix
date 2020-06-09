@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.rssowl.core.Owl;
 import org.rssowl.core.internal.persist.pref.DefaultPreferences;
 import org.rssowl.core.persist.IEntity;
@@ -52,7 +53,6 @@ import org.rssowl.ui.dialogs.properties.IPropertyDialogSite;
 import org.rssowl.ui.internal.Controller;
 import org.rssowl.ui.internal.LinkTransformer;
 import org.rssowl.ui.internal.OwlUI.Layout;
-import org.rssowl.ui.internal.OwlUI.PageSize;
 import org.rssowl.ui.internal.editors.feed.NewsFilter;
 import org.rssowl.ui.internal.editors.feed.NewsGrouping;
 import org.rssowl.ui.internal.util.EditorUtils;
@@ -73,7 +73,7 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
   private Combo fFilterCombo;
   private Combo fGroupCombo;
   private Combo fLayoutCombo;
-  private Combo fPageSizeCombo;
+  private Text fPageSizeText;
   private Button fLoadImagesForNewsCheck;
   private Button fLoadMediaForNewsCheck;
   private Button fDisplayContentsOfNewsRadio;
@@ -87,7 +87,7 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
   private int fPrefSelectedFilter;
   private int fPrefSelectedGroup;
   private int fPrefSelectedLayout;
-  private int fPrefSelectedPageSize;
+  private int fPrefPageSize;
   private boolean fPrefOpenSiteForNews;
   private boolean fPrefOpenSiteForEmptyNews;
   private boolean fPrefUseLinkTransformer;
@@ -106,7 +106,7 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
     fEntities = entities;
 
     /* Load Entity Preferences */
-    fEntityPreferences = new ArrayList<IPreferenceScope>(fEntities.size());
+    fEntityPreferences = new ArrayList<>(fEntities.size());
     for (IEntity entity : entities)
       fEntityPreferences.add(Owl.getPreferenceService().getEntityScope(entity));
 
@@ -129,7 +129,7 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
     fPrefLoadImagesForNews = firstScope.getBoolean(DefaultPreferences.ENABLE_IMAGES);
     fPrefLoadMediaForNews = firstScope.getBoolean(DefaultPreferences.ENABLE_MEDIA);
     fPrefSelectedLayout = firstScope.getInteger(DefaultPreferences.FV_LAYOUT);
-    fPrefSelectedPageSize = firstScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
+    fPrefPageSize = firstScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
 
     /* For any other scope not sharing the initial values, use the default */
     for (int i = 1; i < fEntityPreferences.size(); i++) {
@@ -162,8 +162,8 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
       if (otherScope.getInteger(DefaultPreferences.FV_LAYOUT) != fPrefSelectedLayout)
         fPrefSelectedLayout = defaultScope.getInteger(DefaultPreferences.FV_LAYOUT);
 
-      if (otherScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE) != fPrefSelectedPageSize)
-        fPrefSelectedPageSize = defaultScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
+      if (otherScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE) != fPrefPageSize)
+        fPrefPageSize = defaultScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
     }
   }
 
@@ -205,15 +205,10 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
     });
 
     /* Layout Page Size */
-    fPageSizeCombo = new Combo(layoutContainer, SWT.BORDER | SWT.READ_ONLY);
-    fPageSizeCombo.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, false, false));
-
-    for (PageSize pageSize : PageSize.values()) {
-      fPageSizeCombo.add(pageSize.getName());
-    }
-
-    fPageSizeCombo.select(PageSize.from(fPrefSelectedPageSize).ordinal());
-    fPageSizeCombo.setVisibleItemCount(fPageSizeCombo.getItemCount());
+    fPageSizeText = new Text(layoutContainer, SWT.BORDER);
+    fPageSizeText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, false, false));
+    fPageSizeText.setToolTipText(Messages.DisplayPropertyPage_PAGE_SIZE);
+    fPageSizeText.setText(String.valueOf(fPrefPageSize));
 
     /* Filter Settings */
     Label filterLabel = new Label(topContainer, SWT.None);
@@ -364,11 +359,11 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
     /* Update Layout */
     GridData data = (GridData) fLayoutCombo.getLayoutData();
     data.horizontalSpan = isNewspaperLayout ? 1 : 2;
-    data = (GridData) fPageSizeCombo.getLayoutData();
+    data = (GridData) fPageSizeText.getLayoutData();
     data.exclude = !isNewspaperLayout;
 
     if (layout)
-      fPageSizeCombo.getParent().getParent().layout(true, true);
+      fPageSizeText.getParent().getParent().layout(true, true);
   }
 
   /*
@@ -455,10 +450,16 @@ public class DisplayPropertyPage implements IEntityPropertyPage {
     }
 
     /* Page Size */
-    iVal = fPageSizeCombo.getSelectionIndex();
-    PageSize size = PageSize.values()[iVal];
-    if (fPrefSelectedPageSize != size.getPageSize()) {
-      scope.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, size.getPageSize());
+    try {
+      iVal = Integer.valueOf(fPageSizeText.getText());
+      if (iVal < 0) {
+        iVal = fPrefPageSize;
+      }
+    } catch (NumberFormatException e) {
+      iVal = fPrefPageSize;
+    }
+    if (fPrefPageSize != iVal) {
+      scope.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, iVal);
       changed = true;
     }
 

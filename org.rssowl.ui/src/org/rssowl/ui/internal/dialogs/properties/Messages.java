@@ -36,6 +36,7 @@ public class Messages extends NLS {
   public static String DisplayPropertyPage_LOAD_MEDIA;
   public static String DisplayPropertyPage_ONLY_EMPTY_CONTENT;
   public static String DisplayPropertyPage_OPEN_NEWS_LINK;
+  public static String DisplayPropertyPage_PAGE_SIZE;
   public static String DisplayPropertyPage_USE_LINK_TRANSFORMER;
   public static String EntityPropertyDialog_PROPERTIES;
   public static String EntityPropertyDialog_PROPERTIES_FOR_N;

@@ -32,7 +32,6 @@ public class Messages extends NLS {
   public static String Application_QUIT_RSSOWL;
   public static String Application_RESTART_RSSOWL;
   public static String ApplicationActionBarAdvisor_ABOUT_RSSOWL;
-  public static String ApplicationActionBarAdvisor_ALL_ARTICLES;
   public static String ApplicationActionBarAdvisor_ASCENDING;
   public static String ApplicationActionBarAdvisor_ATTACHMENTS;
   public static String ApplicationActionBarAdvisor_BOOKMARKS;
@@ -52,7 +51,6 @@ public class Messages extends NLS {
   public static String ApplicationActionBarAdvisor_EXIT;
   public static String ApplicationActionBarAdvisor_EXPORT_LOGFILE;
   public static String ApplicationActionBarAdvisor_EXPORT_LOGFILE_DIALOG;
-  public static String ApplicationActionBarAdvisor_F_ARTICLES;
   public static String ApplicationActionBarAdvisor_FAQ;
   public static String ApplicationActionBarAdvisor_FEED_TOOLBAR;
   public static String ApplicationActionBarAdvisor_FILE;
@@ -63,7 +61,6 @@ public class Messages extends NLS {
   public static String ApplicationActionBarAdvisor_GO;
   public static String ApplicationActionBarAdvisor_GOOGLE_READER_SYNC;
   public static String ApplicationActionBarAdvisor_GROUP_NEWS;
-  public static String ApplicationActionBarAdvisor_H_ARTICLES;
   public static String ApplicationActionBarAdvisor_HEADLINES_LAYOUT;
   public static String ApplicationActionBarAdvisor_HELP;
   public static String ApplicationActionBarAdvisor_HIDE_TOOLBAR;
@@ -101,10 +98,8 @@ public class Messages extends NLS {
   public static String ApplicationActionBarAdvisor_SOME_ELEMENTS_FILTERED;
   public static String ApplicationActionBarAdvisor_SORT_BY;
   public static String ApplicationActionBarAdvisor_STATUS;
-  public static String ApplicationActionBarAdvisor_T_ARTICLES;
   public static String ApplicationActionBarAdvisor_TABBED_BROWSING;
   public static String ApplicationActionBarAdvisor_TABS_MESSAGE;
-  public static String ApplicationActionBarAdvisor_TF_ARTICLES;
   public static String ApplicationActionBarAdvisor_TOOLBAR;
   public static String ApplicationActionBarAdvisor_TOOLBARS;
   public static String ApplicationActionBarAdvisor_TOOLS;
@@ -205,11 +200,8 @@ public class Messages extends NLS {
   public static String DefaultStatusHandler_ERROR_DISK_WRITE;
   public static String EntityGroup_GROUP;
   public static String OwlUI_ACCESSIBLE_NAME;
-  public static String OwlUI_ALL_ARTICLES;
   public static String OwlUI_CLASSIC_LAYOUT;
   public static String OwlUI_CONTENT_ASSIST;
-  public static String OwlUI_F_ARTICLES;
-  public static String OwlUI_H_ARTICLES;
   public static String OwlUI_HEADLINES_LAYOUT;
   public static String OwlUI_HOUR;
   public static String OwlUI_HOUR_MINUTE;
@@ -231,8 +223,6 @@ public class Messages extends NLS {
   public static String OwlUI_SIZE_FORMAT;
   public static String OwlUI_SYNC_LOGIN;
   public static String OwlUI_SYNC_LOGIN_TEXT;
-  public static String OwlUI_T_ARTICLES;
-  public static String OwlUI_TF_ARTICLES;
   public static String OwlUI_TITLE;
   public static String OwlUI_UPDATED;
   public static String OwlUI_VERTICAL_LAYOUT;

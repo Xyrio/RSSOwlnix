@@ -93,6 +93,7 @@ public class Messages extends NLS {
   public static String FeedsPreferencePage_NEVER_DELETE_UNREAD;
   public static String FeedsPreferencePage_ONLY_WHEN_EMPTY;
   public static String FeedsPreferencePage_OPEN_NEWS_LINK;
+  public static String FeedsPreferencePage_PAGE_SIZE;
   public static String FeedsPreferencePage_PERFORMNG_CLEANUP;
   public static String FeedsPreferencePage_PROPERTY_INFO;
   public static String FeedsPreferencePage_READING;

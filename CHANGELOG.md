@@ -1,5 +1,6 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
+- changed page size preference for newspaper/headlines view to be setable to any value [#91](https://github.com/Xyrio/RSSOwlnix/issues/91)
 - fixed missing Overview/Network Connections in Preferrences
 
 # 2.8.0-beta

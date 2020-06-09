@@ -214,7 +214,7 @@ public class NewsBrowserControl implements IFeedViewPart {
   }
 
   private void onInfoBarClicked() {
-    boolean moveToTop = OwlUI.getPageSize(fInputPreferences).getPageSize() == 0; //Only move to top when paging is disabled
+    boolean moveToTop = OwlUI.getPageSize(fInputPreferences) == 0; //Only move to top when paging is disabled
     fViewer.refresh(true, moveToTop); //Refresh will take care of closing the info bar
   }
 
