@@ -62,7 +62,9 @@ import org.rssowl.ui.internal.util.LayoutUtils;
  * </p>
  *
  * @author bpasero
+ * @deprecated added eclipse progress view instead
  */
+@Deprecated
 public class ActivityDialog extends TitleAreaDialog {
 
   /* Keep the visible instance saved */

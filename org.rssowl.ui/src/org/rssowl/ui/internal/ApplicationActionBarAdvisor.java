@@ -57,10 +57,12 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ContributionItemFactory;
@@ -802,6 +804,45 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             if (page != null)
               return page.findView(BookMarkExplorer.VIEW_ID) != null;
 
+            return false;
+          }
+        });
+
+        /* Toggle State of Download & Activity (dockable view) Visibility */
+        manager.add(new Action(Messages.CoolBarAdvisor_DOWNLOADS_ACTIVITY, IAction.AS_CHECK_BOX) {
+          String VIEW_ID = "org.eclipse.ui.views.ProgressView"; //$NON-NLS-1$
+          @Override
+          public void run() {
+            IWorkbenchPage page = OwlUI.getPage();
+            if (page != null) {
+              IViewPart view = page.findView(VIEW_ID);
+              if (view != null)
+                page.hideView(view);
+              else {
+                try {
+                  page.showView(VIEW_ID);
+                } catch (PartInitException e) {
+                  Activator.getDefault().logError(e.getMessage(), e);
+                }
+              }
+            }
+          }
+
+//          @Override
+//          public String getActionDefinitionId() {
+//            return "org.rssowl.ui.ToggleProgressViewCommand"; //$NON-NLS-1$
+//          }
+//
+//          @Override
+//          public String getId() {
+//            return "org.rssowl.ui.ToggleProgressViewCommand"; //$NON-NLS-1$
+//          }
+
+          @Override
+          public boolean isChecked() {
+            IWorkbenchPage page = OwlUI.getPage();
+            if (page != null)
+              return page.findView(VIEW_ID) != null;
             return false;
           }
         });

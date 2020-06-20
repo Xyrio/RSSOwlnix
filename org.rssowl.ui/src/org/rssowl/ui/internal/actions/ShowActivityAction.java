@@ -35,7 +35,9 @@ import org.rssowl.ui.internal.dialogs.ActivityDialog;
 
 /**
  * @author bpasero
+ * @deprecated added eclipse progress view instead
  */
+@Deprecated
 public class ShowActivityAction implements IWorkbenchWindowActionDelegate {
   private IShellProvider fShellProvider;
 

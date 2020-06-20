@@ -374,6 +374,14 @@
             icon="icons/obj16/bookmark.gif"
             id="org.rssowl.ui.BookMarkExplorer"
             name="%view.name"/>
+      <view
+            allowMultiple="false"
+            category="org.rssowl.ui.category"
+            class="org.eclipse.ui.ExtensionFactory:progressView"
+            fastViewWidthRatio="0.5"
+            icon="icons/eview16/pview.gif"
+            id="org.eclipse.ui.views.ProgressView"
+            name="%actionSet.label.6"/>
       <category
             id="org.rssowl.ui.category"
             name="%category.name">
