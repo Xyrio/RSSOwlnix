@@ -880,7 +880,7 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="org.rssowl.ui.rssowl"
-            name="RSSOwlnix Product">
+            name="%product.name">
          <property
                name="aboutImage"
                value="icons/product/about.gif"/>
@@ -892,7 +892,7 @@
                value="RSSOwlnix fork of RSSOwl&#x0A;&#x0A;Version: 2.8.1-beta&#x0A;Build Id: 2020-06-20&#x0A;&#x0A;RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.&#x0A;http://www.rssowl.org/legal/epl-v10.html&#x0A;&#x0A;(c) Copyright RSSOwl contributors and others 2005-2011.  All rights reserved."/>
          <property
                name="appName"
-               value="RSSOwlnix Product">
+               value="%product.name">
          </property>
       </product>
    </extension>
