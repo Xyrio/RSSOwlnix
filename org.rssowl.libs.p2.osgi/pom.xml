@@ -25,9 +25,25 @@
 							<artifacts>
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
+<!-- 								<artifact> -->
+<!-- 									see here for latest version: https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+<!-- 									<id>org.apache.httpcomponents:httpclient:4.5.12</id> -->
+<!-- 									<source>true</source> -->
+<!-- 								</artifact> -->
+							  	<artifact>
+							  		<id>org.apache.lucene:lucene-core:8.5.2</id>
+									<source>true</source>
+								</artifact>
 								<artifact>
-									<!-- see here for latest version: https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
-									<id>org.apache.httpcomponents:httpclient:4.5.12</id>
+							  		<id>org.apache.lucene:lucene-queries:8.5.2</id>
+									<source>true</source>
+								</artifact>
+								<artifact>
+							  		<id>org.apache.lucene:lucene-analyzers-common:8.5.2</id>
+									<source>true</source>
+								</artifact>
+							    <artifact>
+							  		<id>org.apache.lucene:lucene-queryparser:8.5.2</id>
 									<source>true</source>
 								</artifact>
 							</artifacts>
