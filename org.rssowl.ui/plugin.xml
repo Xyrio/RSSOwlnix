@@ -1821,13 +1821,6 @@
       </shareProvider>
       <shareProvider
             enabled="false"
-            icon="icons/obj16/share_mrwong.gif"
-            id="org.rssowl.ui.MisterWongShareProvider"
-            name="%shareProvider.name.11"
-            url="http://www.mister-wong.com/index.php?action=addurl&amp;bm_url=[L]&amp;bm_description=[T]">
-      </shareProvider>
-      <shareProvider
-            enabled="false"
             icon="icons/obj16/share_newsvine.gif"
             id="org.rssowl.ui.NewsvineShareProvider"
             name="%shareProvider.name.12"
@@ -1926,13 +1919,6 @@
       </shareProvider>
       <shareProvider
             enabled="false"
-            icon="icons/obj16/share_google_plus.gif"
-            id="org.rssowl.ui.GooglePlusShareProvider"
-            name="%shareProvider.name.26"
-            url="https://plus.google.com/share?url=[L]">
-      </shareProvider>
-      <shareProvider
-            enabled="false"
             icon="icons/obj16/share_readability.gif"
             id="org.rssowl.ui.ReadabilityShareProvider"
             name="%shareProvider.name.27"
@@ -1944,6 +1930,21 @@
             id="org.rssowl.ui.TelegramShareProvider"
             name="%shareProvider.name.28"
             url="https://telegram.me/share/url?url=[L]&amp;text=[T]">
+       </shareProvider>
+      <shareProvider
+            enabled="true"
+            icon="icons/obj16/share_readitlater.gif"
+            id="org.rssowl.ui.ReadItLaterShareProvider"
+            name="%shareProvider.name.29"
+            url="http://readitlaterlist.com/save?url=[L]&amp;title=[T]">
+      </shareProvider>
+      <shareProvider
+            enabled="false"
+            icon="icons/obj16/share_bibsonomy.png"
+            id="org.rssowl.ui.BibsonomyShareProvider"
+            name="%shareProvider.name.30"
+			method="POST"
+            url="https://www.bibsonomy.org/ShowBookmarkEntry?url=[L]&amp;description=[T]&amp;abstractGrouping=public">
        </shareProvider>
    </extension>
    <extension
