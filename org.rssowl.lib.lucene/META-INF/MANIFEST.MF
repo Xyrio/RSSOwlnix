@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.rssowl.lib.lucene;singleton:=true
-Bundle-Version: 2.8.1.qualifier
+Bundle-Version: 2.9.0.qualifier
 Export-Package: org.apache.lucene,
  org.apache.lucene.analysis,
  org.apache.lucene.analysis.ar,
