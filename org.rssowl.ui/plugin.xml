@@ -1892,7 +1892,7 @@
       <shareProvider
             enabled="true"
             icon="icons/obj16/share_pocket.gif"
-            id="org.rssowl.ui.ReadItLaterShareProvider"
+            id="org.rssowl.ui.PocketShareProvider"
             name="%shareProvider.name.22"
             url="http://getpocket.com/edit.php?url=[L]&amp;title=[T]">
       </shareProvider>
@@ -1932,17 +1932,10 @@
             url="https://telegram.me/share/url?url=[L]&amp;text=[T]">
        </shareProvider>
       <shareProvider
-            enabled="true"
-            icon="icons/obj16/share_readitlater.gif"
-            id="org.rssowl.ui.ReadItLaterShareProvider"
-            name="%shareProvider.name.29"
-            url="http://readitlaterlist.com/save?url=[L]&amp;title=[T]">
-      </shareProvider>
-      <shareProvider
             enabled="false"
             icon="icons/obj16/share_bibsonomy.png"
             id="org.rssowl.ui.BibsonomyShareProvider"
-            name="%shareProvider.name.30"
+            name="%shareProvider.name.29"
 			method="POST"
             url="https://www.bibsonomy.org/ShowBookmarkEntry?url=[L]&amp;description=[T]&amp;abstractGrouping=public">
        </shareProvider>

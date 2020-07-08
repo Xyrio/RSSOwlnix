@@ -1549,10 +1549,10 @@
       </shareProvider>
       <shareProvider
             enabled="true"
-            icon="icons/obj16/share_readitlater.gif"
-            id="org.rssowl.ui.ReadItLaterShareProvider"
+            icon="icons/obj16/share_pocket.gif"
+            id="org.rssowl.ui.PocketShareProvider"
             name="%shareProvider.name.22"
-            url="http://readitlaterlist.com/save?url=[L]&amp;title=[T]">
+            url="http://getpocket.com/edit.php?url=[L]&amp;title=[T]">
       </shareProvider>
       <shareProvider
             enabled="false"
