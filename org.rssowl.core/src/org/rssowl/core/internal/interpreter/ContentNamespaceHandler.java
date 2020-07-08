@@ -29,6 +29,7 @@ import org.jdom.Element;
 import org.rssowl.core.interpreter.INamespaceHandler;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.IPersistable;
+import org.rssowl.core.util.StringUtils;
 
 /**
  * Handler for the Content Namespace.
@@ -48,9 +49,15 @@ public class ContentNamespaceHandler implements INamespaceHandler {
   @Override
   public void processElement(Element element, IPersistable type) {
 
-    /* Encoded */
-    if ("encoded".equals(element.getName()) && type instanceof INews) //$NON-NLS-1$
-      ((INews) type).setDescription(element.getText());
+    // <content:encoded>
+    // example with text: https://wordpress.com/blog/feed/
+    // example no text: https://feeds.a.dj.com/rss/RSSWSJD.xml
+    if ("encoded".equals(element.getName()) && type instanceof INews) {//$NON-NLS-1$
+      // sometimes empty but description has the already loaded text. so do not overwrite here.
+      String text = element.getText();
+      if (StringUtils.isSet(text))
+        ((INews) type).setDescription(text);
+    }
   }
 
   /*
