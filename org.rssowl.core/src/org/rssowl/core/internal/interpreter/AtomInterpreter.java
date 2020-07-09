@@ -29,6 +29,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.rssowl.core.Owl;
+import org.rssowl.core.internal.persist.Attachment;
 import org.rssowl.core.persist.IAttachment;
 import org.rssowl.core.persist.ICategory;
 import org.rssowl.core.persist.IEntity;
@@ -39,7 +40,6 @@ import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.IPersistable;
 import org.rssowl.core.persist.IPerson;
 import org.rssowl.core.persist.ISource;
-import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.DateUtils;
 import org.rssowl.core.util.StringUtils;
 import org.rssowl.core.util.URIUtils;
@@ -236,15 +236,9 @@ public class AtomInterpreter extends BasicInterpreter {
           String attachmentType = child.getAttributeValue("type"); //$NON-NLS-1$
           int attachmentLength = StringUtils.stringToInt(child.getAttributeValue("length")); //$NON-NLS-1$
 
-          /* Create Attachment only if valid */
-          if (attachmentUri != null && !CoreUtils.hasAttachment(news, attachmentUri)) {
-            IAttachment attachment = Owl.getModelFactory().createAttachment(null, news);
-            attachment.setLink(attachmentUri);
-            if (StringUtils.isSet(attachmentType))
-              attachment.setType(attachmentType);
-            if (attachmentLength != -1)
-              attachment.setLength(attachmentLength);
 
+          IAttachment attachment = Attachment.createValidAttachment(news, attachmentUri, attachmentType, attachmentLength);
+          if (attachment != null) {
             /* Allow Contributions */
             processNamespaceAttributes(child, attachment);
           }

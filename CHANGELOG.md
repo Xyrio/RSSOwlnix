@@ -1,6 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.8.1-beta (WIP)
+- support more media tags from youtube, peertube [#74](https://github.com/Xyrio/RSSOwlnix/issues/74)
 - fix missing description when <content:encode> exists but has no text to not overwrite what was already loaded from <description> [#56](https://github.com/Xyrio/RSSOwlnix/issues/56)
 - updated share links: removed Mister Wong, Google+ and added BibSonomy [#95](https://github.com/Xyrio/RSSOwlnix/issues/95)
 - fixed progress button at bottom left to show new Download & Activities view (eclipse ProgressView) toggleable from Menu/View/Downloads & Activity. Kept old view at Menu/Tools/Downloads & Activity for now. [#45](https://github.com/Xyrio/RSSOwlnix/issues/45)
