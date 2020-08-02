@@ -112,6 +112,9 @@
             class="org.rssowl.core.internal.connection.DefaultProtocolHandler"
             protocol="feed"/>
       <protocolHandler
+            class="org.rssowl.core.internal.connection.DefaultProtocolHandler"
+            protocol="feeds"/>
+      <protocolHandler
             class="org.rssowl.core.internal.connection.ReaderProtocolHandler"
             protocol="reader"/>
       <protocolHandler
@@ -131,20 +134,19 @@
          point="org.rssowl.core.CredentialsProvider">
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="http">
-      </credentialsProvider>
+            protocol="http"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="https">
-      </credentialsProvider>
+            protocol="https"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="file">
-      </credentialsProvider>
+            protocol="file"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="feed">
-      </credentialsProvider>
+            protocol="feed"/>
+      <credentialsProvider
+            class="org.rssowl.core.connection.PlatformCredentialsProvider"
+            protocol="feeds"/>
    </extension>
    <extension
          point="org.rssowl.core.ModelFactory">

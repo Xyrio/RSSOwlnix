@@ -118,9 +118,9 @@ public class NewsTableLabelProvider extends OwnerDrawLabelProvider {
   private Font fBoldFont;
 
   /* A cache for the Feed and Location Column */
-  private Map<Long, String> fMapBinIdToLocation = new HashMap<Long, String>();
-  private Map<String, String> fMapFeedLinkToLocation = new HashMap<String, String>();
-  private Map<String, ImageDescriptor> fMapFeedLinkToFeedIcon = new HashMap<String, ImageDescriptor>();
+  private Map<Long, String> fMapBinIdToLocation = new HashMap<>();
+  private Map<String, String> fMapFeedLinkToLocation = new HashMap<>();
+  private Map<String, ImageDescriptor> fMapFeedLinkToFeedIcon = new HashMap<>();
 
   /* Today in Millies */
   private final long fTodayInMillies;
@@ -416,6 +416,7 @@ public class NewsTableLabelProvider extends OwnerDrawLabelProvider {
           text = CoreUtils.getLink(news);
           if (StringUtils.isSet(text)) {
             text = StringUtils.replaceAll(text, URIUtils.HTTP, ""); //$NON-NLS-1$
+            text = StringUtils.replaceAll(text, URIUtils.HTTPS, ""); //$NON-NLS-1$
             text = StringUtils.replaceAll(text, "www.", ""); //$NON-NLS-1$ //$NON-NLS-2$
           }
       }

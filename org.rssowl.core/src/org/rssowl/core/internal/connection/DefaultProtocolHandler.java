@@ -479,6 +479,20 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     }
   }
 
+  private String replaceFeedScheme(String url) {
+    //feed:// -> http://
+    //feeds:// -> https://
+    //feed:https:// -> https:// from https://en.wikipedia.org/wiki/Feed_URI_scheme, supposedly from a firefox bug
+    if (url.startsWith(URIUtils.FEED_HTTPS))
+      return url.replace(URIUtils.FEED_HTTPS, URIUtils.HTTPS);
+    else if (url.startsWith(URIUtils.FEEDS))
+      return url.replace(URIUtils.FEEDS, URIUtils.HTTPS);
+    else if (url.startsWith(URIUtils.FEED))
+      return url.replace(URIUtils.FEED, URIUtils.HTTP);
+    else
+      return url;
+  }
+
   private InputStream internalOpenStream(URI link, URI authLink, String authRealm, Map<Object, Object> properties) throws ConnectionException {
 
     /* Handle File Protocol at first */
@@ -490,29 +504,14 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     registryBuilder.register(URIUtils.HTTPS_SCHEME, Owl.getConnectionService().ConnectionSocketFactory());
 
     String strLink = link.toString();
-    //feed:https from //https://en.wikipedia.org/wiki/Feed_URI_scheme
-    //for easier support the additional https: is removed but internally it will use https sockets
-    if (strLink.startsWith(URIUtils.FEED_SCHEME + ":" + URIUtils.HTTPS_SCHEME + ":")) { //$NON-NLS-1$ //$NON-NLS-2$
-      registryBuilder.register(URIUtils.FEED_SCHEME, Owl.getConnectionService().ConnectionSocketFactory());
+    if (strLink.startsWith("feed")) { //$NON-NLS-1$
       try {
-        URI link2 = new URI(strLink.replaceFirst("https:", "")); //$NON-NLS-1$ //$NON-NLS-2$
-        URI authLink2 = new URI(authLink.toString().replaceFirst("https:", "")); //$NON-NLS-1$ //$NON-NLS-2$
-        link = link2;
-        authLink = authLink2;
+        link = new URI(replaceFeedScheme(strLink));
+        authLink = new URI(replaceFeedScheme(authLink.toString()));
       } catch (URISyntaxException e) {
         throw new RuntimeException("feed link problem", e); //$NON-NLS-1$
       }
-    } else {
-      registryBuilder.register(URIUtils.FEED_SCHEME, PlainConnectionSocketFactory.getSocketFactory());
     }
-
-//    if (URIUtils.HTTPS_SCHEME.equals(link.getScheme())) {
-//old:      initSSLProtocol();
-//    }
-
-//    if (URIUtils.FEED_SCHEME.equals(link.getScheme())) {
-//old:      initFeedProtocol();
-//    }
 
     /* Retrieve Connection Timeout from Properties if set */
     int conTimeout = DEFAULT_CON_TIMEOUT;

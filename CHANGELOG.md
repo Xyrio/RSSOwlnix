@@ -1,6 +1,8 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.8.1-beta (WIP)
+- added feeds:// for https:// (also feed:https:// is still supported)
+- improvement to keep http or https accordingly when reconstructing urls and use https when missing (favico,etc)
 - support more media tags from youtube, peertube [#74](https://github.com/Xyrio/RSSOwlnix/issues/74)
 - fix missing description when <content:encode> exists but has no text to not overwrite what was already loaded from <description> [#56](https://github.com/Xyrio/RSSOwlnix/issues/56)
 - updated share links: removed Mister Wong, Google+ and added BibSonomy [#95](https://github.com/Xyrio/RSSOwlnix/issues/95)

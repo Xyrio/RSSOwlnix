@@ -61,25 +61,14 @@ public class URIUtils {
   private static final String[] CHARS_TO_ENCODE = new String[] { " ", "[", "]", "{", "}", "|", "^", "\\", "<", ">" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
   private static final String[] ENCODED_CHARS = new String[] { "%20", "%5B", "%5D", "%7B", "%7D", "%7C", "%5E", "%5C", "%3C", "%3E" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$
 
-  /** The HTTP Protocol */
   public static final String HTTP = "http://"; //$NON-NLS-1$
-
-  /** The HTTPS Protocol */
   public static final String HTTPS = "https://"; //$NON-NLS-1$
-
-  /** The FEED Protocol */
   public static final String FEED = "feed://"; //$NON-NLS-1$
+  public static final String FEEDS = "feeds://"; //$NON-NLS-1$
+  public static final String FEED_HTTPS = "feed:https://"; //$NON-NLS-1$
 
-  /** The FEED Identifier */
-  public static final String FEED_IDENTIFIER = "feed:"; //$NON-NLS-1$
-
-  /** The NEWS Identifier */
   public static final String NEWS_IDENTIFIER = "news:"; //$NON-NLS-1$
-
-  /** The NNTP Identifier */
   public static final String NNTP_IDENTIFIER = "nntp:"; //$NON-NLS-1$
-
-  /** Identifier for a Protocol */
   public static final String PROTOCOL_IDENTIFIER = "://"; //$NON-NLS-1$
 
   /** Some URI Schemes */
@@ -357,7 +346,10 @@ public class URIUtils {
     }
 
     StringBuilder buf = new StringBuilder();
-    buf.append(HTTP);
+    if (link.toString().startsWith(HTTPS))
+      buf.append(HTTPS);
+    else
+      buf.append(HTTP);
     buf.append(hostPort);
     buf.append("/favicon.ico"); //$NON-NLS-1$
 
@@ -380,6 +372,8 @@ public class URIUtils {
     if (!StringUtils.isSet(hostPort))
       return null;
 
+    if (link.toString().startsWith(HTTPS))
+      return new URI(HTTPS + hostPort);
     return new URI(HTTP + hostPort);
   }
 
@@ -436,7 +430,7 @@ public class URIUtils {
   private static String getFileSegmentFromQuery(String query, String extension) {
     if (StringUtils.isSet(query)) {
       StringTokenizer tokenizer = new StringTokenizer(query, "&?=/"); //$NON-NLS-1$
-      List<String> tokens = new ArrayList<String>();
+      List<String> tokens = new ArrayList<>();
       while (tokenizer.hasMoreTokens())
         tokens.add(tokenizer.nextToken());
 
@@ -525,7 +519,6 @@ public class URIUtils {
   public static String ensureProtocol(String link) {
     if (link != null && !link.contains(PROTOCOL_IDENTIFIER))
       return HTTP + link;
-
     return link;
   }
 
@@ -631,7 +624,8 @@ public class URIUtils {
       return uri;
 
     String newScheme = HTTP_SCHEME;
-    if (SyncUtils.READER_HTTPS_SCHEME.equals(scheme))
+    String strUri = uri.toString();
+    if (SyncUtils.READER_HTTPS_SCHEME.equals(scheme) || strUri.startsWith(FEEDS) || strUri.startsWith(FEED_HTTPS))
       newScheme = HTTPS_SCHEME;
 
     try {
