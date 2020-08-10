@@ -83,6 +83,7 @@ public class MediaNamespaceHandler implements INamespaceHandler {
         String description = null;
         String ytRatingCount = null;
         String ytRatingAvg = null;
+        String ytRatingMin = null;
         String ytRatingMax = null;
         String ytViews = null;
 
@@ -109,6 +110,7 @@ public class MediaNamespaceHandler implements INamespaceHandler {
                   case "starrating"://$NON-NLS-1$
                     ytRatingCount = child2.getAttributeValue("count");//$NON-NLS-1$
                     ytRatingAvg = child2.getAttributeValue("average");//$NON-NLS-1$
+                    ytRatingMin = child2.getAttributeValue("min");//$NON-NLS-1$
                     ytRatingMax = child2.getAttributeValue("max");//$NON-NLS-1$
                     break;
                   case "statistics"://$NON-NLS-1$
@@ -134,15 +136,24 @@ public class MediaNamespaceHandler implements INamespaceHandler {
 //            sbDesc.append("<iframe width=\"1024\" height=\"665\" src=\"" + videoLink + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"); //$NON-NLS-1$ //$NON-NLS-2$
 //          }
         if (ytRatingCount != null) {
+          double ratingAvg = Double.valueOf(ytRatingAvg);
+          double ratingMin = Double.valueOf(ytRatingMin);
+          double ratingMax = Double.valueOf(ytRatingMax);
+          if (ratingMax <= 0.0)
+            ratingMax = 5.0;
+          long ratingCount = Long.valueOf(ytRatingCount);
+          double ratingThumbsDownPc = 1.0 - (ratingAvg - ratingMin) / (ratingMax - ratingMin);
+          long ratingThumbsDownCount = (long) (ratingCount * ratingThumbsDownPc);
+          long ratingThumbsUpCount = ratingCount - ratingThumbsDownCount;
+
           sbDesc.append("<table><tr>");//$NON-NLS-1$
-          sbDesc.append("<td id=\"views\">").append(ytViews).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td id=\"rating_avg\">").append(ytRatingAvg).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>/</td>"); //$NON-NLS-1$
-          sbDesc.append("<td id=\"rating_max\">").append(ytRatingMax).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>(</td>");//$NON-NLS-1$
-          sbDesc.append("<td id=\"rating_count\">").append(ytRatingCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>)</td>");//$NON-NLS-1$
-          sbDesc.append("</tr></table><br><br>");//$NON-NLS-1$
+          sbDesc.append("<td>&#x1f440;</td><td id=\"views\">").append(ytViews).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>&#x1f44d;</td><td id=\"rating_tu\">").append(ratingThumbsUpCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>&#x1f44e;</td><td id=\"rating_td\">").append(ratingThumbsDownCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>&#x1fe;</td><td id=\"rating_avg\">").append(ytRatingAvg).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>/</td><td id=\"rating_max\">").append(ytRatingMax).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>#</td><td id=\"rating_count\">").append(ytRatingCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("</tr></table><br>");//$NON-NLS-1$
         }
         if (description != null) {
           if (isYoutube) {
