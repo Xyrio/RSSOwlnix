@@ -34,8 +34,6 @@ import org.rssowl.core.util.StringUtils;
 import org.rssowl.core.util.URIUtils;
 
 import java.net.URI;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Handler for the Media Namespace.
@@ -68,6 +66,8 @@ public class MediaNamespaceHandler implements INamespaceHandler {
       return;
     INews news = (INews) type;
 
+    StringBuilder sbDesc = new StringBuilder();
+
     //examples:
     // https://www.youtube.com/feeds/videos.xml?channel_id=UC0vBXGSyV14uvJ4hECDOl0Q
     // https://www.youtube.com/feeds/videos.xml?user=Techquickie
@@ -83,10 +83,11 @@ public class MediaNamespaceHandler implements INamespaceHandler {
         String description = null;
         String ytRatingCount = null;
         String ytRatingAvg = null;
+        String ytRatingMax = null;
         String ytViews = null;
-        for (Iterator<?> iter = element.getChildren().iterator(); iter.hasNext();) {
-          Element child = (Element) iter.next();
 
+        for (Object obj : element.getChildren()) {
+          Element child = (Element) obj;
           switch (child.getName().toLowerCase()) {
             case "content"://$NON-NLS-1$
             case "peerlink"://$NON-NLS-1$
@@ -102,59 +103,66 @@ public class MediaNamespaceHandler implements INamespaceHandler {
               thumbnail = child.getAttributeValue("url"); //$NON-NLS-1$
               break;
             case "community"://$NON-NLS-1$
-              for (Iterator<?> iter2 = child.getChildren().iterator(); iter2.hasNext();) {
-                Element child2 = (Element) iter2.next();
+              for (Object obj2 : child.getChildren()) {
+                Element child2 = (Element) obj2;
                 switch (child2.getName().toLowerCase()) {
-                  case "starRating"://$NON-NLS-1$
-                    ytRatingCount = child.getAttributeValue("count");//$NON-NLS-1$
-                    ytRatingAvg = child.getAttributeValue("average");//$NON-NLS-1$
+                  case "starrating"://$NON-NLS-1$
+                    ytRatingCount = child2.getAttributeValue("count");//$NON-NLS-1$
+                    ytRatingAvg = child2.getAttributeValue("average");//$NON-NLS-1$
+                    ytRatingMax = child2.getAttributeValue("max");//$NON-NLS-1$
                     break;
                   case "statistics"://$NON-NLS-1$
-                    ytViews = child.getAttributeValue("views");//$NON-NLS-1$
+                    ytViews = child2.getAttributeValue("views");//$NON-NLS-1$
                     break;
                 }
               }
               break;
           }
-          StringBuilder sbDesc = new StringBuilder();
-          if (thumbnail != null) {
-            //TODO hide image when video is shown? (at least for youtube)
-            sbDesc.append("<img src=\"").append(thumbnail).append("\"><br><br>"); //$NON-NLS-1$ //$NON-NLS-2$
-          }
-//          if (isYoutube) {
-          //embedding video not so easy
+        }
 
+        if (thumbnail != null) {
+          //TODO hide image when video is shown? (at least for youtube)
+          sbDesc.append("<img src=\"").append(thumbnail).append("\"><br>"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+//          if (isYoutube) {
+        //TODO embedding video is not so easy
 //            sbDesc.append("<video><source src=\"").append(news.getLinkAsText()); //$NON-NLS-1$
 //            sbDesc.append("\" type=\"video/mp4\">Your browser does not support the video HTML tag.</video><br><br>"); //$NON-NLS-1$
 
-          //https://www.youtube.com/embed/videoId
+        //https://www.youtube.com/embed/videoId
 //            String videoLink = news.getLinkAsText().replace("watch?v=", "embed/"); //$NON-NLS-1$ //$NON-NLS-2$
 //            sbDesc.append("<iframe width=\"1024\" height=\"665\" src=\"" + videoLink + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"); //$NON-NLS-1$ //$NON-NLS-2$
 //          }
-          if (ytRatingCount != null) {
-            sbDesc.append("<table><tr>");//$NON-NLS-1$
-            sbDesc.append("<td id=\"views\">").append(ytViews).append("</td><br>"); //$NON-NLS-1$ //$NON-NLS-2$
-            sbDesc.append("<td id=\"rating_avg\">").append(ytRatingAvg).append("</td><br>"); //$NON-NLS-1$ //$NON-NLS-2$
-            sbDesc.append("<td>(</td><br>");//$NON-NLS-1$
-            sbDesc.append("<td id=\"rating_count\">").append(ytRatingCount).append("</td><br>"); //$NON-NLS-1$ //$NON-NLS-2$
-            sbDesc.append("<td>)</td><br>");//$NON-NLS-1$
-            sbDesc.append("</tr></table><br><br>");//$NON-NLS-1$
-          }
-          if (description != null) {
-            if (isYoutube) {
-              description += " "; //$NON-NLS-1$
-              //TODO: links made are destroyed by prefixing feeds url without page (http://www.youtube.com/feeds/)somewhere else
+        if (ytRatingCount != null) {
+          sbDesc.append("<table><tr>");//$NON-NLS-1$
+          sbDesc.append("<td id=\"views\">").append(ytViews).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td id=\"rating_avg\">").append(ytRatingAvg).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>/</td>"); //$NON-NLS-1$
+          sbDesc.append("<td id=\"rating_max\">").append(ytRatingMax).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>(</td>");//$NON-NLS-1$
+          sbDesc.append("<td id=\"rating_count\">").append(ytRatingCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
+          sbDesc.append("<td>)</td>");//$NON-NLS-1$
+          sbDesc.append("</tr></table><br><br>");//$NON-NLS-1$
+        }
+        if (description != null) {
+          if (isYoutube) {
+            description += " "; //$NON-NLS-1$
+            //TODO: links made are destroyed by prefixing feeds url without page (http://www.youtube.com/feeds/)somewhere else
 //              description = description.replaceAll("(https?:\\/\\/[^\\s]+)", "<a href=\"$1\">$1</a>"); //$NON-NLS-1$ //$NON-NLS-2$
-              description = description.replaceAll("\r?\n\r?", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
-              sbDesc.append(description);
+            description = description.replaceAll("\r?\n\r?", "<br>"); //$NON-NLS-1$ //$NON-NLS-2$
+            sbDesc.append(description);
 //              sbDesc.append("<pre>").append(description).append("</pre>"); //$NON-NLS-1$ //$NON-NLS-2$
-            } else {
-              sbDesc.append(description);
-            }
+          } else {
+            sbDesc.append(description);
           }
-          if (sbDesc.length() > 0) {
-            news.setDescription(sbDesc.toString());
+        }
+        if (sbDesc.length() > 0) {
+          String descriptionOld = news.getDescription();
+          if (descriptionOld != null && descriptionOld.length() > 0) {
+            sbDesc.append(descriptionOld);
+            sbDesc.append("<br>"); //$NON-NLS-1$
           }
+          news.setDescription(sbDesc.toString());
         }
         break;
       }
@@ -163,7 +171,6 @@ public class MediaNamespaceHandler implements INamespaceHandler {
 
   private void processContentOrPeerLink(Element element, INews news) {
 
-    /* In case no Attributes present to interpret */
     if (element.getAttributes().isEmpty())
       return;
 
@@ -171,10 +178,8 @@ public class MediaNamespaceHandler implements INamespaceHandler {
     String attachmentType = null;
     int attachmentLength = -1;
 
-    /* Interpret Attributes */
-    List<?> attributes = element.getAttributes();
-    for (Iterator<?> iter = attributes.iterator(); iter.hasNext();) {
-      Attribute attribute = (Attribute) iter.next();
+    for (Object obj : element.getAttributes()) {
+      Attribute attribute = (Attribute) obj;
       switch (attribute.getName()) {
         case "fileSize"://$NON-NLS-1$
           attachmentLength = StringUtils.stringToInt(attribute.getValue());

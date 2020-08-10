@@ -68,16 +68,10 @@
             namespaceURI="http://www.w3.org/XML/1998/namespace"/>
       <namespaceHandler
             class="org.rssowl.core.internal.interpreter.PodcastNamespaceHandler"
-            namespaceURI="http://www.itunes.com/dtds/podcast-1.0.dtd">
-      </namespaceHandler>
+            namespaceURI="http://www.itunes.com/dtds/podcast-1.0.dtd"/>
       <namespaceHandler
             class="org.rssowl.core.internal.interpreter.MediaNamespaceHandler"
-            namespaceURI="http://search.yahoo.com/mrss/">
-      </namespaceHandler>
-      <namespaceHandler
-            class="org.rssowl.core.internal.interpreter.MediaNamespaceHandler"
-            namespaceURI="http://search.yahoo.com/mrss">
-      </namespaceHandler>
+            namespaceURI="http://search.yahoo.com/mrss/"/>
    </extension>
    <extension
          point="org.rssowl.core.TypeImporter">
