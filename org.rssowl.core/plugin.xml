@@ -51,6 +51,10 @@
       <formatInterpreter
             class="org.rssowl.core.internal.interpreter.BugzillaInterpreter"
             rootElement="bugzilla"/>
+      <formatInterpreter
+            class="org.rssowl.core.internal.interpreter.JsonInterpreter"
+            rootElement="json">
+      </formatInterpreter>
    </extension>
    <extension
          point="org.rssowl.core.NamespaceHandler">
