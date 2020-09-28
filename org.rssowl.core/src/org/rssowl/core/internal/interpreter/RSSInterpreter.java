@@ -28,6 +28,7 @@ import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.rssowl.core.Owl;
+import org.rssowl.core.internal.persist.Attachment;
 import org.rssowl.core.persist.IAttachment;
 import org.rssowl.core.persist.ICategory;
 import org.rssowl.core.persist.ICloud;
@@ -38,7 +39,6 @@ import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.IPerson;
 import org.rssowl.core.persist.ISource;
 import org.rssowl.core.persist.ITextInput;
-import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.DateUtils;
 import org.rssowl.core.util.StringUtils;
 import org.rssowl.core.util.URIUtils;
@@ -496,15 +496,9 @@ public class RSSInterpreter extends BasicInterpreter {
         attachmentLength = StringUtils.stringToInt(attribute.getValue());
     }
 
-    /* Create Attachment only if valid */
-    if (attachmentUri != null && !CoreUtils.hasAttachment(news, attachmentUri)) {
-      IAttachment attachment = Owl.getModelFactory().createAttachment(null, news);
-      attachment.setLink(attachmentUri);
-      if (StringUtils.isSet(attachmentType))
-        attachment.setType(attachmentType);
-      if (attachmentLength != -1)
-        attachment.setLength(attachmentLength);
+    IAttachment attachment = Attachment.createValidAttachment(news, attachmentUri, attachmentType, attachmentLength);
 
+    if (attachment != null) {
       /* Check wether this Attribute is to be processed by a Contribution */
       for (Iterator<?> iter = attachmentAttributes.iterator(); iter.hasNext();) {
         Attribute attribute = (Attribute) iter.next();

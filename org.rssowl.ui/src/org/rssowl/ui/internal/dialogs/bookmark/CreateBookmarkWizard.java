@@ -44,8 +44,8 @@ import org.rssowl.core.persist.IFeed;
 import org.rssowl.core.persist.IFolder;
 import org.rssowl.core.persist.IFolderChild;
 import org.rssowl.core.persist.IMark;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IFeedDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.util.Pair;
@@ -196,15 +196,21 @@ public class CreateBookmarkWizard extends Wizard implements INewWizard {
               try {
                 feedTitle = Owl.getConnectionService().getLabel(link[0], monitor);
               } catch (ConnectionException e1) {
+                fBookMarkDefinitionPage.setMessage(e.getMessage(), IMessageProvider.ERROR);
                 Activator.getDefault().logError(e.getMessage(), e);
               }
+            } else {
+              fBookMarkDefinitionPage.setMessage(e.getMessage(), IMessageProvider.ERROR);
+              Activator.getDefault().logError(e.getMessage(), e);
             }
           } catch (URISyntaxException e) {
+            fBookMarkDefinitionPage.setMessage(e.getMessage(), IMessageProvider.ERROR);
             Activator.getDefault().logError(e.getMessage(), e);
           }
 
           /* Update last Page with Title */
-          fBookMarkDefinitionPage.presetBookmarkName(feedTitle);
+          if (feedTitle != null)
+            fBookMarkDefinitionPage.presetBookmarkName(feedTitle);
 
           /* Update Link */
           if (link[0] != null) {

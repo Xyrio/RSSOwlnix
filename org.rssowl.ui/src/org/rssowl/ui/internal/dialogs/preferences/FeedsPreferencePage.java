@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.rssowl.core.Owl;
@@ -66,7 +67,6 @@ import org.rssowl.ui.internal.FolderNewsMark;
 import org.rssowl.ui.internal.LinkTransformer;
 import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.OwlUI.Layout;
-import org.rssowl.ui.internal.OwlUI.PageSize;
 import org.rssowl.ui.internal.editors.feed.NewsColumnViewModel;
 import org.rssowl.ui.internal.editors.feed.NewsFilter;
 import org.rssowl.ui.internal.editors.feed.NewsGrouping;
@@ -119,7 +119,7 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
   private Combo fFilterCombo;
   private Combo fGroupCombo;
   private Combo fLayoutCombo;
-  private Combo fPageSizeCombo;
+  private Text fPageSizeText;
   private Button fOpenSiteForEmptyNewsCheck;
   private Button fLoadImagesForNewsCheck;
   private Button fLoadMediaForNewsCheck;
@@ -396,15 +396,10 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
     });
 
     /* Layout Page Size */
-    fPageSizeCombo = new Combo(layoutContainer, SWT.BORDER | SWT.READ_ONLY);
-    fPageSizeCombo.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, false, false));
-
-    for (PageSize pageSize : PageSize.values()) {
-      fPageSizeCombo.add(pageSize.getName());
-    }
-
-    fPageSizeCombo.select(PageSize.from(fGlobalScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE)).ordinal());
-    fPageSizeCombo.setVisibleItemCount(fPageSizeCombo.getItemCount());
+    fPageSizeText = new Text(layoutContainer, SWT.BORDER);
+    fPageSizeText.setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, false, false));
+    fPageSizeText.setToolTipText(Messages.FeedsPreferencePage_PAGE_SIZE);
+    fPageSizeText.setText(String.valueOf(fGlobalScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE)));
 
     /* Filter Settings */
     Label filterLabel = new Label(topContainer, SWT.None);
@@ -547,11 +542,11 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
     /* Update Layout */
     GridData data = (GridData) fLayoutCombo.getLayoutData();
     data.horizontalSpan = isNewspaperLayout ? 1 : 2;
-    data = (GridData) fPageSizeCombo.getLayoutData();
+    data = (GridData) fPageSizeText.getLayoutData();
     data.exclude = !isNewspaperLayout;
 
     if (layout)
-      fPageSizeCombo.getParent().getParent().layout(true, true);
+      fPageSizeText.getParent().getParent().layout(true, true);
   }
 
   private void createColumnsGroup(TabFolder parent) {
@@ -729,10 +724,17 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
       layoutChange = true;
     }
 
-    iVal = fPageSizeCombo.getSelectionIndex();
-    PageSize size = PageSize.values()[iVal];
-    if (fGlobalScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE) != size.getPageSize())
-      fGlobalScope.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, size.getPageSize());
+    int iValOld = fGlobalScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
+    try {
+      iVal = Integer.valueOf(fPageSizeText.getText());
+      if (iVal < 0) {
+        iVal = iValOld;
+      }
+    } catch (NumberFormatException e) {
+      iVal = iValOld;
+    }
+    if (iValOld != iVal)
+      fGlobalScope.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, iVal);
 
     fGlobalScope.putBoolean(DefaultPreferences.BM_OPEN_SITE_FOR_NEWS, fOpenLinkOfNewsRadio.getSelection());
     fGlobalScope.putBoolean(DefaultPreferences.BM_OPEN_SITE_FOR_EMPTY_NEWS, fOpenSiteForEmptyNewsCheck.getSelection());
@@ -829,7 +831,7 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
         @Override
         protected IStatus run(IProgressMonitor monitor) {
           try {
-            Set<IBookMark> bookmarks = new HashSet<IBookMark>();
+            Set<IBookMark> bookmarks = new HashSet<>();
             CoreUtils.fillBookMarks(bookmarks, rootFolders);
 
             monitor.beginTask(Messages.FeedsPreferencePage_PERFORMNG_CLEANUP, bookmarks.size());
@@ -919,7 +921,7 @@ public class FeedsPreferencePage extends PreferencePage implements IWorkbenchPre
     fFilterCombo.select(ModelUtils.loadIntegerValueWithFallback(defaultScope, DefaultPreferences.BM_NEWS_FILTERING, defaultScope, DefaultPreferences.FV_FILTER_TYPE));
     fGroupCombo.select(ModelUtils.loadIntegerValueWithFallback(defaultScope, DefaultPreferences.BM_NEWS_GROUPING, defaultScope, DefaultPreferences.FV_GROUP_TYPE));
     fLayoutCombo.select(defaultScope.getInteger(DefaultPreferences.FV_LAYOUT));
-    fPageSizeCombo.select(PageSize.from(defaultScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE)).ordinal());
+    fPageSizeText.setText(String.valueOf(defaultScope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE)));
     fDisplayContentsOfNewsRadio.setSelection(!defaultScope.getBoolean(DefaultPreferences.BM_OPEN_SITE_FOR_NEWS));
     fOpenLinkOfNewsRadio.setSelection(defaultScope.getBoolean(DefaultPreferences.BM_OPEN_SITE_FOR_NEWS));
     fOpenSiteForEmptyNewsCheck.setSelection(defaultScope.getBoolean(DefaultPreferences.BM_OPEN_SITE_FOR_EMPTY_NEWS));

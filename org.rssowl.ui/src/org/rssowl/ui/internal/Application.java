@@ -39,8 +39,8 @@ import org.rssowl.core.Owl;
 import org.rssowl.core.connection.ConnectionException;
 import org.rssowl.core.internal.InternalOwl;
 import org.rssowl.core.persist.IBookMark;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.util.StringUtils;
 import org.rssowl.core.util.URIUtils;
@@ -214,8 +214,8 @@ public class Application implements IApplication {
 
     /* Bug with Firefox: HTTPS feeds start with "feed:https://" */
     final String normalizedLink;
-    if (link.startsWith(URIUtils.FEED_IDENTIFIER + URIUtils.HTTPS))
-      normalizedLink = URIUtils.HTTPS + link.substring((URIUtils.FEED_IDENTIFIER + URIUtils.HTTPS).length());
+    if (link.startsWith(URIUtils.FEED_HTTPS))
+      normalizedLink = URIUtils.HTTPS + link.substring((URIUtils.FEED_HTTPS).length());
     else
       normalizedLink = link;
 

@@ -68,16 +68,10 @@
             namespaceURI="http://www.w3.org/XML/1998/namespace"/>
       <namespaceHandler
             class="org.rssowl.core.internal.interpreter.PodcastNamespaceHandler"
-            namespaceURI="http://www.itunes.com/dtds/podcast-1.0.dtd">
-      </namespaceHandler>
+            namespaceURI="http://www.itunes.com/dtds/podcast-1.0.dtd"/>
       <namespaceHandler
             class="org.rssowl.core.internal.interpreter.MediaNamespaceHandler"
-            namespaceURI="http://search.yahoo.com/mrss/">
-      </namespaceHandler>
-      <namespaceHandler
-            class="org.rssowl.core.internal.interpreter.MediaNamespaceHandler"
-            namespaceURI="http://search.yahoo.com/mrss">
-      </namespaceHandler>
+            namespaceURI="http://search.yahoo.com/mrss/"/>
    </extension>
    <extension
          point="org.rssowl.core.TypeImporter">
@@ -110,16 +104,19 @@
             protocol="file"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.DefaultProtocolHandler"
-            protocol="feed">
-      </protocolHandler>
+            protocol="feed"/>
+      <protocolHandler
+            class="org.rssowl.core.internal.connection.DefaultProtocolHandler"
+            protocol="feeds"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.ReaderProtocolHandler"
-            protocol="reader">
-      </protocolHandler>
+            protocol="reader"/>
       <protocolHandler
             class="org.rssowl.core.internal.connection.ReaderProtocolHandler"
-            protocol="readers">
-      </protocolHandler>
+            protocol="readers"/>
+      <protocolHandler
+            class="org.rssowl.core.internal.connection.ShellProtocolHandler"
+            protocol="shell"/>
    </extension>
    <extension
          point="org.rssowl.core.DAOService">
@@ -131,20 +128,19 @@
          point="org.rssowl.core.CredentialsProvider">
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="http">
-      </credentialsProvider>
+            protocol="http"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="https">
-      </credentialsProvider>
+            protocol="https"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="file">
-      </credentialsProvider>
+            protocol="file"/>
       <credentialsProvider
             class="org.rssowl.core.connection.PlatformCredentialsProvider"
-            protocol="feed">
-      </credentialsProvider>
+            protocol="feed"/>
+      <credentialsProvider
+            class="org.rssowl.core.connection.PlatformCredentialsProvider"
+            protocol="feeds"/>
    </extension>
    <extension
          point="org.rssowl.core.ModelFactory">

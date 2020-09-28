@@ -25,10 +25,13 @@
 package org.rssowl.core.internal.persist;
 
 import org.eclipse.core.runtime.Assert;
+import org.rssowl.core.Owl;
 import org.rssowl.core.persist.IAttachment;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.reference.AttachmentReference;
+import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.MergeUtils;
+import org.rssowl.core.util.StringUtils;
 
 import java.net.URI;
 
@@ -74,6 +77,20 @@ public class Attachment extends AbstractEntity implements IAttachment {
     super(id);
     Assert.isNotNull(news, "The type Attachment requires a News that is not NULL"); //$NON-NLS-1$
     fNews = news;
+  }
+
+  public static IAttachment createValidAttachment(INews news, URI link, String type, int length) {
+    /* Create Attachment only if valid */
+    if (link != null && !CoreUtils.hasAttachment(news, link)) {
+      IAttachment attachment = Owl.getModelFactory().createAttachment(null, news);
+      attachment.setLink(link);
+      if (StringUtils.isSet(type))
+        attachment.setType(type);
+      if (length >= 0)
+        attachment.setLength(length);
+      return attachment;
+    }
+    return null;
   }
 
   public Attachment(IAttachment attachment, INews news) {

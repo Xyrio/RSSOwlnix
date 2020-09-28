@@ -60,9 +60,9 @@ import org.rssowl.core.persist.ISearchFilter;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.ISearchValueType;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
 import org.rssowl.core.persist.dao.IFolderDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.ModelEvent;
 import org.rssowl.core.persist.event.NewsEvent;
 import org.rssowl.core.persist.pref.IPreferenceScope;
@@ -125,7 +125,7 @@ public class CoreUtils {
   public static final String[] FEED_MIME_TYPES = new String[] { "application/rss+xml", "application/atom+xml", "application/rdf+xml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
   /* A Set of Stop Words in English */
-  private static final Set<String> STOP_WORDS = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(StringUtils.ENGLISH_STOP_WORDS)));
+  private static final Set<String> STOP_WORDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(StringUtils.ENGLISH_STOP_WORDS)));
 
   /* A buffer that can be used to add log entries from db4o */
   private static final StringBuffer fgLogBuffer = new StringBuffer();
@@ -143,7 +143,7 @@ public class CoreUtils {
   private static List<String> DISPLAY_ACTIONS = Arrays.asList(new String[] { "org.rssowl.ui.ShowNotifierNewsAction" }); //$NON-NLS-1$
 
   /* Favicon Markers */
-  private static final String[] FAVICON_MARKERS = new String[] { "shortcut icon", ".ico" }; //$NON-NLS-1$ //$NON-NLS-2$
+  private static final String[] FAVICON_MARKERS = new String[] { "\"shortcut icon\"", "\"icon\"", ".ico" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
   /* Href Variants */
   private static final String[] HREF_VARIANTS = new String[] { "href = ", "href= ", "href=", "HREF=", "href =" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
@@ -166,7 +166,7 @@ public class CoreUtils {
    * such as structural actions are moved to the end of the list.
    */
   public static Collection<IFilterAction> getActions(ISearchFilter filter) {
-    Set<IFilterAction> actions = new TreeSet<IFilterAction>(new Comparator<IFilterAction>() {
+    Set<IFilterAction> actions = new TreeSet<>(new Comparator<IFilterAction>() {
       @Override
       public int compare(IFilterAction o1, IFilterAction o2) {
         if (o1.equals(o2))
@@ -199,10 +199,10 @@ public class CoreUtils {
    */
   public static String getName(List<ISearchCondition> conditions, boolean matchAllConditions) {
     StringBuilder name = new StringBuilder();
-    List<ISearchCondition> locationConditions = new ArrayList<ISearchCondition>(conditions.size());
+    List<ISearchCondition> locationConditions = new ArrayList<>(conditions.size());
 
     /* First group Conditions by Field */
-    Map<String, List<ISearchCondition>> mapFieldNameToConditions = new HashMap<String, List<ISearchCondition>>();
+    Map<String, List<ISearchCondition>> mapFieldNameToConditions = new HashMap<>();
     for (ISearchCondition condition : conditions) {
 
       /* Handle Location at the End */
@@ -217,7 +217,7 @@ public class CoreUtils {
       if (condValue.length() > 0) {
         List<ISearchCondition> fieldConditions = mapFieldNameToConditions.get(fieldName);
         if (fieldConditions == null) {
-          fieldConditions = new ArrayList<ISearchCondition>();
+          fieldConditions = new ArrayList<>();
           mapFieldNameToConditions.put(fieldName, fieldConditions);
         }
 
@@ -340,7 +340,7 @@ public class CoreUtils {
    * @return a list of {@link INewsBin} loaded from the provided IDs.
    */
   public static List<INewsBin> toBins(Long[] primitives) {
-    List<INewsBin> bins = new ArrayList<INewsBin>(primitives.length);
+    List<INewsBin> bins = new ArrayList<>(primitives.length);
     for (Long id : primitives) {
       INewsBin bin = OwlDAO.load(INewsBin.class, id);
       if (bin != null)
@@ -363,7 +363,7 @@ public class CoreUtils {
     if (primitives == null)
       return Collections.emptyList();
 
-    List<IFolderChild> childs = new ArrayList<IFolderChild>();
+    List<IFolderChild> childs = new ArrayList<>();
 
     /* Folders */
     for (int i = 0; primitives[FOLDER] != null && i < primitives[FOLDER].length; i++) {
@@ -424,7 +424,7 @@ public class CoreUtils {
     for (Object element : entities) {
       if (element instanceof IFolder) {
         if (folders == null)
-          folders = new ArrayList<IFolder>();
+          folders = new ArrayList<>();
         folders.add((IFolder) element);
       }
     }
@@ -1069,7 +1069,7 @@ public class CoreUtils {
   public static Set<String> getFeedLinks() {
     IBookMarkDAO bookMarkDAO = Owl.getPersistenceService().getDAOService().getBookMarkDAO();
     Collection<IBookMark> bookMarks = bookMarkDAO.loadAll();
-    Set<String> links = new HashSet<String>(bookMarks.size());
+    Set<String> links = new HashSet<>(bookMarks.size());
 
     for (IBookMark bookmark : bookMarks) {
       links.add(bookmark.getFeedLinkReference().getLinkAsText());
@@ -1115,12 +1115,12 @@ public class CoreUtils {
    * news-references.
    */
   public static Map<INews.State, List<NewsReference>> toStateMap(Collection<INews> news) {
-    Map<INews.State, List<NewsReference>> map = new HashMap<State, List<NewsReference>>();
+    Map<INews.State, List<NewsReference>> map = new HashMap<>();
     for (INews newsitem : news) {
       INews.State state = newsitem.getState();
       List<NewsReference> newsrefs = map.get(state);
       if (newsrefs == null) {
-        newsrefs = new ArrayList<NewsReference>();
+        newsrefs = new ArrayList<>();
         map.put(state, newsrefs);
       }
 
@@ -1135,7 +1135,7 @@ public class CoreUtils {
    * @return Returns a List of all News resolved.
    */
   public static List<INews> resolveAll(Map<State, List<NewsReference>> map) {
-    List<INews> news = new ArrayList<INews>();
+    List<INews> news = new ArrayList<>();
 
     Collection<List<NewsReference>> values = map.values();
     for (List<NewsReference> value : values) {
@@ -1154,7 +1154,7 @@ public class CoreUtils {
    * @return Returns a set of words from the given conditions.
    */
   public static Set<String> extractWords(List<ISearchCondition> conditions) {
-    Set<String> words = new HashSet<String>(conditions.size());
+    Set<String> words = new HashSet<>(conditions.size());
 
     /* Check Search Conditions for String-Values */
     for (ISearchCondition cond : conditions) {
@@ -1176,7 +1176,7 @@ public class CoreUtils {
     if (!StringUtils.isSet(str))
       return Collections.emptySet();
 
-    Set<String> words = new HashSet<String>();
+    Set<String> words = new HashSet<>();
 
     /* Tokenize by characters and digits */
     StringTokenizer tokenizer = new StringTokenizer(str, NON_CHAR_DIGIT_DELIMS);
@@ -1210,7 +1210,7 @@ public class CoreUtils {
   public static Set<IFolder> loadRootFolders() {
 
     /* Sort by ID to respect order */
-    Set<IFolder> rootFolders = new TreeSet<IFolder>(new Comparator<IFolder>() {
+    Set<IFolder> rootFolders = new TreeSet<>(new Comparator<IFolder>() {
       @Override
       public int compare(IFolder f1, IFolder f2) {
         if (f1.equals(f2))
@@ -1232,7 +1232,7 @@ public class CoreUtils {
   public static Set<ISearchMark> loadSortedSearchMarks() {
 
     /* Sort by Sort Key to respect order */
-    Set<ISearchMark> searchmarks = new TreeSet<ISearchMark>(new Comparator<ISearchMark>() {
+    Set<ISearchMark> searchmarks = new TreeSet<>(new Comparator<ISearchMark>() {
       @Override
       public int compare(ISearchMark s1, ISearchMark s2) {
         if (s1.equals(s2))
@@ -1257,7 +1257,7 @@ public class CoreUtils {
   public static Set<ISearchFilter> loadSortedNewsFilters() {
 
     /* Sort by Sort Key to respect order */
-    Set<ISearchFilter> filters = new TreeSet<ISearchFilter>(new Comparator<ISearchFilter>() {
+    Set<ISearchFilter> filters = new TreeSet<>(new Comparator<ISearchFilter>() {
       @Override
       public int compare(ISearchFilter f1, ISearchFilter f2) {
         if (f1.equals(f2))
@@ -1299,7 +1299,7 @@ public class CoreUtils {
   private static Set<ILabel> sortLabels(Collection<ILabel> labels) {
 
     /* Sort by Sort Key to respect order */
-    Set<ILabel> sortedLabels = new TreeSet<ILabel>(new Comparator<ILabel>() {
+    Set<ILabel> sortedLabels = new TreeSet<>(new Comparator<ILabel>() {
       @Override
       public int compare(ILabel l1, ILabel l2) {
         if (l1.equals(l2))
@@ -1344,7 +1344,7 @@ public class CoreUtils {
       return null;
 
     ISearchCondition scope = null;
-    List<ISearchCondition> otherConditions = new ArrayList<ISearchCondition>(conditions.size());
+    List<ISearchCondition> otherConditions = new ArrayList<>(conditions.size());
 
     for (ISearchCondition condition : conditions) {
       if (condition.getSpecifier() == SearchSpecifier.SCOPE)
@@ -1445,8 +1445,8 @@ public class CoreUtils {
    * identiy equalness.
    */
   public static <T> List<T> removeIdentityDuplicates(List<T> list) {
-    List<T> newList = new ArrayList<T>(list.size());
-    Map<T, T> identityMap = new IdentityHashMap<T, T>();
+    List<T> newList = new ArrayList<>(list.size());
+    Map<T, T> identityMap = new IdentityHashMap<>();
     for (T t : list) {
       if (!identityMap.containsKey(t)) {
         newList.add(t);
@@ -1591,7 +1591,7 @@ public class CoreUtils {
     String defaultSetName = folders.iterator().next().getName();
 
     /* Build a Chain of all Parent Names starting from Root */
-    List<String> folderNameChain = new ArrayList<String>();
+    List<String> folderNameChain = new ArrayList<>();
     if (folder.getProperty(ITypeImporter.TEMPORARY_FOLDER) != null)
       folderNameChain.add(defaultSetName);
     else
@@ -1850,7 +1850,7 @@ public class CoreUtils {
     if (replacements == null || replacements.isEmpty())
       return news;
 
-    List<INews> replacedNews = new ArrayList<INews>();
+    List<INews> replacedNews = new ArrayList<>();
     for (INews newsitem : news) {
       INews replacedItem = replacements.get(newsitem);
       if (replacedItem != null)
@@ -1953,7 +1953,7 @@ public class CoreUtils {
    * @param feedLink the scope to use as filter.
    */
   public static void removeFiltersByScope(Collection<ISearchFilter> filters, String feedLink) {
-    List<ISearchFilter> filtersToRemove = new ArrayList<ISearchFilter>();
+    List<ISearchFilter> filtersToRemove = new ArrayList<>();
     FilterLoop: for (ISearchFilter filter : filters) {
       List<IFolderChild> scope = getLocationScope(filter);
       if (scope == null)
@@ -1987,7 +1987,7 @@ public class CoreUtils {
     if (filter.getSearch() == null || filter.matchAllNews())
       return null;
 
-    List<ISearchCondition> locationConditions = new ArrayList<ISearchCondition>(1);
+    List<ISearchCondition> locationConditions = new ArrayList<>(1);
     List<ISearchCondition> conditions = filter.getSearch().getSearchConditions();
     for (ISearchCondition condition : conditions) {
 
@@ -2146,8 +2146,8 @@ public class CoreUtils {
    * @return a list of chunks from the provided list.
    */
   public static <T> List<List<T>> toChunks(List<T> list, int chunkSize) {
-    List<List<T>> chunkList = new ArrayList<List<T>>();
-    List<T> currentChunk = new ArrayList<T>(chunkSize);
+    List<List<T>> chunkList = new ArrayList<>();
+    List<T> currentChunk = new ArrayList<>(chunkSize);
     chunkList.add(currentChunk);
 
     int counter = 0;
@@ -2155,7 +2155,7 @@ public class CoreUtils {
       currentChunk.add(entry);
       counter++;
       if (counter % chunkSize == 0) {
-        currentChunk = new ArrayList<T>(chunkSize);
+        currentChunk = new ArrayList<>(chunkSize);
         chunkList.add(currentChunk);
       }
     }

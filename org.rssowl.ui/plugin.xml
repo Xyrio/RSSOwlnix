@@ -374,6 +374,14 @@
             icon="icons/obj16/bookmark.gif"
             id="org.rssowl.ui.BookMarkExplorer"
             name="%view.name"/>
+      <view
+            allowMultiple="false"
+            category="org.rssowl.ui.category"
+            class="org.eclipse.ui.ExtensionFactory:progressView"
+            fastViewWidthRatio="0.5"
+            icon="icons/eview16/pview.gif"
+            id="org.eclipse.ui.views.ProgressView"
+            name="%actionSet.label.6"/>
       <category
             id="org.rssowl.ui.category"
             name="%category.name">
@@ -881,10 +889,10 @@
                value="icons/product/16x16.png,icons/product/32x32.png,icons/product/48x48.png,icons/product/64x64.png,icons/product/128x128.png,icons/product/256x256.png"/>
          <property
                name="aboutText"
-               value="RSSOwlnix fork of RSSOwl&#x0A;&#x0A;Version: 2.7.0-beta&#x0A;Build Id: 2019-02-09&#x0A;&#x0A;RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.&#x0A;http://www.rssowl.org/legal/epl-v10.html&#x0A;&#x0A;(c) Copyright RSSOwl contributors and others 2005-2011.  All rights reserved."/>
+               value="RSSOwlnix fork of RSSOwl&#x0A;&#x0A;Version: 2.8.1-beta&#x0A;Build Id: 2020-08-10&#x0A;&#x0A;RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.&#x0A;http://www.rssowl.org/legal/epl-v10.html&#x0A;&#x0A;(c) Copyright RSSOwl contributors and others 2005-2011.  All rights reserved."/>
          <property
                name="appName"
-               value="RSSOwlnix Product">
+               value="%product.name">
          </property>
       </product>
    </extension>
@@ -1813,13 +1821,6 @@
       </shareProvider>
       <shareProvider
             enabled="false"
-            icon="icons/obj16/share_mrwong.gif"
-            id="org.rssowl.ui.MisterWongShareProvider"
-            name="%shareProvider.name.11"
-            url="http://www.mister-wong.com/index.php?action=addurl&amp;bm_url=[L]&amp;bm_description=[T]">
-      </shareProvider>
-      <shareProvider
-            enabled="false"
             icon="icons/obj16/share_newsvine.gif"
             id="org.rssowl.ui.NewsvineShareProvider"
             name="%shareProvider.name.12"
@@ -1891,7 +1892,7 @@
       <shareProvider
             enabled="true"
             icon="icons/obj16/share_pocket.gif"
-            id="org.rssowl.ui.ReadItLaterShareProvider"
+            id="org.rssowl.ui.PocketShareProvider"
             name="%shareProvider.name.22"
             url="http://getpocket.com/edit.php?url=[L]&amp;title=[T]">
       </shareProvider>
@@ -1918,13 +1919,6 @@
       </shareProvider>
       <shareProvider
             enabled="false"
-            icon="icons/obj16/share_google_plus.gif"
-            id="org.rssowl.ui.GooglePlusShareProvider"
-            name="%shareProvider.name.26"
-            url="https://plus.google.com/share?url=[L]">
-      </shareProvider>
-      <shareProvider
-            enabled="false"
             icon="icons/obj16/share_readability.gif"
             id="org.rssowl.ui.ReadabilityShareProvider"
             name="%shareProvider.name.27"
@@ -1936,6 +1930,14 @@
             id="org.rssowl.ui.TelegramShareProvider"
             name="%shareProvider.name.28"
             url="https://telegram.me/share/url?url=[L]&amp;text=[T]">
+       </shareProvider>
+      <shareProvider
+            enabled="false"
+            icon="icons/obj16/share_bibsonomy.png"
+            id="org.rssowl.ui.BibsonomyShareProvider"
+            name="%shareProvider.name.29"
+			method="POST"
+            url="https://www.bibsonomy.org/ShowBookmarkEntry?url=[L]&amp;description=[T]&amp;abstractGrouping=public">
        </shareProvider>
    </extension>
    <extension

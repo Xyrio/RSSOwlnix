@@ -57,10 +57,12 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ContributionItemFactory;
@@ -82,8 +84,8 @@ import org.rssowl.core.persist.INewsBin;
 import org.rssowl.core.persist.INewsMark;
 import org.rssowl.core.persist.ISearchFilter;
 import org.rssowl.core.persist.ISearchMark;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.Pair;
@@ -91,7 +93,6 @@ import org.rssowl.core.util.StringUtils;
 import org.rssowl.core.util.SyncUtils;
 import org.rssowl.core.util.URIUtils;
 import org.rssowl.ui.internal.OwlUI.Layout;
-import org.rssowl.ui.internal.OwlUI.PageSize;
 import org.rssowl.ui.internal.actions.ArchiveNewsAction;
 import org.rssowl.ui.internal.actions.AssignLabelsAction;
 import org.rssowl.ui.internal.actions.AutomateFilterAction;
@@ -382,7 +383,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         final FeedView activeFeedView = OwlUI.getActiveFeedView();
         final IPreferenceScope entityPreferences = OwlUI.getActiveFeedViewPreferences();
         final Layout layout = OwlUI.getLayout(entityPreferences != null ? entityPreferences : globalPreferences);
-        final PageSize pageSize = OwlUI.getPageSize(entityPreferences != null ? entityPreferences : globalPreferences);
+        final int pageSize = OwlUI.getPageSize(entityPreferences != null ? entityPreferences : globalPreferences);
 
         manager.add(new GroupMarker(M_VIEW_START));
 
@@ -452,82 +453,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             return layout == Layout.HEADLINES;
           }
         });
-
-        /* Add the Page Size if using Newspaper or Headlines layout */
-        if (layout == Layout.NEWSPAPER || layout == Layout.HEADLINES) {
-          layoutMenu.add(new Separator());
-
-          MenuManager pageMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_PAGE_SIZE);
-
-          pageMenu.add(new Action(Messages.ApplicationActionBarAdvisor_T_ARTICLES, IAction.AS_RADIO_BUTTON) {
-            @Override
-            public void run() {
-              if (super.isChecked()) //Need to use parent scope to get real selection state from UI and not Model
-                updatePageSizePreferences(globalPreferences, entityPreferences, PageSize.TEN);
-            }
-
-            @Override
-            public boolean isChecked() {
-              return pageSize == PageSize.TEN;
-            }
-          });
-
-          pageMenu.add(new Action(Messages.ApplicationActionBarAdvisor_TF_ARTICLES, IAction.AS_RADIO_BUTTON) {
-            @Override
-            public void run() {
-              if (super.isChecked()) //Need to use parent scope to get real selection state from UI and not Model
-                updatePageSizePreferences(globalPreferences, entityPreferences, PageSize.TWENTY_FIVE);
-            }
-
-            @Override
-            public boolean isChecked() {
-              return pageSize == PageSize.TWENTY_FIVE;
-            }
-          });
-
-          pageMenu.add(new Action(Messages.ApplicationActionBarAdvisor_F_ARTICLES, IAction.AS_RADIO_BUTTON) {
-            @Override
-            public void run() {
-              if (super.isChecked()) //Need to use parent scope to get real selection state from UI and not Model
-                updatePageSizePreferences(globalPreferences, entityPreferences, PageSize.FIFTY);
-            }
-
-            @Override
-            public boolean isChecked() {
-              return pageSize == PageSize.FIFTY;
-            }
-          });
-
-          pageMenu.add(new Action(Messages.ApplicationActionBarAdvisor_H_ARTICLES, IAction.AS_RADIO_BUTTON) {
-            @Override
-            public void run() {
-              if (super.isChecked()) //Need to use parent scope to get real selection state from UI and not Model
-                updatePageSizePreferences(globalPreferences, entityPreferences, PageSize.HUNDRED);
-            }
-
-            @Override
-            public boolean isChecked() {
-              return pageSize == PageSize.HUNDRED;
-            }
-          });
-
-          pageMenu.add(new Separator());
-
-          pageMenu.add(new Action(Messages.ApplicationActionBarAdvisor_ALL_ARTICLES, IAction.AS_RADIO_BUTTON) {
-            @Override
-            public void run() {
-              if (super.isChecked()) //Need to use parent scope to get real selection state from UI and not Model
-                updatePageSizePreferences(globalPreferences, entityPreferences, PageSize.NO_PAGING);
-            }
-
-            @Override
-            public boolean isChecked() {
-              return pageSize == PageSize.NO_PAGING;
-            }
-          });
-
-          layoutMenu.add(pageMenu);
-        }
 
         manager.add(layoutMenu);
 
@@ -883,6 +808,45 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
           }
         });
 
+        /* Toggle State of Download & Activity (dockable view) Visibility */
+        manager.add(new Action(Messages.CoolBarAdvisor_DOWNLOADS_ACTIVITY, IAction.AS_CHECK_BOX) {
+          String VIEW_ID = "org.eclipse.ui.views.ProgressView"; //$NON-NLS-1$
+          @Override
+          public void run() {
+            IWorkbenchPage page = OwlUI.getPage();
+            if (page != null) {
+              IViewPart view = page.findView(VIEW_ID);
+              if (view != null)
+                page.hideView(view);
+              else {
+                try {
+                  page.showView(VIEW_ID);
+                } catch (PartInitException e) {
+                  Activator.getDefault().logError(e.getMessage(), e);
+                }
+              }
+            }
+          }
+
+//          @Override
+//          public String getActionDefinitionId() {
+//            return "org.rssowl.ui.ToggleProgressViewCommand"; //$NON-NLS-1$
+//          }
+//
+//          @Override
+//          public String getId() {
+//            return "org.rssowl.ui.ToggleProgressViewCommand"; //$NON-NLS-1$
+//          }
+
+          @Override
+          public boolean isChecked() {
+            IWorkbenchPage page = OwlUI.getPage();
+            if (page != null)
+              return page.findView(VIEW_ID) != null;
+            return false;
+          }
+        });
+
         /* Customize Toolbar */
         manager.add(new Separator());
         manager.add(new Action(Messages.ApplicationActionBarAdvisor_CUSTOMIZE_TOOLBAR) {
@@ -1006,10 +970,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     });
   }
 
-  private void updatePageSizePreferences(IPreferenceScope globalPreferences, IPreferenceScope entityPreferences, PageSize pageSize) {
+  private void updatePageSizePreferences(IPreferenceScope globalPreferences, IPreferenceScope entityPreferences, int pageSize) {
 
     /* Update Global */
-    globalPreferences.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, pageSize.getPageSize());
+    globalPreferences.putInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE, pageSize);
 
     /* Update Entity if it was configured explicitly */
     if (entityPreferences != null) {
@@ -1210,7 +1174,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
           manager.add(new Separator("movecopy")); //$NON-NLS-1$
 
           /* Load all news bins and sort by name */
-          List<INewsBin> newsbins = new ArrayList<INewsBin>(OwlDAO.loadAll(INewsBin.class));
+          List<INewsBin> newsbins = new ArrayList<>(OwlDAO.loadAll(INewsBin.class));
 
           Comparator<INewsBin> comparator = new Comparator<INewsBin>() {
             @Override
@@ -1766,7 +1730,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
       }
 
       /* Collect openable Attachments that have already been downloaded */
-      List<Action> openActions = new ArrayList<Action>(1);
+      List<Action> openActions = new ArrayList<>(1);
       Set<String> downloadLocations = getDownloadLocations();
 
       /* Offer Download Action for each */
@@ -1859,7 +1823,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
   private static Set<String> getDownloadLocations() {
     IPreferenceScope preferences = Owl.getPreferenceService().getGlobalScope();
-    Set<String> locations = new HashSet<String>(1);
+    Set<String> locations = new HashSet<>(1);
 
     /* Check Preference */
     String folderPath = preferences.getString(DefaultPreferences.DOWNLOAD_FOLDER);

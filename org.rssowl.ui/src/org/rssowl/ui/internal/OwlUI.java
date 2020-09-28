@@ -492,57 +492,6 @@ public class OwlUI {
     }
   }
 
-  /** Supported Page Sizes for Newspaper/Headlines Layout */
-  public enum PageSize {
-    TEN(Messages.OwlUI_T_ARTICLES, 10),
-    TWENTY_FIVE(Messages.OwlUI_TF_ARTICLES, 25),
-    FIFTY(Messages.OwlUI_F_ARTICLES, 50),
-    HUNDRED(Messages.OwlUI_H_ARTICLES, 100),
-    NO_PAGING(Messages.OwlUI_ALL_ARTICLES, 0);
-
-    private final String fName;
-    private final int fPageSize;
-
-    private PageSize(String name, int pageSize) {
-      fName = name;
-      fPageSize = pageSize;
-    }
-
-    /**
-     * @return the name of the page size option.
-     */
-    public String getName() {
-      return fName;
-    }
-
-    /**
-     * @return the page size.
-     */
-    public int getPageSize() {
-      return fPageSize;
-    }
-
-    /**
-     * @param pageSize the configured page size.
-     * @return the matching {@link PageSize} value from the enum or
-     * <code>NO_PAGING</code> if none.
-     */
-    public static PageSize from(int pageSize) {
-      switch (pageSize) {
-        case 10:
-          return TEN;
-        case 25:
-          return TWENTY_FIVE;
-        case 50:
-          return FIFTY;
-        case 100:
-          return HUNDRED;
-      }
-
-      return NO_PAGING;
-    }
-  }
-
   /* Helper to ensure favicons cause no errors if corrupt */
   private static class FavIconImageDescriptor extends ImageDescriptor {
     private final ImageDescriptor fDescriptor;
@@ -2889,9 +2838,9 @@ public class OwlUI {
    * @param scope the preferences scope to look for the defined page size.
    * @return the selected {@link PageSize} from the given preferences scope.
    */
-  public static PageSize getPageSize(IPreferenceScope scope) {
+  public static int getPageSize(IPreferenceScope scope) {
     int pageSize = scope.getInteger(DefaultPreferences.NEWS_BROWSER_PAGE_SIZE);
-    return PageSize.from(pageSize);
+    return pageSize;
   }
 
   /**
