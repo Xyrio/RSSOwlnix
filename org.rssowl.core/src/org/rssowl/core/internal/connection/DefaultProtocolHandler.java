@@ -178,6 +178,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
   
   private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
   private static final String TITLE_ATTR_NAME = "title"; //$NON-NLS-1$
+  private static final String ICON = "icon"; //$NON-NLS-1$
   
 //  private static boolean fgSSLInitialized;
 //  private static boolean fgFeedProtocolInitialized;
@@ -296,7 +297,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
         boolean isError = false;
         try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
           JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
-          String iconUriStr = jsonFeedObject.getString("icon");//$NON-NLS-1$
+          String iconUriStr = jsonFeedObject.getString(ICON);
           if(iconUriStr != null) {
             link = new URI(iconUriStr); 
             return loadFavicon(link, true, false, monitor);
