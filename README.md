@@ -6,6 +6,8 @@ changelog: https://github.com/Xyrio/RSSOwlnix/blob/master/CHANGELOG.md
 
 bug reports: https://github.com/Xyrio/RSSOwlnix/issues
 
+others discussions: https://github.com/Xyrio/RSSOwlnix/discussions
+
 wiki: https://github.com/Xyrio/RSSOwlnix/wiki
 
 how to build: https://github.com/Xyrio/RSSOwlnix/wiki/How-To-Build
