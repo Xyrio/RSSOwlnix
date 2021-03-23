@@ -81,11 +81,6 @@ public class MediaNamespaceHandler implements INamespaceHandler {
         boolean isYoutube = news.getLinkAsText().contains(".youtube.com/"); //$NON-NLS-1$
         String thumbnail = null;
         String description = null;
-        String ytRatingCount = null;
-        String ytRatingAvg = null;
-        String ytRatingMin = null;
-        String ytRatingMax = null;
-        String ytViews = null;
 
         for (Object obj : element.getChildren()) {
           Element child = (Element) obj;
@@ -103,22 +98,6 @@ public class MediaNamespaceHandler implements INamespaceHandler {
             case "thumbnail"://$NON-NLS-1$
               thumbnail = child.getAttributeValue("url"); //$NON-NLS-1$
               break;
-            case "community"://$NON-NLS-1$
-              for (Object obj2 : child.getChildren()) {
-                Element child2 = (Element) obj2;
-                switch (child2.getName().toLowerCase()) {
-                  case "starrating"://$NON-NLS-1$
-                    ytRatingCount = child2.getAttributeValue("count");//$NON-NLS-1$
-                    ytRatingAvg = child2.getAttributeValue("average");//$NON-NLS-1$
-                    ytRatingMin = child2.getAttributeValue("min");//$NON-NLS-1$
-                    ytRatingMax = child2.getAttributeValue("max");//$NON-NLS-1$
-                    break;
-                  case "statistics"://$NON-NLS-1$
-                    ytViews = child2.getAttributeValue("views");//$NON-NLS-1$
-                    break;
-                }
-              }
-              break;
           }
         }
 
@@ -126,35 +105,17 @@ public class MediaNamespaceHandler implements INamespaceHandler {
           //TODO hide image when video is shown? (at least for youtube)
           sbDesc.append("<img src=\"").append(thumbnail).append("\"><br>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
+        //(video shows but on play tries forever)
 //          if (isYoutube) {
         //TODO embedding video is not so easy
 //            sbDesc.append("<video><source src=\"").append(news.getLinkAsText()); //$NON-NLS-1$
-//            sbDesc.append("\" type=\"video/mp4\">Your browser does not support the video HTML tag.</video><br><br>"); //$NON-NLS-1$
+//            sbDesc.append("\" type=\"video/mp4\">Your browser does not support the video HTML tag.</video><br>"); //$NON-NLS-1$
 
         //https://www.youtube.com/embed/videoId
 //            String videoLink = news.getLinkAsText().replace("watch?v=", "embed/"); //$NON-NLS-1$ //$NON-NLS-2$
-//            sbDesc.append("<iframe width=\"1024\" height=\"665\" src=\"" + videoLink + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>"); //$NON-NLS-1$ //$NON-NLS-2$
+//            sbDesc.append("<iframe width=\"1024\" height=\"665\" src=\"" + videoLink + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe><br>"); //$NON-NLS-1$ //$NON-NLS-2$
 //          }
-        if (ytRatingCount != null) {
-          double ratingAvg = Double.valueOf(ytRatingAvg);
-          double ratingMin = Double.valueOf(ytRatingMin);
-          double ratingMax = Double.valueOf(ytRatingMax);
-          if (ratingMax <= 0.0)
-            ratingMax = 5.0;
-          long ratingCount = Long.valueOf(ytRatingCount);
-          double ratingThumbsDownPc = 1.0 - (ratingAvg - ratingMin) / (ratingMax - ratingMin);
-          long ratingThumbsDownCount = (long) (ratingCount * ratingThumbsDownPc);
-          long ratingThumbsUpCount = ratingCount - ratingThumbsDownCount;
 
-          sbDesc.append("<table><tr>");//$NON-NLS-1$
-          sbDesc.append("<td>&#x1f440;</td><td id=\"views\">").append(ytViews).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>&#x1f44d;</td><td id=\"rating_tu\">").append(ratingThumbsUpCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>&#x1f44e;</td><td id=\"rating_td\">").append(ratingThumbsDownCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>&#x1fe;</td><td id=\"rating_avg\">").append(ytRatingAvg).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>/</td><td id=\"rating_max\">").append(ytRatingMax).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("<td>#</td><td id=\"rating_count\">").append(ytRatingCount).append("</td>"); //$NON-NLS-1$ //$NON-NLS-2$
-          sbDesc.append("</tr></table><br>");//$NON-NLS-1$
-        }
         if (description != null) {
           if (isYoutube) {
             description += " "; //$NON-NLS-1$
