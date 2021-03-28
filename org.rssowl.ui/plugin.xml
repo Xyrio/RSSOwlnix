@@ -332,14 +332,14 @@
                menubarPath="tools/end"
                style="push">
          </action>-->
-         <action
+<!--         <action
                class="org.rssowl.ui.internal.actions.UnsubscribeGoogleReaderAction"
                icon="icons/elcl16/reader.gif"
                id="org.rssowl.ui.UnsubscribeGoogleReaderAction"
                label="%action.label.40"
                menubarPath="tools/end"
                style="push">
-         </action>
+         </action>-->
          <action
                class="org.rssowl.ui.internal.actions.ShowActivityAction"
                definitionId="org.rssowl.ui.ShowActivityAction"
