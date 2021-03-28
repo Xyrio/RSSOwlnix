@@ -37,8 +37,8 @@ import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.INewsBin;
 import org.rssowl.core.persist.ISearchMark;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.ISearchMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.BookMarkAdapter;
 import org.rssowl.core.persist.event.BookMarkEvent;
 import org.rssowl.core.persist.event.FolderAdapter;
@@ -49,6 +49,7 @@ import org.rssowl.core.persist.event.SearchMarkEvent;
 import org.rssowl.core.persist.reference.NewsReference;
 import org.rssowl.core.persist.service.IModelSearch;
 import org.rssowl.core.persist.service.IndexListener;
+import org.rssowl.core.persist.service.TrackingBL;
 import org.rssowl.core.util.LoggingSafeRunnable;
 import org.rssowl.core.util.Pair;
 import org.rssowl.core.util.SearchHit;
@@ -262,7 +263,7 @@ public class SavedSearchService {
 
     fUpdatedOnce.set(true);
     IModelSearch modelSearch = Owl.getPersistenceService().getModelSearch();
-    Set<SearchMarkEvent> events = new HashSet<SearchMarkEvent>(searchMarks.size());
+    Set<SearchMarkEvent> events = new HashSet<>(searchMarks.size());
 
     /* For each Search Mark */
     for (ISearchMark searchMark : searchMarks) {
@@ -275,7 +276,7 @@ public class SavedSearchService {
       List<SearchHit<NewsReference>> results = modelSearch.searchNews(searchMark.getSearchConditions(), searchMark.matchAllConditions());
 
       /* Fill Result into Map Buckets */
-      Map<INews.State, List<NewsReference>> resultsMap = new EnumMap<INews.State, List<NewsReference>>(INews.State.class);
+      Map<INews.State, List<NewsReference>> resultsMap = new EnumMap<>(INews.State.class);
 
       Set<State> visibleStates = INews.State.getVisible();
       for (SearchHit<NewsReference> searchHit : results) {
@@ -288,7 +289,7 @@ public class SavedSearchService {
         if (visibleStates.contains(state)) {
           List<NewsReference> newsRefs = resultsMap.get(state);
           if (newsRefs == null) {
-            newsRefs = new ArrayList<NewsReference>(results.size() / 3);
+            newsRefs = new ArrayList<>(results.size() / 3);
             resultsMap.put(state, newsRefs);
           }
           newsRefs.add(searchHit.getResult());
@@ -301,13 +302,16 @@ public class SavedSearchService {
       boolean newNewsAdded = result.getSecond();
 
       /* Create Event to indicate changed results if any */
-      if (changed)
+      if (changed) {
+        TrackingBL.onChanged(searchMark);
         events.add(new SearchMarkEvent(searchMark, null, true, !firstUpdate && !fromUserEvent && newNewsAdded));
+      }
     }
 
     /* Notify Listeners */
-    if (!events.isEmpty() && !Controller.getDefault().isShuttingDown())
+    if (!events.isEmpty() && !Controller.getDefault().isShuttingDown()) {
       OwlDAO.getDAO(ISearchMarkDAO.class).fireNewsChanged(events);
+    }
   }
 
   /** Stops this service and unregisters any listeners added. */

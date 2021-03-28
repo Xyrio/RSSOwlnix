@@ -72,13 +72,14 @@ import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.ISearch;
 import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchFilter;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
 import org.rssowl.core.persist.dao.ISearchFilterDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.NewsEvent;
 import org.rssowl.core.persist.event.runnable.NewsEventRunnable;
 import org.rssowl.core.persist.reference.NewsReference;
 import org.rssowl.core.persist.service.IDGenerator;
+import org.rssowl.core.persist.service.TrackingBL;
 import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.DateUtils;
 import org.rssowl.core.util.LoggingSafeRunnable;
@@ -125,7 +126,7 @@ public class ApplicationServiceImpl implements IApplicationService {
    * Creates an instance of this class.
    */
   public ApplicationServiceImpl() {
-    fNewsActions = new HashMap<String, INewsAction>();
+    fNewsActions = new HashMap<>();
     loadNewsActions();
 
     DBManager.getInstance().addEntityStoreListener(new DatabaseListener() {
@@ -200,7 +201,7 @@ public class ApplicationServiceImpl implements IApplicationService {
 
         /* Determine those Labels the user has explicitly deleted and ignore */
         String[] labelsToIgnore = Owl.getPreferenceService().getGlobalScope().getStrings(DefaultPreferences.DELETED_LABELS);
-        List<String> labelsToIgnoreList = (labelsToIgnore != null) ? new ArrayList<String>(labelsToIgnore.length) : Collections.<String> emptyList();
+        List<String> labelsToIgnoreList = (labelsToIgnore != null) ? new ArrayList<>(labelsToIgnore.length) : Collections.<String> emptyList();
         if (labelsToIgnore != null) {
           for (String label : labelsToIgnore) {
             labelsToIgnoreList.add(label);
@@ -209,7 +210,7 @@ public class ApplicationServiceImpl implements IApplicationService {
 
         /* Collect All Incoming Labels */
         boolean hasLabels = false;
-        Set<String> incomingLabels = new HashSet<String>();
+        Set<String> incomingLabels = new HashSet<>();
         for (INews item : interpretedFeed.getNews()) {
           Object labelsObj = item.getProperty(SyncUtils.GOOGLE_LABELS);
           if (labelsObj != null && labelsObj instanceof String[]) {
@@ -227,13 +228,13 @@ public class ApplicationServiceImpl implements IApplicationService {
 
           /* Existing Labels */
           Collection<ILabel> existingLabels = OwlDAO.loadAll(ILabel.class);
-          Map<String, ILabel> mapNameToLabel = new HashMap<String, ILabel>();
+          Map<String, ILabel> mapNameToLabel = new HashMap<>();
           for (ILabel label : existingLabels) {
             mapNameToLabel.put(label.getName(), label);
           }
 
           /* New Labels to Create */
-          Set<ILabel> labelsToCreate = new HashSet<ILabel>();
+          Set<ILabel> labelsToCreate = new HashSet<>();
           for (String incomingLabel : incomingLabels) {
             if (!mapNameToLabel.containsKey(incomingLabel)) {
               ILabel newLabel = Owl.getModelFactory().createLabel(null, incomingLabel);
@@ -305,9 +306,10 @@ public class ApplicationServiceImpl implements IApplicationService {
       /* Update Date of last added news in Bookmark */
       if (!newNewsAdded.isEmpty()) {
         Date mostRecentDate = DateUtils.getRecentDate(newNewsAdded);
-        Date previousMostRecentDate = bookMark.getMostRecentNewsDate();
+        Date previousMostRecentDate = bookMark.getLastRecentNewsDate();
         if (previousMostRecentDate == null || mostRecentDate.after(previousMostRecentDate)) {
-          bookMark.setMostRecentNewsDate(mostRecentDate);
+          bookMark.setLastRecentNewsDate(mostRecentDate);
+          TrackingBL.onChanged(bookMark);
           fDb.set(bookMark);
         }
       }
@@ -413,7 +415,7 @@ public class ApplicationServiceImpl implements IApplicationService {
       return Collections.emptySet();
 
     /* Sort filters by ID */
-    Set<ISearchFilter> enabledFilters = new TreeSet<ISearchFilter>(new Comparator<ISearchFilter>() {
+    Set<ISearchFilter> enabledFilters = new TreeSet<>(new Comparator<ISearchFilter>() {
       @Override
       public int compare(ISearchFilter f1, ISearchFilter f2) {
         if (f1.equals(f2))
@@ -493,7 +495,7 @@ public class ApplicationServiceImpl implements IApplicationService {
     }
 
     /* Remember the news already filtered */
-    List<INews> filteredNews = new ArrayList<INews>(news.size());
+    List<INews> filteredNews = new ArrayList<>(news.size());
     boolean filterMatchedAll = false;
 
     /* Iterate over Filters */
@@ -503,7 +505,7 @@ public class ApplicationServiceImpl implements IApplicationService {
       if (filter.getSearch() == null) {
         filterMatchedAll = true;
 
-        List<INews> remainingNews = new ArrayList<INews>(news);
+        List<INews> remainingNews = new ArrayList<>(news);
         remainingNews.removeAll(filteredNews);
         if (!remainingNews.isEmpty())
           applyFilter(filter, remainingNews);
@@ -520,7 +522,7 @@ public class ApplicationServiceImpl implements IApplicationService {
           return false;
 
         try {
-          final List<INews> matchingNews = new ArrayList<INews>();
+          final List<INews> matchingNews = new ArrayList<>();
 
           /* Perform Query */
           Query query = ModelSearchQueries.createQuery(filter.getSearch());
@@ -575,7 +577,7 @@ public class ApplicationServiceImpl implements IApplicationService {
   }
 
   private void applyFilter(final ISearchFilter filter, final List<INews> news) {
-    final Map<INews, INews> replacements = new HashMap<INews, INews>();
+    final Map<INews, INews> replacements = new HashMap<>();
     Collection<IFilterAction> actions = CoreUtils.getActions(filter); //Need to sort structural actions to end
     for (final IFilterAction action : actions) {
       final INewsAction newsAction = fNewsActions.get(action.getActionId());
@@ -634,8 +636,8 @@ public class ApplicationServiceImpl implements IApplicationService {
       return;
 
     /* Find Links and GUIDs */
-    List<URI> links = new ArrayList<URI>();
-    List<IGuid> guids = new ArrayList<IGuid>();
+    List<URI> links = new ArrayList<>();
+    List<IGuid> guids = new ArrayList<>();
     for (INews item : news) {
       if (SyncUtils.isSynchronized(item))
         continue; //Not offering state sync from duplicates for synced news items
@@ -710,7 +712,7 @@ public class ApplicationServiceImpl implements IApplicationService {
     }
 
     /* Updated Objects */
-    List<Object> otherObjects = new ArrayList<Object>();
+    List<Object> otherObjects = new ArrayList<>();
     for (Object o : mergeResult.getUpdatedObjects()) {
       if (o instanceof INews)
         DBHelper.saveUpdatedNews(fDb, (INews) o);

@@ -126,9 +126,6 @@ import org.rssowl.ui.internal.actions.DeleteTypesAction;
 import org.rssowl.ui.internal.actions.EntityPropertyDialogAction;
 import org.rssowl.ui.internal.actions.FindAction;
 import org.rssowl.ui.internal.actions.NewBookMarkAction;
-import org.rssowl.ui.internal.actions.NewFolderAction;
-import org.rssowl.ui.internal.actions.NewNewsBinAction;
-import org.rssowl.ui.internal.actions.NewSearchMarkAction;
 import org.rssowl.ui.internal.actions.OpenAction;
 import org.rssowl.ui.internal.actions.OpenInBrowserAction;
 import org.rssowl.ui.internal.actions.OpenInNewTabAction;
@@ -200,7 +197,7 @@ public class BookMarkExplorer extends ViewPart {
   private TreeViewer fViewer;
   private BookMarkContentProvider fContentProvider;
   private BookMarkLabelProvider fLabelProvider;
-  private BookMarkSorter fBookMarkComparator;
+  private BookMarkSorter fBookMarkSorter;
   private BookMarkFilter fBookMarkFilter;
   private BookMarkGrouping fBookMarkGrouping;
 
@@ -316,10 +313,10 @@ public class BookMarkExplorer extends ViewPart {
     fViewer.setLabelProvider(fLabelProvider);
 
     /* Apply Sorter */
-    fBookMarkComparator = new BookMarkSorter();
+    fBookMarkSorter = new BookMarkSorter();
     if (fSortByName)
-      fBookMarkComparator.setType(BookMarkSorter.Type.SORT_BY_NAME);
-    fViewer.setComparator(fBookMarkComparator);
+      fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_NAME);
+    fViewer.setComparator(fBookMarkSorter);
 
     /* Apply Filter */
     fBookMarkFilter = new BookMarkFilter();
@@ -742,9 +739,9 @@ public class BookMarkExplorer extends ViewPart {
           public void run() {
             fSortByName = !fSortByName;
             if (fSortByName)
-              fBookMarkComparator.setType(BookMarkSorter.Type.SORT_BY_NAME);
+              fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_NAME);
             else
-              fBookMarkComparator.setType(BookMarkSorter.Type.DEFAULT_SORTING);
+              fBookMarkSorter.setType(BookMarkSorter.Type.DEFAULT_SORTING);
             fViewer.refresh(false);
 
             /* Save directly to global scope */
@@ -771,9 +768,7 @@ public class BookMarkExplorer extends ViewPart {
         showFavicons.setChecked(fFaviconsEnabled);
         manager.add(showFavicons);
 
-        /* Allow Contributions */
         manager.add(new Separator());
-
         IAction linkFeedView = new Action(Messages.BookMarkExplorer_LINKING, IAction.AS_CHECK_BOX) {
           @Override
           public void run() {
@@ -810,11 +805,11 @@ public class BookMarkExplorer extends ViewPart {
 
         /* Restore Default */
         if (fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_ALL)
-          doFilter(BookMarkFilter.Type.SHOW_ALL);
+          refreshFilter(BookMarkFilter.Type.SHOW_ALL);
 
         /* Toggle to Previous */
         else if (fLastFilterType != null)
-          doFilter(fLastFilterType);
+          refreshFilter(fLastFilterType);
 
         /* Show Menu */
         else if (fToolBarManager instanceof ToolBarManager)
@@ -832,94 +827,31 @@ public class BookMarkExplorer extends ViewPart {
     bookmarkFilter.setId(FILTER_ACTION);
 
     bookmarkFilter.setMenuCreator(new ContextMenuCreator() {
-
       @Override
       public Menu createMenu(Control parent) {
         Menu menu = new Menu(parent);
-
-        /* Filter: None */
-        final MenuItem showAll = new MenuItem(menu, SWT.RADIO);
-        showAll.setText(Messages.BookMarkExplorer_SHOW_ALL);
-        showAll.setSelection(BookMarkFilter.Type.SHOW_ALL == fBookMarkFilter.getType());
-        menu.setDefaultItem(showAll);
-        showAll.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showAll.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_ALL)
-              doFilter(BookMarkFilter.Type.SHOW_ALL);
-          }
-        });
-
-        /* Separator */
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_ALL, BookMarkFilter.Type.SHOW_ALL);
         new MenuItem(menu, SWT.SEPARATOR);
-
-        /* Filter: New */
-        final MenuItem showNew = new MenuItem(menu, SWT.RADIO);
-        showNew.setText(Messages.BookMarkExplorer_SHOW_NEW);
-        showNew.setSelection(BookMarkFilter.Type.SHOW_NEW == fBookMarkFilter.getType());
-        showNew.addSelectionListener(new SelectionAdapter() {
-
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showNew.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_NEW)
-              doFilter(BookMarkFilter.Type.SHOW_NEW);
-          }
-        });
-
-        /* Filter: Unread */
-        final MenuItem showUnread = new MenuItem(menu, SWT.RADIO);
-        showUnread.setText(Messages.BookMarkExplorer_SHOW_UNREAD);
-        showUnread.setSelection(BookMarkFilter.Type.SHOW_UNREAD == fBookMarkFilter.getType());
-        showUnread.addSelectionListener(new SelectionAdapter() {
-
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showUnread.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_UNREAD)
-              doFilter(BookMarkFilter.Type.SHOW_UNREAD);
-          }
-        });
-
-        /* Filter: Sticky */
-        final MenuItem showSticky = new MenuItem(menu, SWT.RADIO);
-        showSticky.setText(Messages.BookMarkExplorer_SHOW_STICKY);
-        showSticky.setSelection(BookMarkFilter.Type.SHOW_STICKY == fBookMarkFilter.getType());
-        showSticky.addSelectionListener(new SelectionAdapter() {
-
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showSticky.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_STICKY)
-              doFilter(BookMarkFilter.Type.SHOW_STICKY);
-          }
-        });
-
-        /* Separator */
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_NEW, BookMarkFilter.Type.SHOW_NEW);
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_UNREAD, BookMarkFilter.Type.SHOW_UNREAD);
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_STICKY, BookMarkFilter.Type.SHOW_STICKY);
         new MenuItem(menu, SWT.SEPARATOR);
-
-        /* Filter: Erroneous */
-        final MenuItem showErroneous = new MenuItem(menu, SWT.RADIO);
-        showErroneous.setText(Messages.BookMarkExplorer_SHOW_ERROR);
-        showErroneous.setSelection(BookMarkFilter.Type.SHOW_ERRONEOUS == fBookMarkFilter.getType());
-        showErroneous.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showErroneous.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_ERRONEOUS)
-              doFilter(BookMarkFilter.Type.SHOW_ERRONEOUS);
-          }
-        });
-
-        /* Filter: Never Visited */
-        final MenuItem showNeverVisited = new MenuItem(menu, SWT.RADIO);
-        showNeverVisited.setText(Messages.BookMarkExplorer_SHOW_NEVER_VISITED);
-        showNeverVisited.setSelection(BookMarkFilter.Type.SHOW_NEVER_VISITED == fBookMarkFilter.getType());
-        showNeverVisited.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (showNeverVisited.getSelection() && fBookMarkFilter.getType() != BookMarkFilter.Type.SHOW_NEVER_VISITED)
-              doFilter(BookMarkFilter.Type.SHOW_NEVER_VISITED);
-          }
-        });
-
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_ERROR, BookMarkFilter.Type.SHOW_ERRONEOUS);
+        createFilterOption(menu, Messages.BookMarkExplorer_SHOW_NEVER_VISITED, BookMarkFilter.Type.SHOW_NEVER_VISITED);
         return menu;
+      }
+
+      private void createFilterOption(Menu menu, String text, BookMarkFilter.Type bookMarkFilterType) {
+        final MenuItem menuItem = new MenuItem(menu, SWT.RADIO);
+        menuItem.setText(text);
+        menuItem.setSelection(bookMarkFilterType == fBookMarkFilter.getType());
+        menuItem.addSelectionListener(new SelectionAdapter() {
+          @Override
+          public void widgetSelected(SelectionEvent e) {
+            if (menuItem.getSelection() && fBookMarkFilter.getType() != bookMarkFilterType)
+              refreshFilter(bookMarkFilterType);
+          }
+        });
       }
     });
 
@@ -933,11 +865,11 @@ public class BookMarkExplorer extends ViewPart {
 
         /* Restore Default */
         if (fBookMarkGrouping.getType() != BookMarkGrouping.Type.NO_GROUPING)
-          doGrouping(BookMarkGrouping.Type.NO_GROUPING);
+          refreshGrouping(BookMarkGrouping.Type.NO_GROUPING);
 
         /* Toggle to previous */
         else if (fLastGroupType != null)
-          doGrouping(fLastGroupType);
+          refreshGrouping(fLastGroupType);
 
         /* Show Menu */
         else if (fToolBarManager instanceof ToolBarManager)
@@ -955,79 +887,32 @@ public class BookMarkExplorer extends ViewPart {
     bookmarkGroup.setId(GROUP_ACTION);
 
     bookmarkGroup.setMenuCreator(new ContextMenuCreator() {
-
       @Override
       public Menu createMenu(Control parent) {
         Menu menu = new Menu(parent);
-
-        /* Group: None */
-        final MenuItem noGrouping = new MenuItem(menu, SWT.RADIO);
-        noGrouping.setText(Messages.BookMarkExplorer_NO_GROUPING);
-        noGrouping.setSelection(BookMarkGrouping.Type.NO_GROUPING == fBookMarkGrouping.getType());
-        menu.setDefaultItem(noGrouping);
-        noGrouping.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (noGrouping.getSelection() && fBookMarkGrouping.getType() != BookMarkGrouping.Type.NO_GROUPING)
-              doGrouping(BookMarkGrouping.Type.NO_GROUPING);
-          }
-        });
-
-        /* Separator */
+        createGroupingOption(menu, Messages.BookMarkExplorer_NO_GROUPING, BookMarkGrouping.Type.NO_GROUPING);
         new MenuItem(menu, SWT.SEPARATOR);
-
-        /* Group: By Type */
-        final MenuItem groupByType = new MenuItem(menu, SWT.RADIO);
-        groupByType.setText(Messages.BookMarkExplorer_GROUP_BY_TYPE);
-        groupByType.setSelection(BookMarkGrouping.Type.GROUP_BY_TYPE == fBookMarkGrouping.getType());
-        groupByType.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (groupByType.getSelection() && fBookMarkGrouping.getType() != BookMarkGrouping.Type.GROUP_BY_TYPE)
-              doGrouping(BookMarkGrouping.Type.GROUP_BY_TYPE);
-          }
-        });
-
-        /* Group: By State */
-        final MenuItem groupByState = new MenuItem(menu, SWT.RADIO);
-        groupByState.setText(Messages.BookMarkExplorer_GROUP_BY_STATE);
-        groupByState.setSelection(BookMarkGrouping.Type.GROUP_BY_STATE == fBookMarkGrouping.getType());
-        groupByState.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (groupByState.getSelection() && fBookMarkGrouping.getType() != BookMarkGrouping.Type.GROUP_BY_STATE)
-              doGrouping(BookMarkGrouping.Type.GROUP_BY_STATE);
-          }
-        });
-
-        /* Separator */
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_TYPE, BookMarkGrouping.Type.GROUP_BY_TYPE);
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_STATE, BookMarkGrouping.Type.GROUP_BY_STATE);
         new MenuItem(menu, SWT.SEPARATOR);
-
-        /* Group: By Last Visit */
-        final MenuItem groupByLastVisit = new MenuItem(menu, SWT.RADIO);
-        groupByLastVisit.setText(Messages.BookMarkExplorer_GROUP_BY_LAST_VISIT);
-        groupByLastVisit.setSelection(BookMarkGrouping.Type.GROUP_BY_LAST_VISIT == fBookMarkGrouping.getType());
-        groupByLastVisit.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (groupByLastVisit.getSelection() && fBookMarkGrouping.getType() != BookMarkGrouping.Type.GROUP_BY_LAST_VISIT)
-              doGrouping(BookMarkGrouping.Type.GROUP_BY_LAST_VISIT);
-          }
-        });
-
-        /* Group: By Popularity */
-        final MenuItem groupByPopularity = new MenuItem(menu, SWT.RADIO);
-        groupByPopularity.setText(Messages.BookMarkExplorer_GROUP_BY_POPULARITY);
-        groupByPopularity.setSelection(BookMarkGrouping.Type.GROUP_BY_POPULARITY == fBookMarkGrouping.getType());
-        groupByPopularity.addSelectionListener(new SelectionAdapter() {
-          @Override
-          public void widgetSelected(SelectionEvent e) {
-            if (groupByPopularity.getSelection() && fBookMarkGrouping.getType() != BookMarkGrouping.Type.GROUP_BY_POPULARITY)
-              doGrouping(BookMarkGrouping.Type.GROUP_BY_POPULARITY);
-          }
-        });
-
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_LAST_VISIT, BookMarkGrouping.Type.GROUP_BY_LAST_VISIT);
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_POPULARITY, BookMarkGrouping.Type.GROUP_BY_POPULARITY);
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_LAST_RECENT, BookMarkGrouping.Type.GROUP_BY_LAST_RECENT);
+        createGroupingOption(menu, Messages.BookMarkExplorer_GROUP_BY_LAST_UPDATE, BookMarkGrouping.Type.GROUP_BY_LAST_UPDATE);
         return menu;
+      }
+
+      private void createGroupingOption(Menu menu, String text, BookMarkGrouping.Type bookMarkGroupingType) {
+        final MenuItem menuItem = new MenuItem(menu, SWT.RADIO);
+        menuItem.setText(text);
+        menuItem.setSelection(bookMarkGroupingType == fBookMarkGrouping.getType());
+        menuItem.addSelectionListener(new SelectionAdapter() {
+          @Override
+          public void widgetSelected(SelectionEvent e) {
+            if (menuItem.getSelection() && fBookMarkGrouping.getType() != bookMarkGroupingType)
+              refreshGrouping(bookMarkGroupingType);
+          }
+        });
       }
     });
 
@@ -1086,7 +971,7 @@ public class BookMarkExplorer extends ViewPart {
     fToolBarManager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
   }
 
-  private void doFilter(BookMarkFilter.Type type) {
+  private void refreshFilter(BookMarkFilter.Type type) {
 
     /* Remember Selection */
     if (type != BookMarkFilter.Type.SHOW_ALL)
@@ -1105,7 +990,7 @@ public class BookMarkExplorer extends ViewPart {
     fToolBarManager.find(FILTER_ACTION).update(IAction.IMAGE);
   }
 
-  private void doGrouping(BookMarkGrouping.Type type) {
+  private void refreshGrouping(BookMarkGrouping.Type type) {
 
     /* Remember Selection */
     if (type != BookMarkGrouping.Type.NO_GROUPING)
@@ -1116,11 +1001,15 @@ public class BookMarkExplorer extends ViewPart {
     /* Temporary change Sorter to reflect grouping */
     if (!fSortByName) {
       if (type.equals(BookMarkGrouping.Type.NO_GROUPING))
-        fBookMarkComparator.setType(BookMarkSorter.Type.DEFAULT_SORTING);
+        fBookMarkSorter.setType(BookMarkSorter.Type.DEFAULT_SORTING);
       else if (type.equals(BookMarkGrouping.Type.GROUP_BY_LAST_VISIT))
-        fBookMarkComparator.setType(BookMarkSorter.Type.SORT_BY_LAST_VISIT_DATE);
+        fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_LAST_VISIT_DATE);
       else if (type.equals(BookMarkGrouping.Type.GROUP_BY_POPULARITY))
-        fBookMarkComparator.setType(BookMarkSorter.Type.SORT_BY_POPULARITY);
+        fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_POPULARITY);
+      else if (type.equals(BookMarkGrouping.Type.GROUP_BY_LAST_RECENT))
+        fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_LAST_RECENT_DATE);
+      else if (type.equals(BookMarkGrouping.Type.GROUP_BY_LAST_UPDATE))
+        fBookMarkSorter.setType(BookMarkSorter.Type.SORT_BY_LAST_UPDATE_DATE);
     }
 
     /* Refresh w/o updating Labels */
@@ -1128,7 +1017,7 @@ public class BookMarkExplorer extends ViewPart {
     fViewer.refresh(false);
 
     /* Restore Sorter */
-    fBookMarkComparator.setType(fSortByName ? BookMarkSorter.Type.SORT_BY_NAME : BookMarkSorter.Type.DEFAULT_SORTING);
+    fBookMarkSorter.setType(fSortByName ? BookMarkSorter.Type.SORT_BY_NAME : BookMarkSorter.Type.DEFAULT_SORTING);
 
     /* Restore expanded Elements */
     restoreExpandedElements();
@@ -1141,15 +1030,9 @@ public class BookMarkExplorer extends ViewPart {
     MenuManager manager = new MenuManager();
     manager.setRemoveAllWhenShown(true);
     manager.addMenuListener(new IMenuListener() {
-      @Override
-      public void menuAboutToShow(IMenuManager manager) {
 
-        /* New Menu */
-        MenuManager newMenu = new MenuManager(Messages.BookMarkExplorer_NEW);
-        manager.add(newMenu);
-
-        /* New BookMark */
-        Action newBookmarkAction = new Action(Messages.BookMarkExplorer_BOOKMARK) {
+      private void createContextOption(MenuManager menuManager, String text, ImageDescriptor imageDescriptor, String actionId) {
+        Action action = new Action(text) {
           @Override
           public void run() {
             IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
@@ -1160,70 +1043,24 @@ public class BookMarkExplorer extends ViewPart {
 
           @Override
           public ImageDescriptor getImageDescriptor() {
-            return OwlUI.BOOKMARK;
+            return imageDescriptor;
           }
         };
-        newBookmarkAction.setId("org.rssowl.ui.actions.NewBookMark"); //$NON-NLS-1$
-        newBookmarkAction.setActionDefinitionId("org.rssowl.ui.actions.NewBookMark"); //$NON-NLS-1$
-        newMenu.add(newBookmarkAction);
+        action.setId(actionId);
+        action.setActionDefinitionId(actionId);
+        menuManager.add(action);
+      }
 
-        /* New NewsBin */
-        Action newNewsBinAction = new Action(Messages.BookMarkExplorer_NEWSBIN) {
-          @Override
-          public void run() {
-            IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-            IFolder parent = getParent(selection);
-            IMark position = (IMark) ((selection.getFirstElement() instanceof IMark) ? selection.getFirstElement() : null);
-            new NewNewsBinAction().init(fViewSite.getShell(), parent, position).run(null);
-          }
+      @Override
+      public void menuAboutToShow(IMenuManager manager) {
 
-          @Override
-          public ImageDescriptor getImageDescriptor() {
-            return OwlUI.NEWSBIN;
-          }
-        };
-        newNewsBinAction.setId("org.rssowl.ui.actions.NewNewsBin"); //$NON-NLS-1$
-        newNewsBinAction.setActionDefinitionId("org.rssowl.ui.actions.NewNewsBin"); //$NON-NLS-1$
-        newMenu.add(newNewsBinAction);
-
-        /* New Saved Search */
-        Action newSavedSearchAction = new Action(Messages.BookMarkExplorer_SAVED_SEARCH) {
-          @Override
-          public void run() {
-            IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-            IFolder parent = getParent(selection);
-            IMark position = (IMark) ((selection.getFirstElement() instanceof IMark) ? selection.getFirstElement() : null);
-            new NewSearchMarkAction().init(fViewSite.getShell(), parent, position).run(null);
-          }
-
-          @Override
-          public ImageDescriptor getImageDescriptor() {
-            return OwlUI.SEARCHMARK;
-          }
-        };
-        newSavedSearchAction.setId("org.rssowl.ui.actions.NewSearchMark"); //$NON-NLS-1$
-        newSavedSearchAction.setActionDefinitionId("org.rssowl.ui.actions.NewSearchMark"); //$NON-NLS-1$
-        newMenu.add(newSavedSearchAction);
-
-        /* New Folder */
-        newMenu.add(new Separator());
-        Action newFolderAction = new Action(Messages.BookMarkExplorer_FOLDER) {
-          @Override
-          public void run() {
-            IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
-            IFolder parent = getParent(selection);
-            IMark position = (IMark) ((selection.getFirstElement() instanceof IMark) ? selection.getFirstElement() : null);
-            new NewFolderAction().init(fViewSite.getShell(), parent, position).run(null);
-          }
-
-          @Override
-          public ImageDescriptor getImageDescriptor() {
-            return OwlUI.FOLDER;
-          }
-        };
-        newFolderAction.setId("org.rssowl.ui.actions.NewFolder"); //$NON-NLS-1$
-        newFolderAction.setActionDefinitionId("org.rssowl.ui.actions.NewFolder"); //$NON-NLS-1$
-        newMenu.add(newFolderAction);
+        /* New */
+        MenuManager newMenu = new MenuManager(Messages.BookMarkExplorer_NEW);
+        manager.add(newMenu);
+        createContextOption(newMenu, Messages.BookMarkExplorer_BOOKMARK, OwlUI.BOOKMARK, "org.rssowl.ui.actions.NewBookMark"); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_NEWSBIN, OwlUI.NEWSBIN, "org.rssowl.ui.actions.NewNewsBin"); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_SAVED_SEARCH, OwlUI.SEARCHMARK, "org.rssowl.ui.actions.NewSearchMark"); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_FOLDER, OwlUI.FOLDER, "org.rssowl.ui.actions.NewFolder"); //$NON-NLS-1$
 
         manager.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
 
@@ -1968,7 +1805,7 @@ public class BookMarkExplorer extends ViewPart {
    * <code>false</code> otherwise.
    */
   public boolean isSortByNameEnabled() {
-    return fBookMarkComparator.getType() == BookMarkSorter.Type.SORT_BY_NAME;
+    return fBookMarkSorter.getType() == BookMarkSorter.Type.SORT_BY_NAME;
   }
 
   /**

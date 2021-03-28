@@ -32,11 +32,12 @@ import org.rssowl.core.persist.dao.ISearchMarkDAO;
 import org.rssowl.core.persist.event.SearchMarkEvent;
 import org.rssowl.core.persist.event.SearchMarkListener;
 import org.rssowl.core.persist.service.PersistenceException;
+import org.rssowl.core.persist.service.TrackingBL;
 
 import com.db4o.ext.Db4oException;
 import com.db4o.query.Query;
 
-import java.util.Date;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -61,9 +62,8 @@ public final class SearchMarkDAOImpl extends AbstractEntityDAO<ISearchMark, Sear
   }
 
   /*
-   * @see
-   * org.rssowl.core.internal.persist.dao.AbstractEntityDAO#createSaveEventTemplate
-   * (org.rssowl.core.persist.IEntity)
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * createSaveEventTemplate (org.rssowl.core.persist.IEntity)
    */
   @Override
   protected final SearchMarkEvent createSaveEventTemplate(ISearchMark entity) {
@@ -71,7 +71,8 @@ public final class SearchMarkDAOImpl extends AbstractEntityDAO<ISearchMark, Sear
   }
 
   /*
-   * @see org.rssowl.core.persist.dao.ISearchMarkDAO#fireNewsChanged(java.util.Set)
+   * @see
+   * org.rssowl.core.persist.dao.ISearchMarkDAO#fireNewsChanged(java.util.Set)
    */
   @Override
   public void fireNewsChanged(Set<SearchMarkEvent> events) {
@@ -94,6 +95,27 @@ public final class SearchMarkDAOImpl extends AbstractEntityDAO<ISearchMark, Sear
   }
 
   /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * save(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public ISearchMark save(ISearchMark object) {
+    TrackingBL.onChanged(object);
+    return super.save(object);
+  }
+
+  /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * saveAll(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public void saveAll(Collection<ISearchMark> objects) {
+    for (ISearchMark object : objects)
+      TrackingBL.onChanged(object);
+    super.saveAll(objects);
+  }
+
+  /*
    * @see
    * org.rssowl.core.persist.dao.ISearchMarkDAO#visited(org.rssowl.core.persist
    * .ISearchMark)
@@ -102,8 +124,7 @@ public final class SearchMarkDAOImpl extends AbstractEntityDAO<ISearchMark, Sear
   public void visited(ISearchMark mark) {
     fWriteLock.lock();
     try {
-      mark.setLastVisitDate(new Date());
-      mark.setPopularity(mark.getPopularity() + 1);
+      TrackingBL.onVisited(mark);
       preSave(mark);
       fDb.ext().set(mark, 1);
       fDb.commit();
@@ -114,4 +135,5 @@ public final class SearchMarkDAOImpl extends AbstractEntityDAO<ISearchMark, Sear
     }
     DBHelper.cleanUpAndFireEvents();
   }
+
 }

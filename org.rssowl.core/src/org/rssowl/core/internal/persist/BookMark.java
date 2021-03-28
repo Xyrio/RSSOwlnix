@@ -30,8 +30,8 @@ import org.rssowl.core.persist.IFolder;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.NewsCounter;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.reference.BookMarkReference;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.persist.reference.NewsReference;
@@ -55,7 +55,7 @@ public class BookMark extends Mark implements IBookMark {
   private transient FeedLinkReference fFeedLinkReference;
   private boolean fIsErrorLoading;
   private transient NewsCounter fNewsCounter;
-  private long fMostRecentNewsDate = -1;
+  private long fLastRecentNewsDate = -1;
 
   /**
    * Creates a new Element of the type BookMark. A BookMark is only visually
@@ -82,24 +82,24 @@ public class BookMark extends Mark implements IBookMark {
   }
 
   /*
-   * @see org.rssowl.core.persist.IBookMark#getMostRecentNewsDate()
+   * @see org.rssowl.core.persist.IBookMark#getLastRecentNewsDate()
    */
   @Override
-  public synchronized Date getMostRecentNewsDate() {
-    if (fMostRecentNewsDate < 0)
+  public synchronized Date getLastRecentNewsDate() {
+    if (fLastRecentNewsDate < 0)
       return null;
 
-    return new Date(fMostRecentNewsDate);
+    return new Date(fLastRecentNewsDate);
   }
 
 
   /*
-   * @see org.rssowl.core.persist.IBookMark#setMostRecentNewsDate(java.util.Date)
+   * @see org.rssowl.core.persist.IBookMark#setLastRecentNewsDate(java.util.Date)
    */
   @Override
-  public synchronized void setMostRecentNewsDate(Date date) {
+  public synchronized void setLastRecentNewsDate(Date date) {
     Assert.isNotNull(date, "date"); //$NON-NLS-1$
-    fMostRecentNewsDate = date.getTime();
+    fLastRecentNewsDate = date.getTime();
   }
 
   /**
@@ -235,7 +235,7 @@ public class BookMark extends Mark implements IBookMark {
   @Override
   public List<NewsReference> getNewsRefs(Set<State> states) {
     List<INews> news = getNews(states);
-    List<NewsReference> newsRefs = new ArrayList<NewsReference>();
+    List<NewsReference> newsRefs = new ArrayList<>();
     for (INews newsItem : news) {
       newsRefs.add(new NewsReference(newsItem.getId()));
     }

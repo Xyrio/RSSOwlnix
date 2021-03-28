@@ -32,12 +32,12 @@ import org.rssowl.core.persist.event.BookMarkEvent;
 import org.rssowl.core.persist.event.BookMarkListener;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.persist.service.PersistenceException;
+import org.rssowl.core.persist.service.TrackingBL;
 
 import com.db4o.ext.Db4oException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * A data-access-object for <code>IBookMark</code>s.
@@ -61,9 +61,8 @@ public final class BookMarkDAOImpl extends AbstractEntityDAO<IBookMark, BookMark
   }
 
   /*
-   * @see
-   * org.rssowl.core.internal.persist.dao.AbstractEntityDAO#createSaveEventTemplate
-   * (org.rssowl.core.persist.IEntity)
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * createSaveEventTemplate (org.rssowl.core.persist.IEntity)
    */
   @Override
   protected final BookMarkEvent createSaveEventTemplate(IBookMark entity) {
@@ -80,10 +79,31 @@ public final class BookMarkDAOImpl extends AbstractEntityDAO<IBookMark, BookMark
     try {
       Collection<IBookMark> marks = DBHelper.loadAllBookMarks(fDb, feedRef);
       activateAll(marks);
-      return new ArrayList<IBookMark>(marks);
+      return new ArrayList<>(marks);
     } catch (Db4oException e) {
       throw new PersistenceException(e);
     }
+  }
+
+  /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * save(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public IBookMark save(IBookMark object) {
+    TrackingBL.onChanged(object);
+    return super.save(object);
+  }
+
+  /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * saveAll(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public void saveAll(Collection<IBookMark> objects) {
+    for (IBookMark object : objects)
+      TrackingBL.onChanged(object);
+    super.saveAll(objects);
   }
 
   /*
@@ -102,12 +122,24 @@ public final class BookMarkDAOImpl extends AbstractEntityDAO<IBookMark, BookMark
   }
 
   /*
-   * @see org.rssowl.core.persist.dao.IBookMarkDAO#visited(org.rssowl.core.persist.IBookMark)
+   * @see
+   * org.rssowl.core.persist.dao.IBookMarkDAO#visited(org.rssowl.core.persist.
+   * IBookMark)
    */
   @Override
   public void visited(IBookMark mark) {
-    mark.setPopularity(mark.getPopularity() + 1);
-    mark.setLastVisitDate(new Date());
-    save(mark);
+    fWriteLock.lock();
+    try {
+      TrackingBL.onVisited(mark);
+      preSave(mark);
+      fDb.ext().set(mark, 1);
+      fDb.commit();
+    } catch (Db4oException e) {
+      throw new PersistenceException(e);
+    } finally {
+      fWriteLock.unlock();
+    }
+    DBHelper.cleanUpAndFireEvents();
   }
+
 }

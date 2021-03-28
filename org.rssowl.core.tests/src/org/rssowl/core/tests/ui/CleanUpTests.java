@@ -224,13 +224,13 @@ public class CleanUpTests {
     OwlDAO.save(feed3);
 
     IBookMark bm1 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed1.getLink()), "BM1");
-    bm1.setMostRecentNewsDate(DateUtils.getRecentDate(news1));
+    bm1.setLastRecentNewsDate(DateUtils.getRecentDate(news1));
 
     IBookMark bm2 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed2.getLink()), "BM2");
-    bm2.setMostRecentNewsDate(DateUtils.getRecentDate(news2));
+    bm2.setLastRecentNewsDate(DateUtils.getRecentDate(news2));
 
     IBookMark bm3 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed3.getLink()), "BM3");
-    bm3.setMostRecentNewsDate(DateUtils.getRecentDate(news3));
+    bm3.setLastRecentNewsDate(DateUtils.getRecentDate(news3));
 
     OwlDAO.save(bm1);
     OwlDAO.save(bm2);
@@ -410,13 +410,13 @@ public class CleanUpTests {
     OwlDAO.save(feed3);
 
     IBookMark bm1 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed1.getLink()), "BM1");
-    bm1.setMostRecentNewsDate(news1.getPublishDate());
+    bm1.setLastRecentNewsDate(news1.getPublishDate());
 
     IBookMark bm2 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed2.getLink()), "BM2");
-    bm2.setMostRecentNewsDate(news2.getPublishDate());
+    bm2.setLastRecentNewsDate(news2.getPublishDate());
 
     IBookMark bm3 = fFactory.createBookMark(null, rootFolder, new FeedLinkReference(feed3.getLink()), "BM3");
-    bm3.setMostRecentNewsDate(news3.getPublishDate());
+    bm3.setLastRecentNewsDate(news3.getPublishDate());
 
     OwlDAO.save(bm1);
     OwlDAO.save(bm2);

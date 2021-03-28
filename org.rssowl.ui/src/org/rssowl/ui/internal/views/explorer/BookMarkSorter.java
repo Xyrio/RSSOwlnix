@@ -32,6 +32,7 @@ import org.rssowl.core.persist.IMark;
 import org.rssowl.ui.internal.EntityGroup;
 
 import java.util.Date;
+import java.util.function.Function;
 
 /**
  * @author bpasero
@@ -43,18 +44,7 @@ public class BookMarkSorter extends ViewerComparator {
 
   /** Sort Type */
   public enum Type {
-
-    /** Apply Default Sorting */
-    DEFAULT_SORTING,
-
-    /** Sort by Name */
-    SORT_BY_NAME,
-
-    /** Sort by Popularity */
-    SORT_BY_POPULARITY,
-
-    /** Sort by Last Visit Date */
-    SORT_BY_LAST_VISIT_DATE
+    DEFAULT_SORTING, SORT_BY_NAME, SORT_BY_POPULARITY, SORT_BY_LAST_VISIT_DATE, SORT_BY_LAST_RECENT_DATE, SORT_BY_LAST_UPDATE_DATE
   }
 
   /* The current Sorter Type */
@@ -119,32 +109,41 @@ public class BookMarkSorter extends ViewerComparator {
     return SKIP_SORT;
   }
 
+  private int compareDatesAscNullsFirst(IMark mark1, IMark mark2, Function<IMark, Date> dateGetter) {
+
+    Date d1 = dateGetter.apply(mark1);
+    Date d2 = dateGetter.apply(mark2);
+    if (d1 != null && d2 != null)
+      return d1.compareTo(d2);
+    else if (d1 == null)
+      return -1;
+    else if (d2 == null)
+      return 1;
+    return SKIP_SORT; //both null
+  }
+
+  private int compareDatesDescNullsLast(IMark mark1, IMark mark2, Function<IMark, Date> dateGetter) {
+    return compareDatesAscNullsFirst(mark2, mark1, dateGetter); //switching params reverses sorting
+  }
+
   private int compareMarks(IMark mark1, IMark mark2) {
 
-    /* Sort by Name */
-    if (fType == Type.SORT_BY_NAME)
+    if (fType == Type.SORT_BY_NAME) //ascending
       return mark1.getName().toLowerCase().compareTo(mark2.getName().toLowerCase());
 
-    /* Sort by Last Visit Date (descending) */
-    else if (fType == Type.SORT_BY_LAST_VISIT_DATE) {
-      Date d1 = mark1.getLastVisitDate();
-      Date d2 = mark2.getLastVisitDate();
-
-      if (d1 != null && d2 != null)
-        return d2.compareTo(d1);
-      else if (d2 != null)
-        return -1;
-      else if (d1 != null)
-        return 1;
+    else if (fType == Type.SORT_BY_LAST_VISIT_DATE) { //descending
+      return compareDatesDescNullsLast(mark1, mark2, IMark::getLastVisitDate);
+    } else if (fType == Type.SORT_BY_LAST_RECENT_DATE) { //descending
+      return compareDatesDescNullsLast(mark1, mark2, IMark::getLastRecentDate);
+    } else if (fType == Type.SORT_BY_LAST_UPDATE_DATE) { //descending
+      return compareDatesDescNullsLast(mark1, mark2, IMark::getLastUpdateDate);
     }
 
-    /* Sort by Popularity (descending) */
-    else if (fType == Type.SORT_BY_POPULARITY) {
+    else if (fType == Type.SORT_BY_POPULARITY) { //descending
       int p1 = mark1.getPopularity();
       int p2 = mark2.getPopularity();
-
       if (p1 != p2)
-        return p2 > p1 ? -1 : 1;
+        return p1 < p2 ? -1 : 1; //ascending comparison here makes descending order in gui
     }
 
     return SKIP_SORT;

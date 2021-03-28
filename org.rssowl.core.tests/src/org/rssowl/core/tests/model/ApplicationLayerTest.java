@@ -147,19 +147,19 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
     OwlDAO.save(feed1);
     IBookMark mark1 = fFactory.createBookMark(null, folder, new FeedLinkReference(feed1.getLink()), "Mark1");
     OwlDAO.save(folder);
-    assertNull(mark1.getMostRecentNewsDate());
+    assertNull(mark1.getLastRecentNewsDate());
 
     long time = System.currentTimeMillis();
     feed1 = fFactory.createFeed(null, new URI("http://www.feed1.com"));
     fFactory.createNews(null, feed1, new Date());
     fAppService.handleFeedReload(mark1, feed1, null, false, true, new NullProgressMonitor());
-    assertNotNull(mark1.getMostRecentNewsDate());
-    long lastUpdatedDate = mark1.getMostRecentNewsDate().getTime();
+    assertNotNull(mark1.getLastRecentNewsDate());
+    long lastUpdatedDate = mark1.getLastRecentNewsDate().getTime();
     assertTrue(time <= lastUpdatedDate);
 
     feed1 = fFactory.createFeed(null, new URI("http://www.feed1.com"));
     fAppService.handleFeedReload(mark1, feed1, null, false, true, new NullProgressMonitor());
-    assertEquals(lastUpdatedDate, mark1.getMostRecentNewsDate().getTime());
+    assertEquals(lastUpdatedDate, mark1.getLastRecentNewsDate().getTime());
   }
 
   /**

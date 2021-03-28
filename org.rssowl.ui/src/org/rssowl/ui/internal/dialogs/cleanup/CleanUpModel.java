@@ -217,7 +217,7 @@ public class CleanUpModel {
         if (bookmarksToDelete.contains(mark))
           continue;
 
-        Date mostRecentNewsDate = mark.getMostRecentNewsDate();
+        Date mostRecentNewsDate = mark.getLastRecentNewsDate();
         Date creationDate = mark.getCreationDate();
         boolean deleteBookMark = false;
 

@@ -159,7 +159,7 @@ public class AggregateFolderAction implements IObjectActionDelegate {
     List<IMark> marks = folder.getMarks();
     for (IMark mark : marks) {
       if (mark instanceof IBookMark) {
-        if ((((IBookMark) mark).getMostRecentNewsDate() == null))
+        if ((((IBookMark) mark).getLastRecentNewsDate() == null))
           bookMarksToReload.add((IBookMark) mark);
       }
     }

@@ -82,11 +82,11 @@ import org.rssowl.core.persist.INewsBin;
 import org.rssowl.core.persist.INewsMark;
 import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchMark;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
 import org.rssowl.core.persist.dao.INewsBinDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
 import org.rssowl.core.persist.dao.ISearchMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.BookMarkAdapter;
 import org.rssowl.core.persist.event.BookMarkEvent;
 import org.rssowl.core.persist.event.BookMarkListener;
@@ -294,7 +294,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
     FileDialog dialog = new FileDialog(getSite().getShell(), SWT.SAVE);
     dialog.setOverwrite(true);
 
-    List<String> extensions = new ArrayList<String>();
+    List<String> extensions = new ArrayList<>();
     extensions.add("*.html"); //$NON-NLS-1$
 
     if (fInput.getMark() instanceof IBookMark)
@@ -418,7 +418,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
       Tree tree = fNewsTableControl.getViewer().getTree();
       TreeItem[] items = tree.getItems();
       if (items.length > 0) {
-        List<INews> newsToSave = new ArrayList<INews>();
+        List<INews> newsToSave = new ArrayList<>();
 
         /* Ungrouped */
         if (items[0].getItemCount() == 0) {
@@ -473,7 +473,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
     Tree tree = fNewsTableControl.getViewer().getTree();
     TreeItem[] items = tree.getItems();
     if (items.length > 0) {
-      List<TreeItem> itemsToSave = new ArrayList<TreeItem>();
+      List<TreeItem> itemsToSave = new ArrayList<>();
 
       /* Ungrouped */
       if (items[0].getItemCount() == 0) {
@@ -1373,7 +1373,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
     if (event == UIEvent.CLOSE) {
 
       /* Perform the State Change */
-      List<INews> newsToUpdate = new ArrayList<INews>();
+      List<INews> newsToUpdate = new ArrayList<>();
       for (INews newsItem : news) {
         if (newsItem.getState() == INews.State.NEW)
           newsToUpdate.add(newsItem);
@@ -1425,7 +1425,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
           }
 
           /* Perform the State Change */
-          List<INews> newsToUpdate = new ArrayList<INews>();
+          List<INews> newsToUpdate = new ArrayList<>();
           for (INews newsItem : news) {
             if (newsItem.getState() == INews.State.NEW)
               newsToUpdate.add(newsItem);
@@ -1574,21 +1574,16 @@ public class FeedView extends EditorPart implements IReusableEditor {
         /* Trigger reload of not loaded included Bookmarks */
         else if (mark instanceof FolderNewsMark) {
           IFolder folder = ((FolderNewsMark) mark).getFolder();
-          List<IBookMark> bookMarksToReload = new ArrayList<IBookMark>();
+          List<IBookMark> bookMarksToReload = new ArrayList<>();
           fillBookMarksToReload(bookMarksToReload, folder);
           if (!bookMarksToReload.isEmpty())
             new ReloadTypesAction(new StructuredSelection(bookMarksToReload.toArray()), getEditorSite().getShell()).run();
         }
 
-        /* Mark the Bookmark as visited */
         if (mark instanceof IBookMark)
           OwlDAO.getDAO(IBookMarkDAO.class).visited((IBookMark) mark);
-
-        /* Mark the Searchmark as visited */
         else if (mark instanceof ISearchMark)
           OwlDAO.getDAO(ISearchMarkDAO.class).visited((ISearchMark) mark);
-
-        /* Mark the newsbin as visited */
         else if (mark instanceof INewsBin)
           OwlDAO.getDAO(INewsBinDAO.class).visited((INewsBin) mark);
       }
@@ -1625,7 +1620,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
     List<IMark> marks = folder.getMarks();
     for (IMark mark : marks) {
       if (mark instanceof IBookMark) {
-        if ((((IBookMark) mark).getMostRecentNewsDate() == null))
+        if ((((IBookMark) mark).getLastRecentNewsDate() == null))
           bookMarksToReload.add((IBookMark) mark);
       }
     }

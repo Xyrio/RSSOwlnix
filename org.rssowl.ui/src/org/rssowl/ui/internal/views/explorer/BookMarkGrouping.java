@@ -43,6 +43,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author bpasero
@@ -63,21 +64,7 @@ public class BookMarkGrouping {
 
   /** Supported Grouping Types */
   public enum Type {
-
-    /** Grouping is Disabled */
-    NO_GROUPING,
-
-    /** Group by Last Visit Date */
-    GROUP_BY_LAST_VISIT,
-
-    /** Group by Popularity */
-    GROUP_BY_POPULARITY,
-
-    /** Group by Type */
-    GROUP_BY_TYPE,
-
-    /** Group by State */
-    GROUP_BY_STATE
+    NO_GROUPING, GROUP_BY_LAST_VISIT, GROUP_BY_POPULARITY, GROUP_BY_TYPE, GROUP_BY_STATE, GROUP_BY_LAST_RECENT, GROUP_BY_LAST_UPDATE
   }
 
   /** Valid Groups */
@@ -172,28 +159,25 @@ public class BookMarkGrouping {
   public EntityGroup[] group(List<? extends IEntity> input) {
     Assert.isTrue(fType != Type.NO_GROUPING, "Grouping is not enabled!"); //$NON-NLS-1$
 
-    /* Group by Last Visit Date */
     if (Type.GROUP_BY_LAST_VISIT == fType)
-      return createLastVisitDateGroups(input);
-
-    /* Group by Popularity */
+      return createDateGroups(input, IMark::getLastVisitDate);
     else if (Type.GROUP_BY_POPULARITY == fType)
       return createPopularityGroups(input);
-
-    /* Group by State */
     else if (Type.GROUP_BY_STATE == fType)
       return createStateGroups(input);
-
-    /* Group by Type */
     else if (Type.GROUP_BY_TYPE == fType)
       return createTypeGroups(input);
+    else if (Type.GROUP_BY_LAST_RECENT == fType)
+      return createDateGroups(input, IMark::getLastRecentDate);
+    else if (Type.GROUP_BY_LAST_UPDATE == fType)
+      return createDateGroups(input, IMark::getLastUpdateDate);
 
     /* Should not happen */
     return new EntityGroup[0];
   }
 
   /* Create the Group for the Type GROUP_BY_LAST_VISIT */
-  private EntityGroup[] createLastVisitDateGroups(List<? extends IEntity> input) {
+  private EntityGroup[] createDateGroups(List<? extends IEntity> input, Function<IMark, Date> dateGetter) {
 
     /* Today */
     Calendar today = DateUtils.getToday();
@@ -221,36 +205,24 @@ public class BookMarkGrouping {
     for (Object object : input) {
       if (object instanceof IMark) {
         IMark mark = (IMark) object;
-        Date lastVisitDate = mark.getLastVisitDate();
-
-        /* Feed was never visited */
-        if (lastVisitDate == null)
+        Date date = dateGetter.apply(mark);
+        if (date == null)
           new EntityGroupItem(gNever, mark);
-
-        /* Feed was visited Today */
-        else if (lastVisitDate.getTime() >= todayMillis)
+        else if (date.getTime() >= todayMillis)
           new EntityGroupItem(gToday, mark);
-
-        /* Feed was visited Yesterday */
-        else if (lastVisitDate.compareTo(yesterday) >= 0)
+        else if (date.compareTo(yesterday) >= 0)
           new EntityGroupItem(gYesterday, mark);
-
-        /* Feed was visited Earlier this Week */
-        else if (lastVisitDate.compareTo(earlierThisWeek) >= 0)
+        else if (date.compareTo(earlierThisWeek) >= 0)
           new EntityGroupItem(gEarlierThisWeek, mark);
-
-        /* Feed was visited Last Week */
-        else if (lastVisitDate.compareTo(lastWeek) >= 0)
+        else if (date.compareTo(lastWeek) >= 0)
           new EntityGroupItem(gLastWeek, mark);
-
-        /* Feed was visited more than a Week ago */
-        else
+        else /* more than a Week ago */
           new EntityGroupItem(gOlder, mark);
       }
     }
 
     /* Select all that are non empty */
-    return maskEmpty(new ArrayList<EntityGroup>(Arrays.asList(new EntityGroup[] { gNever, gToday, gYesterday, gEarlierThisWeek, gLastWeek, gOlder })));
+    return maskEmpty(new ArrayList<>(Arrays.asList(new EntityGroup[] { gNever, gToday, gYesterday, gEarlierThisWeek, gLastWeek, gOlder })));
   }
 
   /* Create the Group for the Type GROUP_BY_POPULARITY */
@@ -298,7 +270,7 @@ public class BookMarkGrouping {
     }
 
     /* Select all that are non empty */
-    return maskEmpty(new ArrayList<EntityGroup>(Arrays.asList(new EntityGroup[] { gVeryPopular, gPopular, gFairlyPopular, gUnpopular })));
+    return maskEmpty(new ArrayList<>(Arrays.asList(new EntityGroup[] { gVeryPopular, gPopular, gFairlyPopular, gUnpopular })));
   }
 
   /* Create the Group for the Type GROUP_BY_TYPE */
@@ -326,7 +298,7 @@ public class BookMarkGrouping {
     }
 
     /* Select all that are non empty */
-    return maskEmpty(new ArrayList<EntityGroup>(Arrays.asList(new EntityGroup[] { gBins, gSearches, gBookmarks })));
+    return maskEmpty(new ArrayList<>(Arrays.asList(new EntityGroup[] { gBins, gSearches, gBookmarks })));
   }
 
   /* Create the Group for the Type GROUP_BY_STATE */
@@ -366,11 +338,11 @@ public class BookMarkGrouping {
     }
 
     /* Select all that are non empty */
-    return maskEmpty(new ArrayList<EntityGroup>(Arrays.asList(new EntityGroup[] { gSticky, gNew, gUnread, gOther })));
+    return maskEmpty(new ArrayList<>(Arrays.asList(new EntityGroup[] { gSticky, gNew, gUnread, gOther })));
   }
 
   private EntityGroup[] maskEmpty(List<EntityGroup> items) {
-    List<EntityGroup> maskedItems = new ArrayList<EntityGroup>();
+    List<EntityGroup> maskedItems = new ArrayList<>();
     for (EntityGroup item : items) {
       if (item.size() > 0)
         maskedItems.add(item);

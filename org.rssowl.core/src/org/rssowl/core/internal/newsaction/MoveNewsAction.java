@@ -59,7 +59,7 @@ public class MoveNewsAction implements INewsAction {
     news = CoreUtils.replace(news, replacements);
 
     /* Run Filter */
-    List<IEntity> entitiesToSave = new ArrayList<IEntity>(news.size());
+    List<IEntity> entitiesToSave = new ArrayList<>(news.size());
 
     Long[] binIds = (Long[]) data;
     List<INewsBin> bins = CoreUtils.toBins(binIds);
@@ -70,7 +70,7 @@ public class MoveNewsAction implements INewsAction {
     for (INewsBin bin : bins) {
 
       /* For each News: Copy */
-      List<INews> copiedNews = new ArrayList<INews>(news.size());
+      List<INews> copiedNews = new ArrayList<>(news.size());
       for (INews newsitem : news) {
         if (newsitem.getParentId() != bin.getId()) { // News could be already inside the bin
           INews newsCopy = Owl.getModelFactory().createNews(newsitem, bin);

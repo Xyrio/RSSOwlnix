@@ -44,10 +44,13 @@ import java.util.List;
  */
 public abstract class Mark extends AbstractEntity implements IMark {
   private String fName;
+  private IFolder fParent;
+
+  private int fPopularity;
   private Date fCreationDate;
   private Date fLastVisitDate;
-  private int fPopularity;
-  private IFolder fParent;
+  private Date fLastRecentDate;
+  private Date fLastUpdateDate;
 
   /**
    * Store ID, Name and Folder for this Mark.
@@ -86,6 +89,38 @@ public abstract class Mark extends AbstractEntity implements IMark {
   @Override
   public synchronized void setLastVisitDate(Date lastVisitDate) {
     fLastVisitDate = lastVisitDate;
+  }
+
+  /*
+   * @see org.rssowl.core.model.types.IFeed#getLastRecentDate()
+   */
+  @Override
+  public Date getLastRecentDate() {
+    return fLastRecentDate;
+  }
+
+  /*
+   * @see org.rssowl.core.model.types.IFeed#setLastRecentDate(java.util.Date)
+   */
+  @Override
+  public void setLastRecentDate(Date lastRecentDate) {
+    fLastRecentDate = lastRecentDate;
+  }
+
+  /*
+   * @see org.rssowl.core.model.types.IFeed#getLastUpdateDate()
+   */
+  @Override
+  public Date getLastUpdateDate() {
+    return fLastUpdateDate;
+  }
+
+  /*
+   * @see org.rssowl.core.model.types.IFeed#setLastUpdateDate(java.util.Date)
+   */
+  @Override
+  public void setLastUpdateDate(Date lastUpdateDate) {
+    fLastUpdateDate = lastUpdateDate;
   }
 
   /*
@@ -155,7 +190,7 @@ public abstract class Mark extends AbstractEntity implements IMark {
   }
 
   protected static List<INews> getNews(List<NewsReference> newsRefs) {
-    List<INews> news = new ArrayList<INews>(newsRefs.size());
+    List<INews> news = new ArrayList<>(newsRefs.size());
 
     for (NewsReference newsRef : newsRefs) {
       INews newsItem = newsRef.resolve();

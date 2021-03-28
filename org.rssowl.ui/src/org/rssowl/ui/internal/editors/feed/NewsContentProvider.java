@@ -465,7 +465,7 @@ public class NewsContentProvider implements ITreeContentProvider {
 
     /* Check for Recent Date or 5 Days Age */
     else if ((filter == Type.SHOW_RECENT || filter == Type.SHOW_LAST_5_DAYS) && input instanceof IBookMark) {
-      Date mostRecentNewsDate = ((IBookMark) input).getMostRecentNewsDate();
+      Date mostRecentNewsDate = ((IBookMark) input).getLastRecentNewsDate();
       if (mostRecentNewsDate != null) { //Date can be null e.g. when having more than 1 Bookmark for the same Feed (known issue)
         if (filter == Type.SHOW_RECENT && (mostRecentNewsDate.getTime() < (DateUtils.getToday().getTimeInMillis() - DateUtils.DAY)))
           return false;

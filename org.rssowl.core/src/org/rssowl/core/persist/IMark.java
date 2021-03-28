@@ -26,8 +26,6 @@ package org.rssowl.core.persist;
 
 import org.rssowl.core.persist.dao.IFolderDAO;
 
-import java.util.Date;
-
 /**
  * The abstract super-type of <code>BookMark</code> and
  * <code>SearchMark</code>. Used to associate Bookmarks and Searchmarks with
@@ -35,7 +33,7 @@ import java.util.Date;
  *
  * @author bpasero
  */
-public interface IMark extends IFolderChild {
+public interface IMark extends IFolderChild, ITracking {
 
   /** One of the fields in this type described as constant */
   public static final int NAME = 0;
@@ -48,44 +46,6 @@ public interface IMark extends IFolderChild {
 
   /** One of the fields in this type described as constant */
   public static final int POPULARITY = 3;
-
-  /**
-   * @return How often this Feed has been visited by the User.
-   */
-  int getPopularity();
-
-  /**
-   * @param popularity How often this Feed has been visited by the User.
-   */
-  void setPopularity(int popularity);
-
-  /**
-   * Get the Date this Mark was last displayed to the User.
-   *
-   * @return the Date this Mark was last displayed to the User.
-   */
-  Date getLastVisitDate();
-
-  /**
-   * Set the Date this Mark was last displayed to the User.
-   *
-   * @param lastVisitDate The Date this Mark was last displayed to the User.
-   */
-  void setLastVisitDate(Date lastVisitDate);
-
-  /**
-   * Get the Date this Mark was created.
-   *
-   * @return the creation date of this mark.
-   */
-  Date getCreationDate();
-
-  /**
-   * Set the Date this Mark was created.
-   *
-   * @param creationDate The creation date of this mark.
-   */
-  void setCreationDate(Date creationDate);
 
   /**
    * Get the Name for this Mark.

@@ -39,6 +39,8 @@ public class Messages extends NLS {
   public static String BookMarkExplorer_FOLDER;
   public static String BookMarkExplorer_GROUP_BY_LAST_VISIT;
   public static String BookMarkExplorer_GROUP_BY_POPULARITY;
+  public static String BookMarkExplorer_GROUP_BY_LAST_RECENT;
+  public static String BookMarkExplorer_GROUP_BY_LAST_UPDATE;
   public static String BookMarkExplorer_GROUP_BY_STATE;
   public static String BookMarkExplorer_GROUP_BY_TYPE;
   public static String BookMarkExplorer_GROUP_ELEMENTS;

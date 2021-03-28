@@ -1,7 +1,7 @@
 /*   **********************************************************************  **
  **   Copyright notice                                                       **
  **                                                                          **
- **   (c) 2005-2009 RSSOwl Development Team                                  **
+ **   (c) 2005-2011 RSSOwl Development Team                                  **
  **   http://www.rssowl.org/                                                 **
  **                                                                          **
  **   All rights reserved                                                    **
@@ -21,72 +21,65 @@
  **     RSSOwl Development Team - initial API and implementation             **
  **                                                                          **
  **  **********************************************************************  */
-
 package org.rssowl.core.persist;
-
-import org.rssowl.core.persist.reference.BookMarkReference;
-import org.rssowl.core.persist.reference.FeedLinkReference;
 
 import java.util.Date;
 
-/**
- * A usual bookmark as seen in Firefox or other Browsers. The Bookmark is used
- * to define a position for a <code>Feed</code> inside the hierarchy of
- * Folders. The user may define some properties, e.g. how often to reload the
- * related Feed.
- *
- * @author bpasero
- */
-public interface IBookMark extends INewsMark {
-
-  /** One of the fields in this type described as constant */
-  public static final int IS_ERROR_LOADING = 4;
+public interface ITracking {
 
   /**
-   * @return TRUE in case the last time this BookMark's Feed was reloading
-   * returned an Error, FALSE otherwise.
+   * @return How often this Feed has been visited by the User.
    */
-  boolean isErrorLoading();
+  int getPopularity();
 
   /**
-   * @param isErrorLoading TRUE in case the last time this BookMark's Feed was
-   * reloading returned an Error, FALSE otherwise.
+   * @param popularity How often this Feed has been visited by the User.
    */
-  void setErrorLoading(boolean isErrorLoading);
+  void setPopularity(int popularity);
 
   /**
-   * @return a reference to the link of the feed that this mark is related to.
-   */
-  FeedLinkReference getFeedLinkReference();
-
-  /**
-   * Sets the reference to the link of the feed that this mark is related to.
+   * Get the Date this Mark was created.
    *
-   * @param feedLinkRef
+   * @return the creation date of this mark.
    */
-  void setFeedLinkReference(FeedLinkReference feedLinkRef);
-
-  /*
-   * @see org.rssowl.core.persist.IEntity#toReference()
-   */
-  @Override
-  BookMarkReference toReference();
+  Date getCreationDate();
 
   /**
-   * @return the number of news in this IBookMark that are sticky.
-   */
-  int getStickyNewsCount();
-
-  /**
-   * @return the most recent Date when new INews where added to this IBookMark
-   * or {@code null} if not yet set.
-   */
-  Date getLastRecentNewsDate();
-
-  /**
-   * Set the most recent Date when new INews where added to this IBookMark.
+   * Set the Date this Mark was created.
    *
-   * @param date Non-null Date object.
+   * @param creationDate The creation date of this mark.
    */
-  void setLastRecentNewsDate(Date date);
+  void setCreationDate(Date creationDate);
+
+  /**
+   * @return date last displayed to the user
+   */
+  Date getLastVisitDate();
+
+  /**
+   * @return date last recent date of news
+   */
+  Date getLastRecentDate();
+
+  /**
+   * @return date last updated the news
+   */
+  Date getLastUpdateDate();
+
+  /**
+   * @param lastVisitDate date last displayed to the user
+   */
+  void setLastVisitDate(Date lastVisitDate);
+
+  /**
+   * @param lastRecentDate date last recent date of news
+   */
+  void setLastRecentDate(Date lastRecentDate);
+
+  /**
+   * @param lastUpdateDate date last updated the news
+   */
+  void setLastUpdateDate(Date lastUpdateDate);
+
 }
+

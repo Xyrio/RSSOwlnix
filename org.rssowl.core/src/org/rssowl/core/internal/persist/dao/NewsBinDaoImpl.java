@@ -31,10 +31,11 @@ import org.rssowl.core.persist.dao.INewsBinDAO;
 import org.rssowl.core.persist.event.NewsBinEvent;
 import org.rssowl.core.persist.event.NewsBinListener;
 import org.rssowl.core.persist.service.PersistenceException;
+import org.rssowl.core.persist.service.TrackingBL;
 
 import com.db4o.ext.Db4oException;
 
-import java.util.Date;
+import java.util.Collection;
 
 /**
  * A data-access-object for <code>INewsBin</code>s.
@@ -46,9 +47,8 @@ public class NewsBinDaoImpl extends AbstractEntityDAO<INewsBin, NewsBinListener,
   }
 
   /*
-   * @see
-   * org.rssowl.core.internal.persist.dao.AbstractEntityDAO#createSaveEventTemplate
-   * (org.rssowl.core.persist.IEntity)
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * createSaveEventTemplate (org.rssowl.core.persist.IEntity)
    */
   @Override
   protected NewsBinEvent createSaveEventTemplate(INewsBin entity) {
@@ -65,6 +65,27 @@ public class NewsBinDaoImpl extends AbstractEntityDAO<INewsBin, NewsBinListener,
   }
 
   /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * save(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public INewsBin save(INewsBin object) {
+    TrackingBL.onChanged(object);
+    return super.save(object);
+  }
+
+  /*
+   * @see org.rssowl.core.internal.persist.dao.AbstractEntityDAO#
+   * saveAll(org.rssowl.core.persist.IEntity)
+   */
+  @Override
+  public void saveAll(Collection<INewsBin> objects) {
+    for (INewsBin object : objects)
+      TrackingBL.onChanged(object);
+    super.saveAll(objects);
+  }
+
+  /*
    * @see
    * org.rssowl.core.persist.dao.INewsBinDAO#visited(org.rssowl.core.persist
    * .INewsBin)
@@ -73,8 +94,7 @@ public class NewsBinDaoImpl extends AbstractEntityDAO<INewsBin, NewsBinListener,
   public void visited(INewsBin mark) {
     fWriteLock.lock();
     try {
-      mark.setLastVisitDate(new Date());
-      mark.setPopularity(mark.getPopularity() + 1);
+      TrackingBL.onVisited(mark);
       preSave(mark);
       fDb.ext().set(mark, 1);
       fDb.commit();
@@ -85,4 +105,5 @@ public class NewsBinDaoImpl extends AbstractEntityDAO<INewsBin, NewsBinListener,
     }
     DBHelper.cleanUpAndFireEvents();
   }
+
 }

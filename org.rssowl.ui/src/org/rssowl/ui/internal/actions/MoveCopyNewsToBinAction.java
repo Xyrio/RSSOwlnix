@@ -31,8 +31,8 @@ import org.rssowl.core.Owl;
 import org.rssowl.core.internal.persist.pref.DefaultPreferences;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INewsBin;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.ui.internal.Controller;
 import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.undo.CopyOperation;
@@ -128,7 +128,7 @@ public class MoveCopyNewsToBinAction extends Action {
     boolean requiresSave = false;
 
     /* Only consider those not already present in the Bin */
-    List<INews> newsToMoveCopy = new ArrayList<INews>(news.size());
+    List<INews> newsToMoveCopy = new ArrayList<>(news.size());
     for (INews newsitem : news) {
       if (!fBin.containsNews(newsitem))
         newsToMoveCopy.add(newsitem);
@@ -139,7 +139,7 @@ public class MoveCopyNewsToBinAction extends Action {
       return;
 
     /* For each News: Copy */
-    List<INews> copiedNews = new ArrayList<INews>(newsToMoveCopy.size());
+    List<INews> copiedNews = new ArrayList<>(newsToMoveCopy.size());
     for (INews newsitem : newsToMoveCopy) {
       INews newsCopy = Owl.getModelFactory().createNews(newsitem, fBin);
       copiedNews.add(newsCopy);
