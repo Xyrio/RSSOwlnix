@@ -58,7 +58,6 @@ import org.rssowl.core.connection.IConnectionPropertyConstants;
 import org.rssowl.core.connection.MonitorCanceledException;
 import org.rssowl.core.connection.NotModifiedException;
 import org.rssowl.core.connection.SyncConnectionException;
-import org.rssowl.core.connection.UnknownProtocolException;
 import org.rssowl.core.internal.InternalOwl;
 import org.rssowl.core.internal.persist.pref.DefaultPreferences;
 import org.rssowl.core.interpreter.ITypeExporter.Options;
@@ -1052,18 +1051,29 @@ public class Controller {
       if (faviconBytes == null)
         faviconBytes = Owl.getConnectionService().getFeedIcon(feedLink, monitor);
 
-      /* Store locally */
-      if (shouldProceedReloading(monitor, bookmark))
-        OwlUI.storeImage(bookmark.getId(), faviconBytes, OwlUI.BOOKMARK, 16, 16);
-
-      /* This will trigger an update to the viewer to show the favicon */
-      if (faviconBytes != null)
-        OwlDAO.save(bookmark);
-    } catch (UnknownProtocolException e) {
-      Activator.getDefault().getLog().log(e.getStatus());
+      saveandReload(bookmark, faviconBytes, monitor);
+      
     } catch (ConnectionException e) {
       Activator.getDefault().getLog().log(e.getStatus());
     }
+  }
+
+  /**
+   * Updates and reloads the {@code bookmark} with new {@code faviconBytes} and
+   * triggers an update to viewer.
+   *
+   * @param bookmark the bookmark
+   * @param faviconBytes the favicon image as byte array
+   * @param monitor the monitor
+   */
+  private void saveandReload(final IBookMark bookmark, byte[] faviconBytes, final IProgressMonitor monitor) {
+    /* Store locally */
+    if (shouldProceedReloading(monitor, bookmark))
+      OwlUI.storeImage(bookmark.getId(), faviconBytes, OwlUI.BOOKMARK, 16, 16);
+
+    /* This will trigger an update to the viewer to show the favicon */
+    if (faviconBytes != null)
+      OwlDAO.save(bookmark);
   }
 
   private byte[] toByte(String file) {

@@ -121,9 +121,14 @@ public class CoreUtils {
   /** Newsbin Index Value for Long Arrays */
   public static final int NEWSBIN = 2;
 
-  /** Mime Types for Feeds */
-  public static final String[] FEED_MIME_TYPES = new String[] { "application/rss+xml", "application/atom+xml", "application/rdf+xml" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  public static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$
 
+  public static final String JSON = "json"; //$NON-NLS-1$
+  
+  /** Mime Types for Feeds */
+  public static final String[] FEED_MIME_TYPES = new String[] { "application/rss+xml", "application/atom+xml", "application/rdf+xml", APPLICATION_JSON }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+  
+  
   /* A Set of Stop Words in English */
   private static final Set<String> STOP_WORDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(StringUtils.ENGLISH_STOP_WORDS)));
 
