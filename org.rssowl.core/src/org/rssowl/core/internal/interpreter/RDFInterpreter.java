@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @author bpasero
  */
-public class RDFInterpreter extends BasicInterpreter {
+public class RDFInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   /*

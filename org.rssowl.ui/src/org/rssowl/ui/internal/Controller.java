@@ -58,6 +58,7 @@ import org.rssowl.core.connection.IConnectionPropertyConstants;
 import org.rssowl.core.connection.MonitorCanceledException;
 import org.rssowl.core.connection.NotModifiedException;
 import org.rssowl.core.connection.SyncConnectionException;
+import org.rssowl.core.connection.UnknownProtocolException;
 import org.rssowl.core.internal.InternalOwl;
 import org.rssowl.core.internal.persist.pref.DefaultPreferences;
 import org.rssowl.core.interpreter.ITypeExporter.Options;
@@ -282,9 +283,9 @@ public class Controller {
   private LabelListener fLabelListener;
   private ListenerList<BookMarkLoadListener> fBookMarkLoadListeners = new ListenerList<>();
   private final int fConnectionTimeout;
-  private List<ShareProvider> fShareProviders = new ArrayList<ShareProvider>();
-  private Map<String, LinkTransformer> fLinkTransformers = new HashMap<String, LinkTransformer>();
-  private Map<Long, Long> fDeletedBookmarksCache = new ConcurrentHashMap<Long, Long>();
+  private List<ShareProvider> fShareProviders = new ArrayList<>();
+  private Map<String, LinkTransformer> fLinkTransformers = new HashMap<>();
+  private Map<Long, Long> fDeletedBookmarksCache = new ConcurrentHashMap<>();
   private String fFeedSearchUrl;
   private boolean fShowWelcome;
   private boolean fPortable;
@@ -477,7 +478,7 @@ public class Controller {
     /* Retrieve List of Deleted Labels */
     IPreferenceScope preferences = Owl.getPreferenceService().getGlobalScope();
     String[] deletedLabels = preferences.getStrings(DefaultPreferences.DELETED_LABELS);
-    Set<String> deletedLabelsSet = new HashSet<String>();
+    Set<String> deletedLabelsSet = new HashSet<>();
     if (deletedLabels != null) {
       for (String label : deletedLabels) {
         deletedLabelsSet.add(label);
@@ -534,7 +535,7 @@ public class Controller {
   }
 
   private void updateLabelConditions(String oldLabelName, String newLabelName) {
-    Set<ISearchMark> searchMarksToUpdate = new HashSet<ISearchMark>(1);
+    Set<ISearchMark> searchMarksToUpdate = new HashSet<>(1);
 
     for (ISearchMark searchMark : fSearchMarkDAO.loadAll()) {
       List<ISearchCondition> conditions = searchMark.getSearchConditions();
@@ -555,7 +556,7 @@ public class Controller {
   }
 
   private List<EntityPropertyPageWrapper> loadEntityPropertyPages() {
-    List<EntityPropertyPageWrapper> pages = new ArrayList<EntityPropertyPageWrapper>();
+    List<EntityPropertyPageWrapper> pages = new ArrayList<>();
 
     IExtensionRegistry reg = Platform.getExtensionRegistry();
     IConfigurationElement elements[] = reg.getConfigurationElementsFor(ENTITY_PROPERTY_PAGE_EXTENSION_POINT);
@@ -568,7 +569,7 @@ public class Controller {
         int order = Integer.valueOf(element.getAttribute("order")); //$NON-NLS-1$
         boolean handlesMultipleEntities = Boolean.valueOf(element.getAttribute("handlesMultipleEntities")); //$NON-NLS-1$
 
-        List<Class<?>> targetEntities = new ArrayList<Class<?>>();
+        List<Class<?>> targetEntities = new ArrayList<>();
         IConfigurationElement[] entityTargets = element.getChildren("targetEntity"); //$NON-NLS-1$
         for (IConfigurationElement entityTarget : entityTargets)
           targetEntities.add(Class.forName(entityTarget.getAttribute("class"))); //$NON-NLS-1$
@@ -605,10 +606,10 @@ public class Controller {
    * @return The EntityPropertyPageWrappers for the given Entity.
    */
   public Set<EntityPropertyPageWrapper> getEntityPropertyPagesFor(List<IEntity> entities) {
-    Set<EntityPropertyPageWrapper> pages = new HashSet<EntityPropertyPageWrapper>();
+    Set<EntityPropertyPageWrapper> pages = new HashSet<>();
 
     /* Retrieve Class-Objects from Entities */
-    Set<Class<? extends IEntity>> entityClasses = new HashSet<Class<? extends IEntity>>();
+    Set<Class<? extends IEntity>> entityClasses = new HashSet<>();
     for (IEntity entity : entities)
       entityClasses.add(entity.getClass());
 
@@ -698,7 +699,7 @@ public class Controller {
     boolean highPrio = bookmarks.size() == 1;
 
     /* Create a Task for each Feed to Reload */
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     for (final IBookMark bookmark : bookmarks) {
       ReloadTask task = new ReloadTask(bookmark, properties, shell, highPrio ? ITask.Priority.SHORT : ITask.Priority.DEFAULT);
 
@@ -1051,8 +1052,10 @@ public class Controller {
       if (faviconBytes == null)
         faviconBytes = Owl.getConnectionService().getFeedIcon(feedLink, monitor);
 
-      saveandReload(bookmark, faviconBytes, monitor);
-      
+      saveAndReload(bookmark, faviconBytes, monitor);
+
+    } catch (UnknownProtocolException e) {
+      Activator.getDefault().getLog().log(e.getStatus());
     } catch (ConnectionException e) {
       Activator.getDefault().getLog().log(e.getStatus());
     }
@@ -1066,7 +1069,7 @@ public class Controller {
    * @param faviconBytes the favicon image as byte array
    * @param monitor the monitor
    */
-  private void saveandReload(final IBookMark bookmark, byte[] faviconBytes, final IProgressMonitor monitor) {
+  private void saveAndReload(final IBookMark bookmark, byte[] faviconBytes, final IProgressMonitor monitor) {
     /* Store locally */
     if (shouldProceedReloading(monitor, bookmark))
       OwlUI.storeImage(bookmark.getId(), faviconBytes, OwlUI.BOOKMARK, 16, 16);
@@ -1312,7 +1315,7 @@ public class Controller {
     if (providerState.length > fShareProviders.size())
       return fShareProviders;
 
-    List<ShareProvider> sortedProviders = new ArrayList<ShareProvider>();
+    List<ShareProvider> sortedProviders = new ArrayList<>();
     for (int i = 0; i < providerState.length; i++) {
       int providerIndex = providerState[i];
       boolean enabled = providerIndex > 0;
@@ -1365,7 +1368,7 @@ public class Controller {
    * @return a {@link List} of {@link LinkTransformer} sorted by name;
    */
   public List<LinkTransformer> getLinkTransformers() {
-    List<LinkTransformer> transformers = new ArrayList<LinkTransformer>();
+    List<LinkTransformer> transformers = new ArrayList<>();
     transformers.addAll(fLinkTransformers.values());
 
     Collections.sort(transformers, new Comparator<LinkTransformer>() {

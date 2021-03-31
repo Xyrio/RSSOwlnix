@@ -41,7 +41,7 @@ import java.util.List;
  * 
  * @author bpasero
  */
-public abstract class BasicInterpreter implements IFormatInterpreter {
+public abstract class AbstractXmlInterpreter implements IFormatInterpreter {
   private String fDefaultNamespaceUri;
   private String fRootElementName;
 

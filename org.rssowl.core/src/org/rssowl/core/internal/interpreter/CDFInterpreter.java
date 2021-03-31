@@ -43,7 +43,7 @@ import java.util.List;
  *
  * @author bpasero
  */
-public class CDFInterpreter extends BasicInterpreter {
+public class CDFInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   /*

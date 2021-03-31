@@ -35,13 +35,9 @@ import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.osgi.util.NLS;
 import org.jdom.Document;
 import org.jdom.input.DOMBuilder;
-import org.rssowl.core.connection.IAbortable;
 import org.rssowl.core.internal.Activator;
-import org.rssowl.core.internal.connection.ConnectionUtils;
-import org.rssowl.core.internal.interpreter.json.JSONException;
 import org.rssowl.core.internal.interpreter.json.JSONInterpreter;
 import org.rssowl.core.internal.interpreter.json.JSONObject;
-import org.rssowl.core.internal.interpreter.json.JSONTokener;
 import org.rssowl.core.interpreter.IElementHandler;
 import org.rssowl.core.interpreter.IFormatInterpreter;
 import org.rssowl.core.interpreter.IInterpreterService;
@@ -59,9 +55,7 @@ import org.rssowl.core.persist.IFolderChild;
 import org.rssowl.core.util.ExtensionUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -104,8 +98,6 @@ public class InterpreterServiceImpl implements IInterpreterService {
 
   /* ID for ElementHandler Contributions */
   private static final String ELHANDLER_EXTENSION_POINT = "org.rssowl.core.ElementHandler"; //$NON-NLS-1$
-  
-  private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
 
   private volatile Map<String, IFormatInterpreter> fFormatInterpreters;
   private volatile Map<String, ITypeImporter> fTypeImporters;
@@ -127,24 +119,10 @@ public class InterpreterServiceImpl implements IInterpreterService {
    */
   @Override
   public void interpret(InputStream inS, IFeed feed, Map<Object, Object> properties) throws ParserException, InterpreterException {
-    if (ConnectionUtils.hasJsonContent(inS)) {
-      /* Read JSON Object from Response and parse */
-      boolean isError = false;
-      try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
-        JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
-        new JsonInterpreter().interpret(jsonFeedObject, feed);
-      } catch (JSONException | IOException e) {
-        isError = true;
-      } finally {
-        if (isError && inS instanceof IAbortable) {
-          ((IAbortable) inS).abort(); //Abort the stream to avoid downloading the full content
-        }
-      }
+    if (JsonInterpreter.interpret(inS, feed))
       return;
-    }
 
     Document document = fXMLParserImpl.parse(inS, properties);
-
     if (document != null) {
       interpretJDomDocument(document, feed);
     }
@@ -299,19 +277,19 @@ public class InterpreterServiceImpl implements IInterpreterService {
     });
 
     /* Load Format Interpreters */
-    fFormatInterpreters = new HashMap<String, IFormatInterpreter>();
+    fFormatInterpreters = new HashMap<>();
     loadFormatInterpreters();
 
     /* Load Type Importers */
-    fTypeImporters = new HashMap<String, ITypeImporter>();
+    fTypeImporters = new HashMap<>();
     loadTypeImporters();
 
     /* Load Type Exporters */
-    fTypeExporters = new HashMap<String, ITypeExporter>();
+    fTypeExporters = new HashMap<>();
     loadTypeExporters();
 
     /* Load Namespace Handlers */
-    fNamespaceHandlers = new HashMap<String, INamespaceHandler>();
+    fNamespaceHandlers = new HashMap<>();
     loadNamespaceHandlers();
 
     /* Load Element Handlers */
@@ -344,7 +322,7 @@ public class InterpreterServiceImpl implements IInterpreterService {
     IConfigurationElement elements[] = reg.getConfigurationElementsFor(ELHANDLER_EXTENSION_POINT);
 
     if (elements.length > 0)
-      fElementHandlers = new HashMap<String, IElementHandler>();
+      fElementHandlers = new HashMap<>();
 
     for (IConfigurationElement element : elements) {
       String elementName = element.getAttribute("elementName").toLowerCase(); //$NON-NLS-1$

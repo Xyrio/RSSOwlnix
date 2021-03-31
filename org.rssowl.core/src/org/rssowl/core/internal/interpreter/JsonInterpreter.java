@@ -24,12 +24,17 @@
 
 package org.rssowl.core.internal.interpreter;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.jdom.Document;
 import org.rssowl.core.Owl;
+import org.rssowl.core.connection.HttpConnectionInputStream;
+import org.rssowl.core.connection.IAbortable;
 import org.rssowl.core.internal.Activator;
+import org.rssowl.core.internal.connection.DefaultProtocolHandler;
 import org.rssowl.core.internal.interpreter.json.JSONArray;
 import org.rssowl.core.internal.interpreter.json.JSONException;
 import org.rssowl.core.internal.interpreter.json.JSONObject;
+import org.rssowl.core.internal.interpreter.json.JSONTokener;
 import org.rssowl.core.interpreter.IFormatInterpreter;
 import org.rssowl.core.interpreter.InterpreterException;
 import org.rssowl.core.persist.IAttachment;
@@ -37,9 +42,11 @@ import org.rssowl.core.persist.IFeed;
 import org.rssowl.core.persist.IModelFactory;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.IPerson;
-import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -52,6 +59,11 @@ import java.util.Set;
  * @author r.roykrishna
  */
 public class JsonInterpreter implements IFormatInterpreter {
+
+  public static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$
+  public static final String JSON = "json"; //$NON-NLS-1$
+  private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
+  private static final String TITLE_ATTR_NAME = "title"; //$NON-NLS-1$
 
   /* Constants used to obtain data from the JSON Objects */
   // refer to https://jsonfeed.org/version/1.1
@@ -120,8 +132,8 @@ public class JsonInterpreter implements IFormatInterpreter {
 
   private void processFeed(JSONObject json, IFeed feed) throws JSONException, URISyntaxException {
 
-    feed.setFormat(CoreUtils.JSON);
-    
+    feed.setFormat(JSON);
+
     /* Title */
     feed.setTitle(getString(json, TITLE));
 
@@ -195,7 +207,7 @@ public class JsonInterpreter implements IFormatInterpreter {
     }
 
     /* Categories / Labels / State */
-    Set<String> labels = new HashSet<String>(1);
+    Set<String> labels = new HashSet<>(1);
     if (item.has(ITEM_TAGS)) {
       JSONArray categories = item.getJSONArray(ITEM_TAGS);
       for (int i = 0; i < categories.length(); i++) {
@@ -247,6 +259,78 @@ public class JsonInterpreter implements IFormatInterpreter {
     } catch (ParseException e) {
       return new Date();
     }
+  }
+
+  /**
+   * If the stream contains JOSON content and returns true if so false
+   * otherwise.
+   *
+   * @param inStream the input stream
+   * @return {@code true}, if stream has json content, {@code false} otherwise
+   */
+  public static boolean hasJsonContent(final InputStream inStream) {
+    return inStream instanceof HttpConnectionInputStream && ((HttpConnectionInputStream) inStream).getContentType().toLowerCase().equals(APPLICATION_JSON);
+  }
+
+  private static void abortConnection(InputStream inS) {
+    if (inS instanceof IAbortable) {
+      ((IAbortable) inS).abort(); // Abort the stream to avoid downloading the full content
+    }
+  }
+
+  public static boolean interpret(InputStream inS, IFeed feed) throws InterpreterException {
+    if (hasJsonContent(inS)) {
+      /* Read JSON Object from Response and parse */
+      try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
+        JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
+        new JsonInterpreter().interpret(jsonFeedObject, feed);
+      } catch (JSONException | IOException e) {
+        abortConnection(inS);
+      }
+      return true;
+    }
+    return false;
+  }
+
+  public static byte[] getFeedIcon(DefaultProtocolHandler defaultProtocolHandler, URI link, IProgressMonitor monitor) {
+    byte[] ret = null;
+    InputStream inS = null;
+    try {
+      inS = defaultProtocolHandler.openStream(link, monitor);
+      if (JsonInterpreter.hasJsonContent(inS)) {
+        /* Read JSON Object from Response and parse */
+        try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
+          JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
+          String iconUriStr = jsonFeedObject.getString(ICON);
+          if (iconUriStr != null) {
+            link = new URI(iconUriStr);
+            ret = defaultProtocolHandler.loadFavicon(link, true, false, monitor);
+          }
+        } catch (JSONException | IOException e) {
+          abortConnection(inS);
+        }
+      }
+    } catch (Exception e) {
+      Activator.getDefault().logError(e.getMessage(), e);
+    } finally {
+      defaultProtocolHandler.closeStream(inS, true); // Abort the stream to avoid downloading the full content
+      inS = null;
+    }
+    return ret;
+  }
+
+  public static String getLabel(InputStream inS) {
+    String ret = null;
+    if (hasJsonContent(inS)) {
+      /* Read JSON Object from Response and parse */
+      try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
+        JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
+        ret = jsonFeedObject.getString(TITLE_ATTR_NAME);
+      } catch (JSONException | IOException e) {
+        abortConnection(inS);
+      }
+    }
+    return ret;
   }
 
 }

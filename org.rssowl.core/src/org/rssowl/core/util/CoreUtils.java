@@ -32,6 +32,7 @@ import org.rssowl.core.connection.ConnectionException;
 import org.rssowl.core.connection.MonitorCanceledException;
 import org.rssowl.core.connection.UnknownProtocolException;
 import org.rssowl.core.internal.Activator;
+import org.rssowl.core.internal.interpreter.JsonInterpreter;
 import org.rssowl.core.internal.newsaction.CopyNewsAction;
 import org.rssowl.core.internal.newsaction.MoveNewsAction;
 import org.rssowl.core.internal.persist.pref.DefaultPreferences;
@@ -121,14 +122,10 @@ public class CoreUtils {
   /** Newsbin Index Value for Long Arrays */
   public static final int NEWSBIN = 2;
 
-  public static final String APPLICATION_JSON = "application/json"; //$NON-NLS-1$
-
-  public static final String JSON = "json"; //$NON-NLS-1$
-  
   /** Mime Types for Feeds */
-  public static final String[] FEED_MIME_TYPES = new String[] { "application/rss+xml", "application/atom+xml", "application/rdf+xml", APPLICATION_JSON }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-  
-  
+  public static final String[] FEED_MIME_TYPES = new String[] { "application/rss+xml", "application/atom+xml", "application/rdf+xml", JsonInterpreter.APPLICATION_JSON }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+
   /* A Set of Stop Words in English */
   private static final Set<String> STOP_WORDS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(StringUtils.ENGLISH_STOP_WORDS)));
 

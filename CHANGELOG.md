@@ -1,6 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
-# 2.8.1-beta (WIP)
+# 2.9.0-beta (WIP)
+- added JSON Feed 1.1 support as described by [jsonfeed.org](https://jsonfeed.org) [example](https://jsonfeed.org/feed.json) [#68](https://github.com/Xyrio/RSSOwlnix/issues/68) [PR#98](https://github.com/Xyrio/RSSOwlnix/pull/98)
 - added feeds:// for https:// (also feed:https:// is still supported)
 - improvement to keep http or https accordingly when reconstructing urls (favico,etc)
 - support more media tags from youtube, peertube [#74](https://github.com/Xyrio/RSSOwlnix/issues/74)

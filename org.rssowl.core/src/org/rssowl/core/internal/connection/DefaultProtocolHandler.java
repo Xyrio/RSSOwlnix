@@ -79,9 +79,7 @@ import org.rssowl.core.connection.NotModifiedException;
 import org.rssowl.core.connection.ProxyAuthenticationRequiredException;
 import org.rssowl.core.connection.SyncConnectionException;
 import org.rssowl.core.internal.Activator;
-import org.rssowl.core.internal.interpreter.json.JSONException;
-import org.rssowl.core.internal.interpreter.json.JSONObject;
-import org.rssowl.core.internal.interpreter.json.JSONTokener;
+import org.rssowl.core.internal.interpreter.JsonInterpreter;
 import org.rssowl.core.interpreter.EncodingException;
 import org.rssowl.core.persist.IConditionalGet;
 import org.rssowl.core.persist.IFeed;
@@ -175,11 +173,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
   private static final int MAX_DETECTED_TITLE_LENGTH = 1024;
 
   private static final String USER_AGENT = CoreUtils.getUserAgent();
-  
-  private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$
-  private static final String TITLE_ATTR_NAME = "title"; //$NON-NLS-1$
-  private static final String ICON = "icon"; //$NON-NLS-1$
-  
+
 //  private static boolean fgSSLInitialized;
 //  private static boolean fgFeedProtocolInitialized;
 
@@ -271,7 +265,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     return null;
   }
 
-  protected void closeStream(InputStream inS, boolean abort) {
+  public void closeStream(InputStream inS, boolean abort) {
     try {
       if (abort && inS instanceof IAbortable)
         ((IAbortable) inS).abort();
@@ -289,36 +283,12 @@ public class DefaultProtocolHandler implements IProtocolHandler {
   @Override
   public byte[] getFeedIcon(URI link, IProgressMonitor monitor) {
 
-    InputStream inS = null;
-    try {
-      inS = openStream(link, monitor);
-      if (ConnectionUtils.hasJsonContent(inS)) {
-        /* Read JSON Object from Response and parse */
-        boolean isError = false;
-        try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
-          JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
-          String iconUriStr = jsonFeedObject.getString(ICON);
-          if(iconUriStr != null) {
-            link = new URI(iconUriStr); 
-            return loadFavicon(link, true, false, monitor);
-          }
-        } catch (JSONException | IOException e) {
-          isError = true;
-        } finally {
-          if (isError && inS instanceof IAbortable) {
-            ((IAbortable) inS).abort(); // Abort the stream to avoid downloading the full content
-          }
-        }
-      }
-    } catch (Exception e) {
-      Activator.getDefault().logError(e.getMessage(), e);
-    } finally {
-      closeStream(inS, true); // Abort the stream to avoid downloading the full content
-      inS = null;
-    }
-    
+    byte[] favicon = JsonInterpreter.getFeedIcon(this, link, monitor);
+    if (favicon != null)
+      return favicon;
+
     /* Try to load the Favicon directly from the supplied Link */
-    byte[] favicon = loadFavicon(link, false, false, monitor);
+    favicon = loadFavicon(link, false, false, monitor);
 
     /* Fallback: Scan the Homepage of the Link for a Favicon entry */
     if (favicon == null || favicon.length == 0) {
@@ -342,7 +312,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
   }
 
   /* Load a possible Favicon from the given Feed */
-  byte[] loadFavicon(URI link, boolean isFavicon, boolean rewriteHost, IProgressMonitor monitor) {
+  public byte[] loadFavicon(URI link, boolean isFavicon, boolean rewriteHost, IProgressMonitor monitor) {
     InputStream inS = null;
     boolean isError = false;
     try {
@@ -444,7 +414,7 @@ public class DefaultProtocolHandler implements IProtocolHandler {
     return openStream(link, properties);
   }
 
-  protected InputStream openStream(URI link, IProgressMonitor monitor) throws ConnectionException {
+  public InputStream openStream(URI link, IProgressMonitor monitor) throws ConnectionException {
 
     /* Define Properties for Connection */
     Map<Object, Object> properties = new HashMap<>();
@@ -1009,20 +979,10 @@ public class DefaultProtocolHandler implements IProtocolHandler {
       if (monitor.isCanceled()) {
         return null;
       }
-      
-      if (ConnectionUtils.hasJsonContent(inS)) {
-        /* Read JSON Object from Response and parse */
-        boolean isError = false;
-        try (InputStreamReader reader = new InputStreamReader(inS, UTF_8);) {
-          JSONObject jsonFeedObject = new JSONObject(new JSONTokener(reader));
-          title = jsonFeedObject.getString(TITLE_ATTR_NAME);
-        } catch (JSONException | IOException e) {
-          isError = true;
-        } finally {
-          if (isError && inS instanceof IAbortable) {
-            ((IAbortable) inS).abort(); // Abort the stream to avoid downloading the full content
-          }
-        }
+
+      String label = JsonInterpreter.getLabel(inS);
+      if (label != null) {
+        title = label;
       } else {
 
         /* Buffered Stream to support mark and reset */

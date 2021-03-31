@@ -53,7 +53,7 @@ import java.util.List;
  *
  * @author bpasero
  */
-public class RSSInterpreter extends BasicInterpreter {
+public class RSSInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   /*

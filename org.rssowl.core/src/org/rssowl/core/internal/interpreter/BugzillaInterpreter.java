@@ -46,7 +46,7 @@ import java.util.List;
  *
  * @author kay.patzwald
  */
-public class BugzillaInterpreter extends BasicInterpreter {
+public class BugzillaInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   @Override

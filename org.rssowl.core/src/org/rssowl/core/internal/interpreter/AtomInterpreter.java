@@ -56,7 +56,7 @@ import java.util.List;
  *
  * @author bpasero
  */
-public class AtomInterpreter extends BasicInterpreter {
+public class AtomInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   /*

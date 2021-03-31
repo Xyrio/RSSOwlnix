@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @author bpasero
  */
-public class OPMLInterpreter extends BasicInterpreter {
+public class OPMLInterpreter extends AbstractXmlInterpreter {
   private int fNewsCounter;
 
   /*
