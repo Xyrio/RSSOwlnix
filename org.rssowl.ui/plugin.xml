@@ -889,7 +889,7 @@
                value="icons/product/16x16.png,icons/product/32x32.png,icons/product/48x48.png,icons/product/64x64.png,icons/product/128x128.png,icons/product/256x256.png"/>
          <property
                name="aboutText"
-               value="RSSOwlnix fork of RSSOwl&#x0A;&#x0A;Version: 2.8.1-beta&#x0A;Build Id: 2020-08-10&#x0A;&#x0A;RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.&#x0A;http://www.rssowl.org/legal/epl-v10.html&#x0A;&#x0A;(c) Copyright RSSOwl contributors and others 2005-2011.  All rights reserved."/>
+               value="RSSOwlnix fork of RSSOwl&#x0A;&#x0A;Version: 2.9.0-beta&#x0A;Build Id: 2021-03-31&#x0A;&#x0A;RSSOwlnix and RSSOwl is licensed under the terms of the Eclipse Public License version 1.0.&#x0A;http://www.rssowl.org/legal/epl-v10.html&#x0A;&#x0A;(c) Copyright RSSOwl contributors and others 2005-2011.  All rights reserved."/>
          <property
                name="appName"
                value="%product.name">
