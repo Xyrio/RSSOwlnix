@@ -3,7 +3,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 # 2.9.0-beta (WIP)
 - runs also with java 15, **does not run with java 16**
 - added more internal information to: Feed / Properties / Status
-- added group feeds by: Latest Date (Modified,Published,Received), Last Update of feed
+- added group feeds by: Latest Date (Modified,Published,Received), Last Update date of feed
 - added JSON Feed 1.1 support as described by [jsonfeed.org](https://jsonfeed.org) [example](https://jsonfeed.org/feed.json) [#68](https://github.com/Xyrio/RSSOwlnix/issues/68) [PR#98](https://github.com/Xyrio/RSSOwlnix/pull/98)
 - added feeds:// for https:// (also feed:https:// is still supported)
 - improvement to keep http or https accordingly when reconstructing urls (favico,etc)

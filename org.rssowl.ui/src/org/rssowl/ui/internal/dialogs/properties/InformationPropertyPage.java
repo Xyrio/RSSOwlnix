@@ -116,11 +116,11 @@ public class InformationPropertyPage implements IEntityPropertyPage {
       if (newsMark instanceof IBookMark)
         fillBookMarkInfo((IBookMark) fEntities.get(0));
 
-      createIntInfoLabel(newsMark, Messages.InformationPropertyPage_POPULARITY, IMark::getPopularity);
-      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_CREATED, IMark::getCreationDate);
-      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_RECENT, IMark::getLastRecentDate);
-      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_UPDATE, IMark::getLastUpdateDate);
-      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_VISITED, IMark::getLastVisitDate);
+      createIntInfoLine(newsMark, Messages.InformationPropertyPage_POPULARITY, IMark::getPopularity);
+      createDateInfoLine(newsMark, Messages.InformationPropertyPage_CREATED, IMark::getCreationDate, false);
+      createDateInfoLine(newsMark, Messages.InformationPropertyPage_LAST_RECENT, IMark::getLastRecentDate, false);
+      createDateInfoLine(newsMark, Messages.InformationPropertyPage_LAST_UPDATE, IMark::getLastUpdateDate, false);
+      createDateInfoLine(newsMark, Messages.InformationPropertyPage_LAST_VISITED, IMark::getLastVisitDate, true);
     }
 
     /* Folder Info */
@@ -134,14 +134,10 @@ public class InformationPropertyPage implements IEntityPropertyPage {
       countFolderChilds(folder, folders, bookmarks, newsbins, searches);
 
       /* Show Counts */
-      createLabel(fContainer, Messages.InformationPropertyPage_FOLDERS, true);
-      createLabel(fContainer, String.valueOf(folders.get()), false);
-      createLabel(fContainer, Messages.InformationPropertyPage_BOOKMARKS, true);
-      createLabel(fContainer, String.valueOf(bookmarks.get()), false);
-      createLabel(fContainer, Messages.InformationPropertyPage_NEWSBINS, true);
-      createLabel(fContainer, String.valueOf(newsbins.get()), false);
-      createLabel(fContainer, Messages.InformationPropertyPage_SEARCHES, true);
-      createLabel(fContainer, String.valueOf(searches.get()), false);
+      createIntInfoLine(Messages.InformationPropertyPage_FOLDERS, folders.get());
+      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, bookmarks.get());
+      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, newsbins.get());
+      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, searches.get());
     }
 
     /* News Count */
@@ -150,20 +146,32 @@ public class InformationPropertyPage implements IEntityPropertyPage {
     return fContainer;
   }
 
-  private void createDateInfoLabel(INewsMark newsMark, String text, Function<IMark, Date> valueGetter) {
+  private void createDateInfoLine(INewsMark newsMark, String text, Function<IMark, Date> valueGetter, boolean showNeverElseNothing) {
     Date value = valueGetter.apply(newsMark);
     createLabel(fContainer, text, true);
     if (value != null)
       createLabel(fContainer, fDateFormat.format(value), false);
-    else
+    else if (showNeverElseNothing)
       createLabel(fContainer, Messages.InformationPropertyPage_NEVER, false);
+    else
+      createLabel(fContainer, "", false); //$NON-NLS-1$
   }
 
-  private void createIntInfoLabel(INewsMark newsMark, String text, Function<IMark, Integer> valueGetter) {
+  private void createIntInfoLine(INewsMark newsMark, String text, Function<IMark, Integer> valueGetter) {
     Integer value = valueGetter.apply(newsMark);
     createLabel(fContainer, text, true);
     if (value != null)
       createLabel(fContainer, String.valueOf(value), false);
+    else
+      createLabel(fContainer, "", false); //$NON-NLS-1$
+  }
+
+  private void createIntInfoLine(String text, Integer value) {
+    createLabel(fContainer, text, true);
+    if (value != null)
+      createLabel(fContainer, String.valueOf(value), false);
+    else
+      createLabel(fContainer, "", false); //$NON-NLS-1$
   }
 
   private void countFolderChilds(IFolder folder, AtomicInteger folders, AtomicInteger bookmarks, AtomicInteger newsbins, AtomicInteger searches) {
