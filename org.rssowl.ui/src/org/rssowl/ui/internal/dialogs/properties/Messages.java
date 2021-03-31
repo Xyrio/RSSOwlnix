@@ -70,6 +70,8 @@ public class Messages extends NLS {
   public static String InformationPropertyPage_FIND_OUT_MORE;
   public static String InformationPropertyPage_FOLDERS;
   public static String InformationPropertyPage_HOMEPAGE;
+  public static String InformationPropertyPage_LAST_RECENT;
+  public static String InformationPropertyPage_LAST_UPDATE;
   public static String InformationPropertyPage_LAST_VISITED;
   public static String InformationPropertyPage_LOAD_FAILED_REASON;
   public static String InformationPropertyPage_LOAD_FAILED_REASON_SYNCED;
@@ -89,6 +91,7 @@ public class Messages extends NLS {
   public static String InformationPropertyPage_NONE;
   public static String InformationPropertyPage_NOT_LOADED;
   public static String InformationPropertyPage_NOT_SYNCED;
+  public static String InformationPropertyPage_POPULARITY;
   public static String InformationPropertyPage_SEARCHES;
   public static String InformationPropertyPage_STATUS;
   public static String InformationPropertyPage_SYNCED_OK;

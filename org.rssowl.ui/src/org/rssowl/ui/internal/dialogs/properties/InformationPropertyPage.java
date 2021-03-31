@@ -44,6 +44,7 @@ import org.rssowl.core.persist.IEntity;
 import org.rssowl.core.persist.IFeed;
 import org.rssowl.core.persist.IFolder;
 import org.rssowl.core.persist.IFolderChild;
+import org.rssowl.core.persist.IMark;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INewsBin;
 import org.rssowl.core.persist.INewsMark;
@@ -65,10 +66,12 @@ import org.rssowl.ui.internal.util.UIBackgroundJob;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * Information about selected Entities.
@@ -107,24 +110,17 @@ public class InformationPropertyPage implements IEntityPropertyPage {
 
     /* Newsmark Info */
     if (entity instanceof INewsMark) {
-      INewsMark newsmark = (INewsMark) fEntities.get(0);
+      INewsMark newsMark = (INewsMark) fEntities.get(0);
 
       /* Bookmark Info */
-      if (newsmark instanceof IBookMark)
+      if (newsMark instanceof IBookMark)
         fillBookMarkInfo((IBookMark) fEntities.get(0));
 
-      /* Created */
-      if (newsmark.getCreationDate() != null) {
-        createLabel(fContainer, Messages.InformationPropertyPage_CREATED, true);
-        createLabel(fContainer, fDateFormat.format(newsmark.getCreationDate()), false);
-      }
-
-      /* Last Visited */
-      createLabel(fContainer, Messages.InformationPropertyPage_LAST_VISITED, true);
-      if (newsmark.getLastVisitDate() != null)
-        createLabel(fContainer, fDateFormat.format(newsmark.getLastVisitDate()), false);
-      else
-        createLabel(fContainer, Messages.InformationPropertyPage_NEVER, false);
+      createIntInfoLabel(newsMark, Messages.InformationPropertyPage_POPULARITY, IMark::getPopularity);
+      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_CREATED, IMark::getCreationDate);
+      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_RECENT, IMark::getLastRecentDate);
+      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_UPDATE, IMark::getLastUpdateDate);
+      createDateInfoLabel(newsMark, Messages.InformationPropertyPage_LAST_VISITED, IMark::getLastVisitDate);
     }
 
     /* Folder Info */
@@ -154,6 +150,22 @@ public class InformationPropertyPage implements IEntityPropertyPage {
     return fContainer;
   }
 
+  private void createDateInfoLabel(INewsMark newsMark, String text, Function<IMark, Date> valueGetter) {
+    Date value = valueGetter.apply(newsMark);
+    createLabel(fContainer, text, true);
+    if (value != null)
+      createLabel(fContainer, fDateFormat.format(value), false);
+    else
+      createLabel(fContainer, Messages.InformationPropertyPage_NEVER, false);
+  }
+
+  private void createIntInfoLabel(INewsMark newsMark, String text, Function<IMark, Integer> valueGetter) {
+    Integer value = valueGetter.apply(newsMark);
+    createLabel(fContainer, text, true);
+    if (value != null)
+      createLabel(fContainer, String.valueOf(value), false);
+  }
+
   private void countFolderChilds(IFolder folder, AtomicInteger folders, AtomicInteger bookmarks, AtomicInteger newsbins, AtomicInteger searches) {
     List<IFolderChild> children = folder.getChildren();
     for (IFolderChild child : children) {
@@ -176,7 +188,6 @@ public class InformationPropertyPage implements IEntityPropertyPage {
     /* Status */
     createLabel(fContainer, Messages.InformationPropertyPage_STATUS, true);
 
-
     /* Error Loading */
     if (bm.isErrorLoading()) {
       message = (String) bm.getProperty(Controller.LOAD_ERROR_KEY);
@@ -187,7 +198,7 @@ public class InformationPropertyPage implements IEntityPropertyPage {
     }
 
     /* Never Loaded */
-    else if (bm.getMostRecentNewsDate() == null)
+    else if (bm.getLastRecentNewsDate() == null)
       message = isSynchronized ? Messages.InformationPropertyPage_NOT_SYNCED : Messages.InformationPropertyPage_NOT_LOADED;
 
     /* Successfully Loaded */
