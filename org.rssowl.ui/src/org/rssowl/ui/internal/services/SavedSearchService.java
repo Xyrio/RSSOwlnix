@@ -302,7 +302,8 @@ public class SavedSearchService {
       boolean newNewsAdded = result.getSecond();
 
       /* Create Event to indicate changed results if any */
-      if (changed) {
+      if (changed || searchMark.getLastRecentDate() == null || searchMark.getLastUpdateDate() == null) {
+        // changed or when already existing feeds from older versions had no changes yet, but news exist
         TrackingBL.onChanged(searchMark);
         events.add(new SearchMarkEvent(searchMark, null, true, !firstUpdate && !fromUserEvent && newNewsAdded));
       }

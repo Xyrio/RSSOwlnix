@@ -160,9 +160,8 @@ public class ApplicationServiceImpl implements IApplicationService {
   }
 
   /*
-   * @see
-   * org.rssowl.core.IApplicationService#handleFeedReload(org.rssowl.core.persist
-   * .IBookMark, org.rssowl.core.persist.IFeed,
+   * @see org.rssowl.core.IApplicationService#handleFeedReload(org.rssowl.core.
+   * persist .IBookMark, org.rssowl.core.persist.IFeed,
    * org.rssowl.core.persist.IConditionalGet, boolean, boolean,
    * org.eclipse.core.runtime.IProgressMonitor)
    */
@@ -312,8 +311,15 @@ public class ApplicationServiceImpl implements IApplicationService {
           TrackingBL.onChanged(bookMark);
           fDb.set(bookMark);
         }
+      } else {
+        // when already existing feeds from older versions had no changes yet, but news exist
+        if (bookMark.getLastRecentDate() == null) {
+          Date mostRecentDate = DateUtils.getRecentDate(bookMark.getNews());
+          bookMark.setLastRecentNewsDate(mostRecentDate);
+        }
+        TrackingBL.onChanged(bookMark); // always done to refresh LastUpdateDate
+        fDb.set(bookMark);
       }
-
       /* Return early on cancellation */
       if (monitor.isCanceled() || Owl.isShuttingDown())
         return;
@@ -332,7 +338,7 @@ public class ApplicationServiceImpl implements IApplicationService {
         return;
 
       /* Retention Policy */
-      final List<INews> deletedNews = runRetention ? RetentionStrategy.process(bookMark, feed) : Collections.<INews>emptyList();
+      final List<INews> deletedNews = runRetention ? RetentionStrategy.process(bookMark, feed) : Collections.<INews> emptyList();
       for (INews news : deletedNews)
         mergeResult.addUpdatedObject(news);
 
@@ -593,10 +599,12 @@ public class ApplicationServiceImpl implements IApplicationService {
 
     /* Notify listeners */
     SafeRunner.run(new LoggingSafeRunnable() {
+
       @Override
       public void run() throws Exception {
         OwlDAO.getDAO(ISearchFilterDAO.class).fireFilterApplied(filter, news);
       }
+
     });
   }
 
