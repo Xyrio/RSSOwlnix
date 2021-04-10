@@ -27,6 +27,7 @@ package org.rssowl.ui.internal.actions;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuCreator;
 import org.eclipse.jface.bindings.TriggerSequence;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.resource.LocalResourceManager;
 import org.eclipse.osgi.util.NLS;
@@ -36,6 +37,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.ui.IActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.IBindingService;
@@ -59,66 +61,28 @@ public class NewTypeDropdownAction extends AbstractSelectionAwareBookMarkAction<
       OwlUI.safeDispose(fMenu);
 
     fMenu = new Menu(parent);
-
-    MenuItem newBookMark = new MenuItem(fMenu, SWT.PUSH);
-    newBookMark.setText(getLabelWithBinding("org.rssowl.ui.actions.NewBookMark", Messages.NewTypeDropdownAction_BOOKMARK)); //$NON-NLS-1$
-    newBookMark.setImage(OwlUI.getImage(fResources, OwlUI.BOOKMARK));
-    newBookMark.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        try {
-          addBookmark();
-        } catch (Exception e1) {
-          Activator.getDefault().logError(e1.getMessage(), e1);
-        }
-      }
-    });
-
-    MenuItem newNewsBin = new MenuItem(fMenu, SWT.PUSH);
-    newNewsBin.setText(getLabelWithBinding("org.rssowl.ui.actions.NewNewsBin", Messages.NewTypeDropdownAction_NEWSBIN)); //$NON-NLS-1$
-    newNewsBin.setImage(OwlUI.getImage(fResources, OwlUI.NEWSBIN));
-    newNewsBin.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        try {
-          addNewsBin();
-        } catch (Exception e1) {
-          Activator.getDefault().logError(e1.getMessage(), e1);
-        }
-      }
-    });
-
-    MenuItem newSearchMark = new MenuItem(fMenu, SWT.PUSH);
-    newSearchMark.setText(getLabelWithBinding("org.rssowl.ui.actions.NewSearchMark", Messages.NewTypeDropdownAction_SAVED_SEARCH)); //$NON-NLS-1$
-    newSearchMark.setImage(OwlUI.getImage(fResources, OwlUI.SEARCHMARK));
-    newSearchMark.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        try {
-          addSearchMark();
-        } catch (Exception e1) {
-          Activator.getDefault().logError(e1.getMessage(), e1);
-        }
-      }
-    });
-
-    new MenuItem(fMenu, SWT.SEPARATOR);
-
-    MenuItem newFolder = new MenuItem(fMenu, SWT.PUSH);
-    newFolder.setText(getLabelWithBinding("org.rssowl.ui.actions.NewFolder", Messages.NewTypeDropdownAction_FOLDER)); //$NON-NLS-1$
-    newFolder.setImage(OwlUI.getImage(fResources, OwlUI.FOLDER));
-    newFolder.addSelectionListener(new SelectionAdapter() {
-      @Override
-      public void widgetSelected(SelectionEvent e) {
-        try {
-          addFolder();
-        } catch (Exception e1) {
-          Activator.getDefault().logError(e1.getMessage(), e1);
-        }
-      }
-    });
-
+    newMenuItem("org.rssowl.ui.actions.NewBookMark", Messages.NewTypeDropdownAction_BOOKMARK, OwlUI.BOOKMARK, new NewBookMarkAction()); //$NON-NLS-1$
+    newMenuItem("org.rssowl.ui.actions.NewNewsBin", Messages.NewTypeDropdownAction_NEWSBIN, OwlUI.NEWSBIN, new NewNewsBinAction()); //$NON-NLS-1$
+    newMenuItem("org.rssowl.ui.actions.NewSearchMark", Messages.NewTypeDropdownAction_SAVED_SEARCH, OwlUI.SEARCHMARK, new NewSearchMarkAction()); //$NON-NLS-1$
+    newMenuItem("org.rssowl.ui.actions.NewFolder", Messages.NewTypeDropdownAction_FOLDER, OwlUI.FOLDER, new NewFolderAction()); //$NON-NLS-1$
     return fMenu;
+  }
+
+  private void newMenuItem(String id, String text, ImageDescriptor imageDescriptor, AbstractSelectionAwareBookMarkAction<? extends IActionDelegate> newAction) {
+
+    MenuItem menuItem = new MenuItem(fMenu, SWT.PUSH);
+    menuItem.setText(getLabelWithBinding(id, text));
+    menuItem.setImage(OwlUI.getImage(fResources, imageDescriptor));
+    menuItem.addSelectionListener(new SelectionAdapter() {
+      @Override
+      public void widgetSelected(SelectionEvent e) {
+        try {
+          newAction.init(fShell, fParent, fPosition).run(null);
+        } catch (Exception e1) {
+          Activator.getDefault().logError(e1.getMessage(), e1);
+        }
+      }
+    });
   }
 
   /*
@@ -137,26 +101,10 @@ public class NewTypeDropdownAction extends AbstractSelectionAwareBookMarkAction<
   @Override
   public void run(IAction action) {
     try {
-      addBookmark();
+      new NewBookMarkAction().init(fShell, fParent, fPosition).run(null);
     } catch (Exception e) {
       Activator.getDefault().logError(e.getMessage(), e);
     }
-  }
-
-  private void addBookmark() {
-    new NewBookMarkAction().init(fShell, fParent, fPosition).run(null);
-  }
-
-  private void addNewsBin() {
-    new NewNewsBinAction().init(fShell, fParent, fPosition).run(null);
-  }
-
-  private void addFolder() {
-    new NewFolderAction().init(fShell, fParent, fPosition).run(null);
-  }
-
-  private void addSearchMark() {
-    new NewSearchMarkAction().init(fShell, fParent, fPosition).run(null);
   }
 
   /*

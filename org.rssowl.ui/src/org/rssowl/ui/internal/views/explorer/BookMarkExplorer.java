@@ -122,10 +122,14 @@ import org.rssowl.ui.internal.EntityGroup;
 import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.ShareProvider;
 import org.rssowl.ui.internal.StatusLineUpdater;
+import org.rssowl.ui.internal.actions.AbstractSelectionAwareBookMarkAction;
 import org.rssowl.ui.internal.actions.DeleteTypesAction;
 import org.rssowl.ui.internal.actions.EntityPropertyDialogAction;
 import org.rssowl.ui.internal.actions.FindAction;
 import org.rssowl.ui.internal.actions.NewBookMarkAction;
+import org.rssowl.ui.internal.actions.NewFolderAction;
+import org.rssowl.ui.internal.actions.NewNewsBinAction;
+import org.rssowl.ui.internal.actions.NewSearchMarkAction;
 import org.rssowl.ui.internal.actions.OpenAction;
 import org.rssowl.ui.internal.actions.OpenInBrowserAction;
 import org.rssowl.ui.internal.actions.OpenInNewTabAction;
@@ -1031,14 +1035,14 @@ public class BookMarkExplorer extends ViewPart {
     manager.setRemoveAllWhenShown(true);
     manager.addMenuListener(new IMenuListener() {
 
-      private void createContextOption(MenuManager menuManager, String text, ImageDescriptor imageDescriptor, String actionId) {
+      private void createContextOption(MenuManager menuManager, String text, ImageDescriptor imageDescriptor, String actionId, AbstractSelectionAwareBookMarkAction<? extends IActionDelegate> newAction) {
         Action action = new Action(text) {
           @Override
           public void run() {
             IStructuredSelection selection = (IStructuredSelection) fViewer.getSelection();
             IFolder parent = getParent(selection);
             IMark position = (IMark) ((selection.getFirstElement() instanceof IMark) ? selection.getFirstElement() : null);
-            new NewBookMarkAction().init(fViewSite.getShell(), parent, position).run(null);
+            newAction.init(fViewSite.getShell(), parent, position).run(null);
           }
 
           @Override
@@ -1057,10 +1061,10 @@ public class BookMarkExplorer extends ViewPart {
         /* New */
         MenuManager newMenu = new MenuManager(Messages.BookMarkExplorer_NEW);
         manager.add(newMenu);
-        createContextOption(newMenu, Messages.BookMarkExplorer_BOOKMARK, OwlUI.BOOKMARK, "org.rssowl.ui.actions.NewBookMark"); //$NON-NLS-1$
-        createContextOption(newMenu, Messages.BookMarkExplorer_NEWSBIN, OwlUI.NEWSBIN, "org.rssowl.ui.actions.NewNewsBin"); //$NON-NLS-1$
-        createContextOption(newMenu, Messages.BookMarkExplorer_SAVED_SEARCH, OwlUI.SEARCHMARK, "org.rssowl.ui.actions.NewSearchMark"); //$NON-NLS-1$
-        createContextOption(newMenu, Messages.BookMarkExplorer_FOLDER, OwlUI.FOLDER, "org.rssowl.ui.actions.NewFolder"); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_BOOKMARK, OwlUI.BOOKMARK, "org.rssowl.ui.actions.NewBookMark", new NewBookMarkAction()); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_NEWSBIN, OwlUI.NEWSBIN, "org.rssowl.ui.actions.NewNewsBin", new NewNewsBinAction()); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_SAVED_SEARCH, OwlUI.SEARCHMARK, "org.rssowl.ui.actions.NewSearchMark", new NewSearchMarkAction()); //$NON-NLS-1$
+        createContextOption(newMenu, Messages.BookMarkExplorer_FOLDER, OwlUI.FOLDER, "org.rssowl.ui.actions.NewFolder", new NewFolderAction()); //$NON-NLS-1$
 
         manager.add(new GroupMarker(IWorkbenchActionConstants.NEW_EXT));
 
