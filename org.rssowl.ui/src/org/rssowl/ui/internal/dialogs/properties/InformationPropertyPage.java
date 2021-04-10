@@ -135,9 +135,9 @@ public class InformationPropertyPage implements IEntityPropertyPage {
 
       /* Show Counts */
       createIntInfoLine(Messages.InformationPropertyPage_FOLDERS, folders.get());
-      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, bookmarks.get());
-      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, newsbins.get());
-      createIntInfoLine(Messages.InformationPropertyPage_POPULARITY, searches.get());
+      createIntInfoLine(Messages.InformationPropertyPage_BOOKMARKS, bookmarks.get());
+      createIntInfoLine(Messages.InformationPropertyPage_NEWSBINS, newsbins.get());
+      createIntInfoLine(Messages.InformationPropertyPage_SEARCHES, searches.get());
     }
 
     /* News Count */
