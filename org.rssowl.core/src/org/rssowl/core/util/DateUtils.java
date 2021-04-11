@@ -24,7 +24,6 @@
 
 package org.rssowl.core.util;
 
-import org.eclipse.core.runtime.Assert;
 import org.rssowl.core.internal.persist.News;
 import org.rssowl.core.persist.INews;
 
@@ -91,7 +90,7 @@ public class DateUtils {
    * are NULL.
    */
   public static Date getRecentDate(INews news) {
-    return ((News)news).fastGetRecentDate();
+    return ((News) news).fastGetRecentDate();
   }
 
   /**
@@ -100,18 +99,16 @@ public class DateUtils {
    *
    * @param news A List of News to get the most recent Date from.
    * @return Either Modified-Date, Publish-Date or Received-Date from the most
-   * recent News.
+   * recent News or null.
    */
   public static Date getRecentDate(List<INews> news) {
-    Assert.isTrue(!news.isEmpty());
-
     Date mostRecentDate = null;
-    for (INews newsitem : news) {
-      Date date = getRecentDate(newsitem);
-      if (mostRecentDate == null || date.after(mostRecentDate))
-        mostRecentDate = date;
-    }
-
+    if (news != null)
+      for (INews newsitem : news) {
+        Date date = getRecentDate(newsitem);
+        if (mostRecentDate == null || date.after(mostRecentDate))
+          mostRecentDate = date;
+      }
     return mostRecentDate;
   }
 
