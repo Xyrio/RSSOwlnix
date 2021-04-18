@@ -1,6 +1,6 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
-# 2.9.0-beta (WIP)
+# 2.9.0-beta
 - runs also with java 15, **does not run with java 16 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)** 
 - added more internal information to: Feed / Properties / Status
 - added group feeds by: Latest Date (Modified,Published,Received), Last Update date of feed
