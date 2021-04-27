@@ -1564,21 +1564,23 @@ public class FeedView extends EditorPart implements IReusableEditor {
 
         IMark mark = fInput.getMark();
 
-        /* Trigger a reload if this is the first time open or previously erroneous open */
-        if (mark instanceof IBookMark) {
-          IBookMark bookmark = (IBookMark) mark;
-          if ((bookmark.getLastVisitDate() == null || bookmark.isErrorLoading()) && !fContentProvider.hasCachedNews())
-            new ReloadTypesAction(new StructuredSelection(mark), getEditorSite().getShell()).run();
-        }
-
-        /* Trigger reload of not loaded included Bookmarks */
-        else if (mark instanceof FolderNewsMark) {
-          IFolder folder = ((FolderNewsMark) mark).getFolder();
-          List<IBookMark> bookMarksToReload = new ArrayList<>();
-          fillBookMarksToReload(bookMarksToReload, folder);
-          if (!bookMarksToReload.isEmpty())
-            new ReloadTypesAction(new StructuredSelection(bookMarksToReload.toArray()), getEditorSite().getShell()).run();
-        }
+        //problem: causes login protected feeds to ask for login on viewing feed or folder
+        // https://github.com/Xyrio/RSSOwlnix/issues/118
+//        /* Trigger a reload if this is the first time open or previously erroneous open */
+//        if (mark instanceof IBookMark) {
+//          IBookMark bookmark = (IBookMark) mark;
+//          if ((bookmark.getLastVisitDate() == null || bookmark.isErrorLoading()) && !fContentProvider.hasCachedNews())
+//            new ReloadTypesAction(new StructuredSelection(mark), getEditorSite().getShell()).run();
+//        }
+//
+//        /* Trigger reload of not loaded included Bookmarks */
+//        else if (mark instanceof FolderNewsMark) {
+//          IFolder folder = ((FolderNewsMark) mark).getFolder();
+//          List<IBookMark> bookMarksToReload = new ArrayList<>();
+//          fillBookMarksToReload(bookMarksToReload, folder);
+//          if (!bookMarksToReload.isEmpty())
+//            new ReloadTypesAction(new StructuredSelection(bookMarksToReload.toArray()), getEditorSite().getShell()).run();
+//        }
 
         if (mark instanceof IBookMark)
           OwlDAO.getDAO(IBookMarkDAO.class).visited((IBookMark) mark);

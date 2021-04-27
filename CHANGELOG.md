@@ -1,5 +1,8 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
+# 2.10.0-beta (WIP)
+- removed auto reload of feeds without any data and error on viewing it or the folder(s) it is in [#118](https://github.com/Xyrio/RSSOwlnix/issues/118)
+
 # 2.9.0-beta
 - runs also with java 15, **does not run with java 16 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)** 
 - added more internal information to: Feed / Properties / Status
