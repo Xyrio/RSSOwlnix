@@ -52,10 +52,10 @@ import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.NewsCounter;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
 import org.rssowl.core.persist.dao.INewsCounterDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.BookMarkEvent;
 import org.rssowl.core.persist.event.BookMarkListener;
 import org.rssowl.core.persist.event.FolderEvent;
@@ -323,7 +323,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
 
       OwlDAO.save(feed1);
       OwlDAO.save(feed2);
-      List<INews> newsList = new ArrayList<INews>(1);
+      List<INews> newsList = new ArrayList<>(1);
       newsList.add(news2);
       final boolean[] newsUpdatedCalled = new boolean[1];
       newsListener = new NewsAdapter() {
@@ -367,7 +367,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
 
       OwlDAO.save(feed1);
       OwlDAO.save(feed2);
-      List<INews> newsList = new ArrayList<INews>(1);
+      List<INews> newsList = new ArrayList<>(1);
       newsList.add(news2);
       final boolean[] newsUpdatedCalled = new boolean[1];
       newsListener = new NewsAdapter() {
@@ -502,7 +502,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
     final INews savedNews = feed.getNews().get(0);
     savedNews.setTitle("News Title Updated #1");
 
-    Collection<INews> newsList = new ArrayList<INews>();
+    Collection<INews> newsList = new ArrayList<>();
     newsList.add(savedNews);
 
     NewsListener newsListener = new NewsAdapter() {
@@ -625,7 +625,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
     news22.setLink(new URI("http://www.link22.com"));
     feed2 = OwlDAO.save(feed2);
 
-    final List<INews> newsList = new ArrayList<INews>();
+    final List<INews> newsList = new ArrayList<>();
 
     for (INews news : feed1.getNews())
       newsList.add(news);
@@ -749,7 +749,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
         }
       };
 
-      final boolean[] searchMarkUpdateEventOccurred = new boolean[1];
+      final boolean[] searchMarkUpdateEventOccurred = new boolean[2];
       searchMarkListener = new SearchMarkListener() {
         @Override
         public void entitiesAdded(Set<SearchMarkEvent> events) {
@@ -774,7 +774,8 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
 
         @Override
         public void newsChanged(Set<SearchMarkEvent> events) {
-          fail("Unexpected event");
+          //one event to update (TrackingBL.onChanged) Last* dates
+          searchMarkUpdateEventOccurred[1] = true;
         }
       };
 
@@ -782,7 +783,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
       OwlDAO.addEntityListener(IBookMark.class, bookMarkListener);
       OwlDAO.addEntityListener(ISearchMark.class, searchMarkListener);
 
-      List<ReparentInfo<IFolderChild, IFolder>> reparentInfos = new ArrayList<ReparentInfo<IFolderChild, IFolder>>();
+      List<ReparentInfo<IFolderChild, IFolder>> reparentInfos = new ArrayList<>();
       reparentInfos.add(new ReparentInfo<IFolderChild, IFolder>(folder, newFolderParent, null, null));
       reparentInfos.add(new ReparentInfo<IFolderChild, IFolder>(bookMark, newMarkParent, null, null));
       reparentInfos.add(new ReparentInfo<IFolderChild, IFolder>(searchMark, newMarkParent, null, null));
@@ -812,6 +813,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
       assertTrue("Missing folderUpdated Event", folderUpdateEventOccurred[0]);
       assertTrue("Missing bookMarkUpdated Event", bookMarkUpdateEventOccurred[0]);
       assertTrue("Missing searchMarkUpdated Event", searchMarkUpdateEventOccurred[0]);
+      assertTrue("Missing searchMarkChanged Event", searchMarkUpdateEventOccurred[1]);
 
       OwlDAO.removeEntityListener(IFolder.class, folderListener);
       OwlDAO.removeEntityListener(IBookMark.class, bookMarkListener);
@@ -1089,7 +1091,7 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
       INews news2 = savedFeed.getNews().get(1);
       INews news3 = savedFeed.getNews().get(2);
 
-      List<INews> news = new ArrayList<INews>();
+      List<INews> news = new ArrayList<>();
       news.add(news1);
       news.add(news2);
 
