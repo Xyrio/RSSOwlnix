@@ -2193,7 +2193,7 @@ public class OwlUI {
       }
 
       @Override
-      protected int getShellStyle() {
+      public int getShellStyle() {
         if (modal)
           return super.getShellStyle();
 

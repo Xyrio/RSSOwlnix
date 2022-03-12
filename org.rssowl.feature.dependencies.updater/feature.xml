@@ -232,10 +232,7 @@ litigation.
 
    <requires>
       <import plugin="org.eclipse.equinox.common" version="3.7.0" match="compatible"/>
-      <import plugin="org.eclipse.ecf.provider.filetransfer" version="3.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ecf" version="3.1.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ecf.filetransfer" version="4.0.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.ecf.provider.filetransfer.httpclient4" version="1.0.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.11.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.p2.metadata" version="2.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.forms" version="3.5.0" match="greaterOrEqual"/>
@@ -258,22 +255,10 @@ litigation.
       <import plugin="org.eclipse.equinox.security.ui" version="1.0.0" match="compatible"/>
       <import plugin="org.eclipse.equinox.p2.repository" version="2.3.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.preferences" version="3.2.200" match="compatible"/>
+      <import feature="org.eclipse.ecf.filetransfer.feature" version="3.14.5.v20190423-0614" match="greaterOrEqual"/>
+      <import feature="org.eclipse.ecf.filetransfer.httpclient45.feature" version="1.0.0.v20190530-1947" match="greaterOrEqual"/>
+      <import feature="org.eclipse.ecf.filetransfer.ssl.feature" version="1.1.100.v20180301-0132" match="greaterOrEqual"/>
    </requires>
-
-   <plugin
-         id="org.eclipse.ecf.provider.filetransfer.httpclient4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.ecf.provider.filetransfer.httpclient4.ssl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
 
    <plugin
          id="org.eclipse.equinox.p2.ui.importexport"
@@ -565,15 +550,22 @@ litigation.
 
    <plugin
          id="org.eclipse.ecf.provider.filetransfer"
-         download-size="126"
-         install-size="267"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.ecf.provider.filetransfer.httpclient45"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
          id="org.eclipse.ecf.provider.filetransfer.ssl"
-         download-size="9"
-         install-size="12"
+         download-size="0"
+         install-size="0"
          version="0.0.0"
          fragment="true"
          unpack="false"/>
