@@ -3,11 +3,11 @@
 <target name="rssowlnix" sequenceNumber="20">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://download.eclipse.org/eclipse/updates/4.14"/>
-			<unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.0.v20191122-2104"/>
-			<unit id="org.eclipse.rcp.feature.group" version="4.14.0.v20191210-0610"/>
-			<unit id="org.eclipse.sdk.ide" version="4.14.0.I20191210-0610"/>
-			<unit id="org.eclipse.test.feature.group" version="3.7.900.v20191120-0245"/>
+			<repository location="http://download.eclipse.org/eclipse/updates/4.15"/>
+			<unit id="org.eclipse.equinox.sdk.feature.group" version="3.20.100.v20200303-1901"/>
+			<unit id="org.eclipse.rcp.feature.group" version="4.15.0.v20200305-0155"/>
+			<unit id="org.eclipse.sdk.ide" version="4.15.0.I20200305-0155"/>
+			<unit id="org.eclipse.test.feature.group" version="3.7.1000.v20200218-1202"/>
 		</location>
 	</locations>
 </target>
