@@ -528,45 +528,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.security.linux.x86_64"
-         os="linux"
-         arch="x86_64"
-         download-size="16"
-         install-size="30"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.macosx"
-         os="macosx"
-         download-size="16"
-         install-size="58"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.win32.x86"
-         os="win32"
-         arch="x86"
-         download-size="22"
-         install-size="47"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.win32.x86_64"
-         os="win32"
-         arch="x86_64"
-         download-size="34"
-         install-size="65"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.p2.ui.sdk"
          download-size="53"
          install-size="95"

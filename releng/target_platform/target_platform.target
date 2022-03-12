@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><?pde version="3.8"?><target name="rssowlnix" sequenceNumber="20">
-<locations>
-	<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-		<unit id="org.eclipse.equinox.sdk.feature.group" version="3.15.0.v20180904-1442"/>
-		<unit id="org.eclipse.rcp.feature.group" version="4.9.0.v20180906-1121"/>
-		<unit id="org.eclipse.sdk.ide" version="4.9.0.I20180906-0745"/>
-		<unit id="org.eclipse.test.feature.group" version="3.7.400.v20180822-0818"/>
-		<repository location="http://download.eclipse.org/eclipse/updates/4.9"/>
-	</location>
-</locations>
+	<locations>
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<unit id="org.eclipse.equinox.sdk.feature.group" version="3.16.0.v20181130-2106"/>
+			<unit id="org.eclipse.rcp.feature.group" version="4.10.0.v20181206-0815"/>
+			<unit id="org.eclipse.sdk.ide" version="4.10.0.I20181206-0815"/>
+			<unit id="org.eclipse.test.feature.group" version="3.7.500.v20181114-1814"/>
+			<repository location="http://download.eclipse.org/eclipse/updates/4.10"/>
+		</location>
+	</locations>
 </target>
