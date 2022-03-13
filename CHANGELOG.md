@@ -1,6 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
-# 2.9.1-beta (WIP)
+# 2.10.0-beta (WIP)
+- update httpclient to 4.5.13
 - update to eclipse rcp 4.22
 - removed auto reload of feeds without any data and error on viewing it or the folder(s) it is in [#118](https://github.com/Xyrio/RSSOwlnix/issues/118)
 
