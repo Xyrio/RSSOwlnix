@@ -244,13 +244,6 @@ litigation.
          id="org.eclipse.emf.ecore"
          version="0.0.0"/>
 
-   <requires>
-      <import feature="org.eclipse.rcp" version="4.7.2.v20171130-0510"/>
-      <import feature="org.eclipse.e4.rcp" version="1.6.2.v20171129-0543"/>
-      <import feature="org.eclipse.emf.common" version="2.13.0.v20170609-0707"/>
-      <import feature="org.eclipse.emf.ecore" version="2.13.0.v20170609-0707"/>
-   </requires>
-
    <plugin
          id="org.eclipse.core.net"
          download-size="0"
@@ -267,13 +260,6 @@ litigation.
 
    <plugin
          id="org.eclipse.equinox.security"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.ds"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -415,6 +401,13 @@ litigation.
 
    <plugin
          id="org.eclipse.ui.net"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.felix.scr"
          download-size="0"
          install-size="0"
          version="0.0.0"

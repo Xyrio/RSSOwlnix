@@ -244,7 +244,6 @@ litigation.
       <import plugin="org.eclipse.emf.ecore.change" version="2.11.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.emf.ecore.xmi" version="2.13.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.e4.core.di" version="1.6.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.ds" version="1.5.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.event" version="1.4.0" match="greaterOrEqual"/>
       <import plugin="org.rssowl.core" version="2.5.0" match="greaterOrEqual"/>
       <import plugin="org.rssowl.lib.httpclient" version="2.5.0" match="greaterOrEqual"/>
@@ -254,6 +253,7 @@ litigation.
       <import plugin="org.rssowl.lib.lucene" version="2.5.0" match="greaterOrEqual"/>
       <import feature="org.rssowl.dependencies" version="2.5.0.qualifier"/>
       <import feature="org.rssowl.dependencies.updater" version="2.5.0.qualifier"/>
+      <import plugin="org.apache.felix.scr" version="2.1.24"/>
    </requires>
 
    <plugin
