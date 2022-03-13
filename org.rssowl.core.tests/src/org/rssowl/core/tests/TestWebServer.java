@@ -10,10 +10,10 @@ import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.CustomRequestLog;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.NCSARequestLog;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
@@ -153,14 +153,7 @@ public class TestWebServer {
 
       System.out.println("*** TestWebServer: starting webserver...");
 
-      NCSARequestLog requestLog = new NCSARequestLog();
-//    requestLog.setFilename("/path/to/my/logs/yyyy_mm_dd.request.log");
-//    requestLog.setFilenameDateFormat("yyyy_MM_dd");
-//    requestLog.setAppend(true);
-//    requestLog.setRetainDays(1);
-      requestLog.setExtended(true);
-      requestLog.setLogCookies(false);
-      requestLog.setLogTimeZone("GMT");
+      CustomRequestLog requestLog = new CustomRequestLog();
       RequestLogHandler requestLogHandler = new RequestLogHandler();
       requestLogHandler.setRequestLog(requestLog);
 
@@ -170,6 +163,7 @@ public class TestWebServer {
           throw new FileNotFoundException(keystoreFile.getAbsolutePath());
 
         final Server server = new Server();
+//      server.setRequestLog(requestLog);
         server.setStopAtShutdown(true);
         server.setStopTimeout(1000);
         {
@@ -183,10 +177,10 @@ public class TestWebServer {
           http.setPort(port);
           http.setIdleTimeout(5000);
 
-          SslContextFactory sslContextFactory = new SslContextFactory();
-          sslContextFactory.setKeyStorePath(keystoreFile.getAbsolutePath());
-          sslContextFactory.setKeyStorePassword("somepassstore"); //when changed must recreate keystore
-          sslContextFactory.setKeyManagerPassword("somepasskey"); //when changed must recreate keystore
+          SslContextFactory.Server sslContextFactoryServer = new SslContextFactory.Server();
+          sslContextFactoryServer.setKeyStorePath(keystoreFile.getAbsolutePath());
+          sslContextFactoryServer.setKeyStorePassword("somepassstore"); //when changed must recreate keystore
+          sslContextFactoryServer.setKeyManagerPassword("somepasskey"); //when changed must recreate keystore
 
           // OPTIONAL: Un-comment the following to use Conscrypt for SSL instead of
           // the native JSSE implementation.
@@ -200,7 +194,7 @@ public class TestWebServer {
           secureRequestCustomizer.setStsIncludeSubDomains(true);
           httpsConfig.addCustomizer(secureRequestCustomizer);
 
-          ServerConnector https = new ServerConnector(server, new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()), new HttpConnectionFactory(httpsConfig));
+          ServerConnector https = new ServerConnector(server, new SslConnectionFactory(sslContextFactoryServer, HttpVersion.HTTP_1_1.asString()), new HttpConnectionFactory(httpsConfig));
           https.setHost(host);
           https.setPort(portSsl);
           https.setIdleTimeout(5000);
