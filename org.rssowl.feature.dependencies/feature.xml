@@ -2,7 +2,7 @@
 <feature
       id="org.rssowl.dependencies"
       label="RSSOwlnix Dependencies"
-      version="2.9.0.qualifier"
+      version="2.10.0.qualifier"
       provider-name="https://github.com/Xyrio/RSSOwlnix">
 
    <description>
