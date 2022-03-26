@@ -153,6 +153,13 @@ public class TestWebServer {
 
       System.out.println("*** TestWebServer: starting webserver...");
 
+      // sni stuff needed because of fake keystore
+      // must not use ip for hostname
+      // must not use localhost
+      // must have a . in hostname (java 17+)
+      boolean isSniRequired = false;
+      boolean isSniHostCheck = false;
+
       CustomRequestLog requestLog = new CustomRequestLog();
       RequestLogHandler requestLogHandler = new RequestLogHandler();
       requestLogHandler.setRequestLog(requestLog);
@@ -181,6 +188,8 @@ public class TestWebServer {
           sslContextFactoryServer.setKeyStorePath(keystoreFile.getAbsolutePath());
           sslContextFactoryServer.setKeyStorePassword("somepassstore"); //when changed must recreate keystore
           sslContextFactoryServer.setKeyManagerPassword("somepasskey"); //when changed must recreate keystore
+          sslContextFactoryServer.setSniRequired(isSniRequired);
+          sslContextFactoryServer.setRenegotiationAllowed(false);
 
           // OPTIONAL: Un-comment the following to use Conscrypt for SSL instead of
           // the native JSSE implementation.
@@ -192,6 +201,7 @@ public class TestWebServer {
           SecureRequestCustomizer secureRequestCustomizer = new SecureRequestCustomizer();
           secureRequestCustomizer.setStsMaxAge(2000);
           secureRequestCustomizer.setStsIncludeSubDomains(true);
+          secureRequestCustomizer.setSniHostCheck(isSniHostCheck);
           httpsConfig.addCustomizer(secureRequestCustomizer);
 
           ServerConnector https = new ServerConnector(server, new SslConnectionFactory(sslContextFactoryServer, HttpVersion.HTTP_1_1.asString()), new HttpConnectionFactory(httpsConfig));
@@ -310,9 +320,15 @@ public class TestWebServer {
 
         securityBasicHandler.setHandler(authBasicHandler);
 
-        Handler handlers = handlers(requestLogHandler, updateProgramHandler//
-            , feedHandler, feedNoListingHandler, redirectHandler, securityBasicHandler//
-            , quitHandler, defaultHandler);
+        HandlerList handlers = new HandlerList();
+        handlers.addHandler(requestLogHandler); //first one
+        handlers.addHandler(updateProgramHandler);
+        handlers.addHandler(feedHandler);
+        handlers.addHandler(feedNoListingHandler);
+        handlers.addHandler(redirectHandler);
+        handlers.addHandler(securityBasicHandler);
+        handlers.addHandler(quitHandler);
+        handlers.addHandler(defaultHandler);
 
 //        // ### servlets start
 //        ServletContextHandler servletHandlers = new ServletContextHandler();
@@ -381,10 +397,6 @@ public class TestWebServer {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-  }
-
-  private static Handler handlers(Handler... handlers) {
-    return new HandlerList(handlers);
   }
 
   private static MovedContextHandler handlerRedirect(String fromUrl, String toUrl) {

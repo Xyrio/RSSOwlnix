@@ -461,7 +461,7 @@ public class ConnectionTests {
     }
     IConditionalGet conditionalGet = Owl.getModelFactory().createConditionalGet(ifModifiedSince, feedUrl, ifNoneMatch);
 
-    Map<Object, Object> conProperties = new HashMap<Object, Object>();
+    Map<Object, Object> conProperties = new HashMap<>();
     ifModifiedSince = conditionalGet.getIfModifiedSince();
     if (ifModifiedSince != null)
       conProperties.put(IConnectionPropertyConstants.IF_MODIFIED_SINCE, ifModifiedSince);
@@ -668,7 +668,7 @@ public class ConnectionTests {
   public void testFeedSearch_SingleLanguage() throws Exception {
     String link = Controller.getDefault().toFeedSearchLink("blog");
 
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
     properties.put(IConnectionPropertyConstants.CON_TIMEOUT, 60000);
     properties.put(IConnectionPropertyConstants.ACCEPT_LANGUAGE, "de");
 
@@ -691,7 +691,7 @@ public class ConnectionTests {
   public void testFeedSearch_DoubleLanguage() throws Exception {
     String link = Controller.getDefault().toFeedSearchLink("blog");
 
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
     properties.put(IConnectionPropertyConstants.CON_TIMEOUT, 60000);
     properties.put(IConnectionPropertyConstants.ACCEPT_LANGUAGE, "en,de");
 
@@ -714,7 +714,7 @@ public class ConnectionTests {
   public void testFeedSearch_WrongLanguage() throws Exception {
     String link = Controller.getDefault().toFeedSearchLink("blog");
 
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
     properties.put(IConnectionPropertyConstants.CON_TIMEOUT, 60000);
     properties.put(IConnectionPropertyConstants.ACCEPT_LANGUAGE, "en-us,de_de");
 
@@ -734,7 +734,7 @@ public class ConnectionTests {
   public void testWebsite() throws Exception {
     String link = TestWebServer.rootHttp + "/feed/some_feed_linked.html";
 
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
     properties.put(IConnectionPropertyConstants.CON_TIMEOUT, 60000);
 
     InputStream inS = Owl.getConnectionService().getHandler(new URI(link)).openStream(new URI(link), null, properties);
@@ -768,9 +768,9 @@ public class ConnectionTests {
     URI uri = URI.create(SyncUtils.GOOGLE_READER_OPML_URI);
     IProtocolHandler handler = Owl.getConnectionService().getHandler(uri);
 
-    Map<Object, Object> properties = new HashMap<Object, Object>();
+    Map<Object, Object> properties = new HashMap<>();
 
-    Map<String, String> headers = new HashMap<String, String>();
+    Map<String, String> headers = new HashMap<>();
     headers.put("Authorization", SyncUtils.getGoogleAuthorizationHeader(authToken)); //$NON-NLS-1$
     properties.put(IConnectionPropertyConstants.HEADERS, headers);
 

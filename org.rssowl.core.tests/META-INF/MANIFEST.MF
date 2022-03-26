@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Tests Plug-in
 Bundle-SymbolicName: org.rssowl.core.tests;singleton:=true
-Bundle-Version: 2.6.0.qualifier
+Bundle-Version: 2.10.0.qualifier
 Bundle-Vendor: https://github.com/Xyrio/RSSOwlnix
 Require-Bundle: org.rssowl.lib.jdom,
  org.rssowl.lib.db4o,
@@ -19,8 +19,9 @@ Require-Bundle: org.rssowl.lib.jdom,
  org.eclipse.jetty.server;bundle-version="9.4.5",
  org.eclipse.jetty.io;bundle-version="9.4.5",
  org.eclipse.jetty.util;bundle-version="9.4.5",
- org.eclipse.jetty.security;bundle-version="9.4.5"
+ org.eclipse.jetty.security;bundle-version="9.4.5",
+ org.slf4j.api;bundle-version="1.7.30"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Activator: org.rssowl.core.tests.Activator
 Automatic-Module-Name: org.rssowl.core.tests
