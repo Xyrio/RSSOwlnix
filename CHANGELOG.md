@@ -1,8 +1,8 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.10.0-beta (WIP)
-- update httpclient to 4.5.13
-- update to eclipse rcp 4.22
+- updated to eclipse rcp 4.22
+- updated httpclient to 4.5.13
 - removed auto reload of feeds without any data and error on viewing it or the folder(s) it is in [#118](https://github.com/Xyrio/RSSOwlnix/issues/118)
 
 # 2.9.0-beta
@@ -13,7 +13,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 - added feeds:// for https:// (also feed:https:// is still supported)
 - improvement to keep http or https accordingly when reconstructing urls (favico,etc)
 - support more media tags from youtube, peertube [#74](https://github.com/Xyrio/RSSOwlnix/issues/74)
-- fix missing description when <content:encode> exists but has no text to not overwrite what was already loaded from <description> [#56](https://github.com/Xyrio/RSSOwlnix/issues/56)
+- fixed missing description when <content:encode> exists but has no text to not overwrite what was already loaded from <description> [#56](https://github.com/Xyrio/RSSOwlnix/issues/56)
 - updated share links: removed Mister Wong, Google+ and added BibSonomy [#95](https://github.com/Xyrio/RSSOwlnix/issues/95)
 - fixed progress button at bottom right to show new Download & Activities view (eclipse ProgressView) toggleable from Menu/View/Downloads & Activity. Kept old view at Menu/Tools/Downloads & Activity for now. [#45](https://github.com/Xyrio/RSSOwlnix/issues/45)
 - changed page size preference for newspaper/headlines view to be setable to any value [#91](https://github.com/Xyrio/RSSOwlnix/issues/91)
@@ -26,7 +26,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.7.1-beta
 - runs also with java 13, 14
-- fix null news in feed when doing cleanup [#64](https://github.com/Xyrio/RSSOwlnix/issues/64)
+- fixed null news in feed when doing cleanup [#64](https://github.com/Xyrio/RSSOwlnix/issues/64)
 - fixed different behaviour when adding new feed from toolbar [#42](https://github.com/Xyrio/RSSOwlnix/issues/42)
 - updated rssowl news to use RSSOwlnix's update.rss [PR#59](https://github.com/Xyrio/RSSOwlnix/pull/59)
 
