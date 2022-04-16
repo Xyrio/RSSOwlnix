@@ -24,9 +24,9 @@
 
 package org.rssowl.core.connection;
 
-import org.apache.http.Header;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.Header;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import java.io.FilterInputStream;
@@ -60,7 +60,7 @@ public class HttpConnectionInputStream extends FilterInputStream implements ICon
   private static final String HEADER_RESPONSE_CONTENT_DISPOSITION = "Content-Disposition"; //$NON-NLS-1$
   private static final String HEADER_RESPONSE_CONTENT_ENCODING = "Content-Encoding"; //$NON-NLS-1$
 
-  private final HttpRequestBase fMethod;
+  private final HttpUriRequestBase fMethod;
   private final CloseableHttpResponse fResponse;
   private final IProgressMonitor fMonitor;
   private String fIfModifiedSince;
@@ -79,7 +79,7 @@ public class HttpConnectionInputStream extends FilterInputStream implements ICon
    * <code>NULL</code> if no monitor is being used.
    * @param inS the underlying input Stream.
    */
-  public HttpConnectionInputStream(URI link, HttpRequestBase method, CloseableHttpResponse response, IProgressMonitor monitor, InputStream inS) {
+  public HttpConnectionInputStream(URI link, HttpUriRequestBase method, CloseableHttpResponse response, IProgressMonitor monitor, InputStream inS) {
     super(inS);
     fLink = link;
     fMethod = method;
@@ -101,7 +101,7 @@ public class HttpConnectionInputStream extends FilterInputStream implements ICon
    */
   public URI getLink() {
     try {
-      return new URI(fMethod.getURI().toString());
+      return new URI(fMethod.getUri().toString());
     } catch (URISyntaxException e) {
       return fLink;
     }
@@ -149,7 +149,7 @@ public class HttpConnectionInputStream extends FilterInputStream implements ICon
   @Override
   public void abort() {
     fMethod.abort();
-    fMethod.releaseConnection();
+//    fMethod.releaseConnection();
   }
 
   /*
@@ -158,7 +158,7 @@ public class HttpConnectionInputStream extends FilterInputStream implements ICon
   @Override
   public void close() throws IOException {
     super.close();
-    fMethod.releaseConnection();
+//    fMethod.releaseConnection();
   }
 
   /*

@@ -170,180 +170,126 @@ public class ConnectionTests {
     }
   }
 
-  /**
-   * Test a protected Feed.
-   *
-   * @throws Exception
-   */
   @Test
-  @SuppressWarnings("nls")
-  public void testProtectedFeed() throws Exception {
+  public void testProtectedFeedHTTP() throws Exception {
+    do_testProtectedFeed(false, false);
+  }
+
+  @Test
+  public void testProtectedFeedInMemoryHTTP() throws Exception {
+    do_testProtectedFeed(true, false);
+  }
+
+  @Test
+  public void testProtectedFeedHTTPS() throws Exception {
+    do_testProtectedFeed(false, true);
+  }
+
+  @Test
+  public void testProtectedFeedInMemoryHTTPS() throws Exception {
+    do_testProtectedFeed(true, true);
+  }
+
+  private void do_testProtectedFeed(boolean isInMemory, boolean isHttps) throws Exception {
     IConnectionService conManager = Owl.getConnectionService();
-    URI feedUrl1 = new URI(TestWebServer.rootHttps + "/auth-feed/some_feed.xml");
-    URI feedUrl2 = new URI(TestWebServer.rootHttps + "/auth-feed/some_feed2.xml");
-    ICredentialsProvider credProvider = conManager.getCredentialsProvider(feedUrl1);
+    String root = isHttps ? TestWebServer.rootHttps : TestWebServer.rootHttp;
+//    URI feedUrl1 = new URI("http://httpbin.org/basic-auth/super/1234");
+//    URI feedUrl1 = new URI("https://httpbin.org/basic-auth/super/1234");
+    URI feedUrl1 = new URI(root + "/auth-feed/some_feed.xml");
+    URI feedUrl2 = new URI(root + "/auth-feed/some_feed2.xml");
+
+    ICredentials credentials = new ICredentials() {
+      @Override
+      public String getDomain() {
+        return null;
+      }
+
+      @Override
+      public String getPassword() {
+        return TestWebServer.password;
+      }
+
+      @Override
+      public String getUsername() {
+        return TestWebServer.username;
+      }
+    };
+
     try {
-      IFeed feed1 = new Feed(feedUrl1);
-      IFeed feed2 = new Feed(feedUrl2);
-      AuthenticationRequiredException e = null;
+      {
+        IFeed feed1 = new Feed(feedUrl1);
+        OwlDAO.save(feed1);
 
-      OwlDAO.save(feed1);
-      OwlDAO.save(feed2);
+        do_testProtectedFeed_MissingCredentials(feed1);
+        do_testProtectedFeed_WithAuth(isInMemory, feed1, credentials, null, true); //no realm set will accept all realms
+        do_testProtectedFeed_WithAuth(isInMemory, feed1, credentials, "", true); //no realm set will accept all realms
 
-      try {
-        Owl.getConnectionService().getHandler(feed1.getLink()).openStream(feed1.getLink(), null, null);
-      } catch (AuthenticationRequiredException e1) {
-        e = e1;
+        OwlDAO.delete(feed1);
+        assertNull(conManager.getAuthCredentials(feed1.getLink(), null));
       }
+      {
+        IFeed feed2 = new Feed(feedUrl2);
+        OwlDAO.save(feed2);
 
-      assertNotNull(e);
-      e = null;
+        //ones that expect exception first because success is remembered
+        do_testProtectedFeed_WithAuth(isInMemory, feed2, credentials, "Other Directory", false); //wrong realm
+        do_testProtectedFeed_WithAuth(isInMemory, feed2, credentials, Constraint.__BASIC_AUTH + " Restricted Directory", true); //correct realm
 
-      ICredentials credentials = new ICredentials() {
-        @Override
-        public String getDomain() {
-          return null;
-        }
-
-        @Override
-        public String getPassword() {
-          return TestWebServer.password;
-        }
-
-        @Override
-        public String getUsername() {
-          return TestWebServer.username;
-        }
-      };
-
-      credProvider.setAuthCredentials(credentials, feedUrl1, null);
-
-      InputStream inS = Owl.getConnectionService().getHandler(feed1.getLink()).openStream(feed1.getLink(), null, null);
-      assertNotNull(inS);
-
-      Owl.getInterpreter().interpret(inS, feed1, null);
-      assertEquals("RSS 2.0", feed1.getFormat());
-
-      /* Test authentication by other realm is not working */
-      URI restrictedDirectoryUri = URIUtils.normalizeUri(feedUrl2, true);
-      credProvider.setAuthCredentials(credentials, restrictedDirectoryUri, "Other Directory");
-
-      try {
-        Owl.getConnectionService().getHandler(feed2.getLink()).openStream(feed2.getLink(), null, null);
-      } catch (AuthenticationRequiredException e1) {
-        e = e1;
+        OwlDAO.delete(feed2);
+        assertNull(conManager.getAuthCredentials(feed2.getLink(), null));
       }
-
-      assertNotNull(e);
-
-      /* Test authentication by realm is working */
-      credProvider.setAuthCredentials(credentials, restrictedDirectoryUri, Constraint.__BASIC_AUTH + " Restricted Directory");
-
-      inS = Owl.getConnectionService().getHandler(feed2.getLink()).openStream(feed2.getLink(), null, null);
-      assertNotNull(inS);
-
-      Owl.getInterpreter().interpret(inS, feed2, null);
-      assertEquals("RSS 2.0", feed2.getFormat());
-
-      OwlDAO.delete(feed1);
-      OwlDAO.delete(feed2);
-
-      assertNull(conManager.getAuthCredentials(feed1.getLink(), null));
-      assertNull(conManager.getAuthCredentials(feed2.getLink(), null));
     } finally {
       ((PlatformCredentialsProvider) conManager.getCredentialsProvider(feedUrl2)).clear();
     }
   }
 
-  /**
-   * Test a protected Feed.
-   *
-   * @throws Exception
-   */
-  @Test
-  @SuppressWarnings("nls")
-  public void testProtectedFeedInMemory() throws Exception {
-    IConnectionService conManager = Owl.getConnectionService();
-    URI feedUrl1 = new URI(TestWebServer.rootHttps + "/auth-feed/some_feed.xml");
-    URI feedUrl2 = new URI(TestWebServer.rootHttps + "/auth-feed/some_feed2.xml");
-    ICredentialsProvider credProvider = conManager.getCredentialsProvider(feedUrl1);
+  private void do_testProtectedFeed_MissingCredentials(IFeed feed) throws Exception {
+    URI link = feed.getLink();
+
+    AuthenticationRequiredException e = null;
     try {
-      IFeed feed1 = new Feed(feedUrl1);
-      IFeed feed2 = new Feed(feedUrl2);
-      AuthenticationRequiredException e = null;
-
-      OwlDAO.save(feed1);
-      OwlDAO.save(feed2);
-
-      try {
-        Owl.getConnectionService().getHandler(feed1.getLink()).openStream(feed1.getLink(), null, null);
-      } catch (AuthenticationRequiredException e1) {
-        e = e1;
-      }
-
-      assertNotNull(e);
-      e = null;
-
-      ICredentials credentials = new ICredentials() {
-        @Override
-        public String getDomain() {
-          return null;
-        }
-
-        @Override
-        public String getPassword() {
-          return TestWebServer.password;
-        }
-
-        @Override
-        public String getUsername() {
-          return TestWebServer.username;
-        }
-      };
-
-      credProvider.setInMemoryAuthCredentials(credentials, feedUrl1, null);
-
-      InputStream inS = Owl.getConnectionService().getHandler(feed1.getLink()).openStream(feed1.getLink(), null, null);
-      assertNotNull(inS);
-
-      Owl.getInterpreter().interpret(inS, feed1, null);
-      assertEquals("RSS 2.0", feed1.getFormat());
-
-      /* Test authentication by other realm is not working */
-      URI restrictedDirectoryUri = URIUtils.normalizeUri(feedUrl2, true);
-//    URI restrictedDirectoryUri = new URI(TestWebServer.rootHttp + "/feed-no-listing/");
-      credProvider.setInMemoryAuthCredentials(credentials, restrictedDirectoryUri, "Other Directory");
-
-      try {
-        Owl.getConnectionService().getHandler(feed2.getLink()).openStream(feed2.getLink(), null, null);
-      } catch (AuthenticationRequiredException e1) {
-        e = e1;
-      }
-
-      assertNotNull(e);
-
-      /* Test authentication by realm is working */
-      credProvider.setInMemoryAuthCredentials(credentials, restrictedDirectoryUri, Constraint.__BASIC_AUTH + " Restricted Directory");
-
-      inS = Owl.getConnectionService().getHandler(feed2.getLink()).openStream(feed2.getLink(), null, null);
-      assertNotNull(inS);
-
-      Owl.getInterpreter().interpret(inS, feed2, null);
-      assertEquals("RSS 2.0", feed2.getFormat());
-
-      assertNull(conManager.getCredentialsProvider(feed1.getLink()).getPersistedAuthCredentials(feed1.getLink(), null));
-      assertNull(conManager.getCredentialsProvider(feed2.getLink()).getPersistedAuthCredentials(feed2.getLink(), null));
-
-      OwlDAO.delete(feed1);
-      OwlDAO.delete(feed2);
-
-      assertNull(conManager.getAuthCredentials(feed1.getLink(), null));
-      assertNull(conManager.getAuthCredentials(feed2.getLink(), null));
-    } finally {
-      ((PlatformCredentialsProvider) conManager.getCredentialsProvider(feedUrl2)).clear();
+      Owl.getConnectionService().getHandler(link).openStream(link, null, null);
+    } catch (AuthenticationRequiredException e1) {
+      e = e1;
     }
+    assertNotNull(e);
   }
 
+  private void do_testProtectedFeed_WithAuth(boolean isInMemory, IFeed feed, ICredentials credentials, String authRealm, boolean expectsRssElseException) throws Exception {
+    URI rssFileLink = feed.getLink();
+    IConnectionService conManager = Owl.getConnectionService();
+    ICredentialsProvider credProvider = conManager.getCredentialsProvider(rssFileLink);
+
+    /* Test authentication by realm is working */
+    if (authRealm == null || authRealm.length() == 0) {
+      if (isInMemory)
+        credProvider.setInMemoryAuthCredentials(credentials, rssFileLink, authRealm);
+      else
+        credProvider.setAuthCredentials(credentials, rssFileLink, authRealm);
+    } else {
+      URI restrictedDirectoryUri = URIUtils.normalizeUri(rssFileLink, true);
+      if (isInMemory)
+        credProvider.setInMemoryAuthCredentials(credentials, restrictedDirectoryUri, authRealm);
+      else
+        credProvider.setAuthCredentials(credentials, restrictedDirectoryUri, authRealm);
+    }
+
+    if (expectsRssElseException) {
+      InputStream inS = Owl.getConnectionService().getHandler(rssFileLink).openStream(rssFileLink, null, null);
+      assertNotNull(inS);
+
+      Owl.getInterpreter().interpret(inS, feed, null);
+      assertEquals("RSS 2.0", feed.getFormat());
+    } else {
+      AuthenticationRequiredException e = null;
+      try {
+        Owl.getConnectionService().getHandler(rssFileLink).openStream(rssFileLink, null, null);
+      } catch (AuthenticationRequiredException e1) {
+        e = e1;
+      }
+      assertNotNull(e);
+    }
+  }
   /**
    * Test a normal Feed via HTTP Protocol.
    *
@@ -351,7 +297,7 @@ public class ConnectionTests {
    */
   @Test
   @SuppressWarnings("nls")
-  public void testHTTPFeed() throws Exception {
+  public void testFeedHTTP() throws Exception {
     URI feedUrl = new URI(TestWebServer.rootHttp + "/feed/some_feed.xml");
     IFeed feed = new Feed(feedUrl);
 
@@ -369,7 +315,7 @@ public class ConnectionTests {
    */
   @Test
   @SuppressWarnings("nls")
-  public void testFEEDFeed() throws Exception {
+  public void testFeedFEED() throws Exception {
     URI feedUrl = new URI((TestWebServer.rootHttp + "/feed/some_feed.xml").replace("http", "feed"));
     IFeed feed = new Feed(feedUrl);
 
@@ -388,7 +334,7 @@ public class ConnectionTests {
    */
   @Test
   @SuppressWarnings("nls")
-  public void testFEEDHTTPSFeed() throws Exception {
+  public void testFeedFEEDHTTPS() throws Exception {
     URI feedUrl = new URI("feed:" + TestWebServer.rootHttps + "/feed/some_feed.xml");
     // assertEquals("feed:https", feedUrl.getScheme()); //result: "feed"
     IFeed feed = new Feed(feedUrl);
@@ -407,7 +353,7 @@ public class ConnectionTests {
    */
   @Test
   @SuppressWarnings("nls")
-  public void testHTTPSFeed() throws Exception {
+  public void testFeedHTTPS() throws Exception {
     {
       URI feedUrl = new URI(TestWebServer.rootHttps + "/feed/some_feed.xml");
       IFeed feed = new Feed(feedUrl);
@@ -427,7 +373,7 @@ public class ConnectionTests {
    */
   @Test
   @SuppressWarnings("nls")
-  public void testFILEFeed() throws Exception {
+  public void testFeedFILE() throws Exception {
     URL pluginLocation = FileLocator.toFileURL(Platform.getBundle("org.rssowl.core.tests").getEntry("/"));
     IConnectionService conManager = Owl.getConnectionService();
     URL feedUrl = pluginLocation.toURI().resolve("data/interpreter/feed_rss.xml").toURL();

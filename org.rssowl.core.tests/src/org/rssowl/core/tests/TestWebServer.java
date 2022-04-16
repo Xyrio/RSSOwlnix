@@ -98,7 +98,7 @@ public class TestWebServer {
   private static void startShutdownTimer(boolean autoShutdown) {
     if (autoShutdown) {
       final long msCheckInterval = 1000;
-      final long msShutdownDuration = 5000;
+      final long msShutdownDuration = 10000;
 
       Timer timer = new Timer("webServerShutdownTimer", true);
       timer.scheduleAtFixedRate(new TimerTask() {
@@ -154,6 +154,7 @@ public class TestWebServer {
       System.out.println("*** TestWebServer: starting webserver...");
 
       // sni stuff needed because of fake keystore
+      // if true:
       // must not use ip for hostname
       // must not use localhost
       // must have a . in hostname (java 17+)
@@ -171,7 +172,7 @@ public class TestWebServer {
 
         final Server server = new Server();
 //      server.setRequestLog(requestLog);
-        server.setStopAtShutdown(true);
+        server.setStopAtShutdown(true); // daemon
         server.setStopTimeout(1000);
         {
           HttpConfiguration httpConfig = new HttpConfiguration();
@@ -459,14 +460,23 @@ public class TestWebServer {
   }
 
   private static ConstraintSecurityHandler handlerSecurity(String contextUrl, Authenticator authenticator, String... rolesAccept) {
-    ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
+    ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler() {
+//      @Override
+//      public void handle(String pathInContext, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+//        System.out.println("*** request: "+request);
+//        super.handle(pathInContext, baseRequest, request, response);
+//        System.out.println("*** response:\n"+response);
+//      }
+    };
+
+    String authRealm = authenticator.getAuthMethod() + " Restricted Directory";
 
     UserStore userStore = new UserStore();
 //    userStore.addUser("usr", new Password("pw"), new String[] { "user" });
     userStore.addUser(username, new Password(password), new String[] { "user", "admin" });
 
     HashLoginService loginService = new HashLoginService();
-    loginService.setName(authenticator.getAuthMethod() + " Restricted Directory"); //used as realm name
+    loginService.setName(authRealm); //used as realm name
 //    loginService.setConfig(realmPropertiesFile.getAbsolutePath());
     loginService.setUserStore(userStore);
     loginService.setHotReload(false);

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.http.HttpHost;
+import org.apache.hc.core5.http.HttpHost;
 import org.junit.Test;
 import org.rssowl.core.util.URIUtils;
 
@@ -217,7 +217,7 @@ public class URIUtilsTest {
   public void testSafeGetHost() throws Exception {
 
     {
-      HttpHost httpHost = org.apache.http.client.utils.URIUtils.extractHost(URI.create("http://un:pw@foo_bar-chair.de:80"));
+      HttpHost httpHost = org.apache.hc.client5.http.utils.URIUtils.extractHost(URI.create("http://un:pw@foo_bar-chair.de:80"));
       if (httpHost != null) {
         assertEquals("foo_bar-chair.de:80", httpHost.getHostName() + ":" + httpHost.getPort());
       }

@@ -78,9 +78,9 @@ RSSOwl Development Team - initial API and implementation
 
 
    <repositories>
-      <repository location="http://xyrio.github.io/RSSOwlnix-site/p2/nls" enabled="true" />
-      <repository location="http://xyrio.github.io/RSSOwlnix-site/p2/addons" enabled="true" />
-      <repository location="http://xyrio.github.io/RSSOwlnix-site/p2/program" enabled="true" />
+      <repository location="https://xyrio.github.io/RSSOwlnix-site/p2/addons" enabled="true" />
+      <repository location="https://xyrio.github.io/RSSOwlnix-site/p2/program" enabled="true" />
+      <repository location="https://xyrio.github.io/RSSOwlnix-site/p2/nls" enabled="true" />
    </repositories>
 
    <preferencesInfo>

@@ -11,7 +11,8 @@ Require-Bundle: org.rssowl.lib.db4o,
  org.rssowl.lib.lucene,
  org.eclipse.core.runtime,
  org.eclipse.core.net,
- org.eclipse.equinox.security
+ org.eclipse.equinox.security,
+ org.slf4j.api;bundle-version="1.7.30"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

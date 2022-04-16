@@ -24,8 +24,8 @@
 
 package org.rssowl.core.util;
 
-import org.apache.http.HttpHost;
-import org.apache.http.conn.util.InetAddressUtils;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.net.InetAddressUtils;
 import org.rssowl.core.internal.Activator;
 
 import java.io.UnsupportedEncodingException;
@@ -589,7 +589,7 @@ public class URIUtils {
     }
 
     /* Fallback to Apache */
-    HttpHost httpHost = org.apache.http.client.utils.URIUtils.extractHost(uri);
+    HttpHost httpHost = org.apache.hc.client5.http.utils.URIUtils.extractHost(uri);
     if (httpHost != null) {
       String host = getHostPort(httpHost.getHostName(), httpHost.getPort(), withPort);
       if (host != null)

@@ -24,10 +24,15 @@
 
 package org.rssowl.core.internal.connection;
 
-import org.apache.http.HttpHost;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.protocol.HttpContext;
+
+import org.apache.hc.client5.http.socket.LayeredConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.protocol.HttpContext;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.TrustStrategy;
+import org.apache.hc.core5.util.TimeValue;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -46,10 +51,10 @@ public class EasySSLConnectionSocketFactory implements LayeredConnectionSocketFa
   public EasySSLConnectionSocketFactory() {
     javax.net.ssl.SSLContext sslContext = null; //should never end up as null
     try {
-      sslContext = new org.apache.http.ssl.SSLContextBuilder() //
+      sslContext = new SSLContextBuilder() //
           // .loadTrustMaterial(null, new TrustSelfSignedStrategy()) //
 //          .setTrustManagerFactoryAlgorithm("PKIX") //$NON-NLS-1$
-          .loadTrustMaterial(null, new org.apache.http.ssl.TrustStrategy() {
+          .loadTrustMaterial(null, new TrustStrategy() {
             @Override
             public boolean isTrusted(java.security.cert.X509Certificate[] chain, String authType) throws java.security.cert.CertificateException {
               return true; //trust everything
@@ -65,7 +70,7 @@ public class EasySSLConnectionSocketFactory implements LayeredConnectionSocketFa
     }
 
     if (sslContext != null)
-      fFactory = new SSLConnectionSocketFactory(sslContext, org.apache.http.conn.ssl.NoopHostnameVerifier.INSTANCE);
+      fFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
 
   }
 
@@ -75,7 +80,7 @@ public class EasySSLConnectionSocketFactory implements LayeredConnectionSocketFa
   }
 
   @Override
-  public Socket connectSocket(int connectTimeout, Socket socket, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException {
+  public Socket connectSocket(TimeValue connectTimeout, Socket socket, HttpHost host, InetSocketAddress remoteAddress, InetSocketAddress localAddress, HttpContext context) throws IOException {
     return fFactory.connectSocket(connectTimeout, socket, host, remoteAddress, localAddress, context);
   }
 

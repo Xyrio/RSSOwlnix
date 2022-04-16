@@ -37,6 +37,8 @@ import org.rssowl.core.Owl;
 import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.LoggingSafeRunnable;
 import org.rssowl.core.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -70,9 +72,14 @@ public class Activator extends Plugin {
     if (!StringUtils.isSet(fNl))
       fNl= "\n"; //$NON-NLS-1$
 
+    System.out.println(">>> sysout"); //$NON-NLS-1$
+    Activator.getDefault().getLog().info(">>> info"); //$NON-NLS-1$
+    Logger logger = LoggerFactory.getLogger(">>>name-bla"); //$NON-NLS-1$
+    logger.info(">>> info slf4j"); //$NON-NLS-1$
+
     /* Use the LogBridge as Logger (RCP Only) */
-    if (!InternalOwl.IS_ECLIPSE)
-      System.setProperty("org.apache.commons.logging.Log", "org.rssowl.core.internal.LogBridge"); //$NON-NLS-1$ //$NON-NLS-2$
+//    if (!InternalOwl.IS_ECLIPSE)
+//      System.setProperty("org.apache.commons.logging.Log", "org.rssowl.core.internal.LogBridge"); //$NON-NLS-1$ //$NON-NLS-2$
 
     /* Load the Proxy Service */
     SafeRunner.run(new LoggingSafeRunnable() {

@@ -242,20 +242,7 @@ litigation.
       <import plugin="org.eclipse.core.net" version="1.3.100" match="greaterOrEqual"/>
       <import plugin="org.eclipse.equinox.security" version="1.2.300" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui" version="3.109.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.console" version="1.1.300" match="greaterOrEqual"/>
-      <import plugin="org.apache.felix.gogo.runtime" version="0.10.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.felix.gogo.shell" version="0.10.0" match="greaterOrEqual"/>
-      <import plugin="org.apache.felix.gogo.command" version="0.10.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore.change" version="2.11.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.emf.ecore.xmi" version="2.13.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.e4.core.di" version="1.6.100" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.ds" version="1.5.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.event" version="1.4.0" match="greaterOrEqual"/>
-      <import plugin="org.rssowl.core" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.rssowl.lib.db4o" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.rssowl.lib.httpclient" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.rssowl.lib.jdom" version="2.5.0" match="greaterOrEqual"/>
-      <import plugin="org.rssowl.lib.lucene" version="2.5.0" match="greaterOrEqual"/>
+      <import plugin="org.slf4j.api" version="1.7.30" match="greaterOrEqual"/>
    </requires>
 
    <plugin

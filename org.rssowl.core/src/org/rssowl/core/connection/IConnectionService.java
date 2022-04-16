@@ -24,7 +24,7 @@
 
 package org.rssowl.core.connection;
 
-import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.rssowl.core.persist.IConditionalGet;
