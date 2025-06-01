@@ -38,7 +38,6 @@ import org.rssowl.core.persist.reference.NewsReference;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -196,10 +195,10 @@ public class BookMark extends Mark implements IBookMark {
    */
   @Override
   public List<INews> getNews(Set<State> states) {
-    if (states.equals(EnumSet.of(INews.State.NEW)))
+    if (states.equals(INews.State.asSet(INews.State.NEW)))
       return (List<INews>) OwlDAO.getDAO(INewsDAO.class).loadAll(getFeedLinkReference(), states);
 
-    if (states.equals(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)))
+    if (states.equals(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)))
       return (List<INews>) OwlDAO.getDAO(INewsDAO.class).loadAll(getFeedLinkReference(), states);
 
     return getFeedLinkReference().resolve().getNewsByStates(states);
@@ -211,10 +210,10 @@ public class BookMark extends Mark implements IBookMark {
   @Override
   public synchronized int getNewsCount(Set<State> states) {
     if (fNewsCounter != null) {
-      if (states.equals(EnumSet.of(INews.State.NEW)))
+      if (states.equals(INews.State.asSet(INews.State.NEW)))
         return fNewsCounter.getNewCount(fFeedLink);
 
-      if (states.equals(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)))
+      if (states.equals(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)))
         return fNewsCounter.getUnreadCount(fFeedLink);
     }
 
@@ -226,7 +225,7 @@ public class BookMark extends Mark implements IBookMark {
    */
   @Override
   public List<NewsReference> getNewsRefs() {
-    return getNewsRefs(EnumSet.allOf(INews.State.class));
+    return getNewsRefs(State.all());
   }
 
   /*

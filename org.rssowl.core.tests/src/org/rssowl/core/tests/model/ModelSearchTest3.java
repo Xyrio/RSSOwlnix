@@ -24,8 +24,8 @@
 
 package org.rssowl.core.tests.model;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.rssowl.core.persist.IAttachment;
@@ -53,7 +53,6 @@ import org.rssowl.ui.internal.util.ModelUtils;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -97,7 +96,7 @@ public class ModelSearchTest3 extends AbstractModelSearchTest {
     INewsBin subRootBin = fFactory.createNewsBin(null, subFolder, "Sub Root Bin");
 
     OwlDAO.save(rootFolder);
-    List<INews> copiedNews = new ArrayList<INews>();
+    List<INews> copiedNews = new ArrayList<>();
     INews news1Copy = fFactory.createNews(news1, rootBin);
     copiedNews.add(news1Copy);
     INews news2Copy = fFactory.createNews(news2, rootBin);
@@ -176,7 +175,7 @@ public class ModelSearchTest3 extends AbstractModelSearchTest {
       ISearchCondition cond1 = fFactory.createSearchCondition(field1, SearchSpecifier.IS, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { subFolder })));
 
       ISearchField field2 = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-      ISearchCondition cond2 = fFactory.createSearchCondition(field2, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(field2, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), true);
       assertSame(result, news4Copy, news6Copy);
@@ -1221,7 +1220,7 @@ public class ModelSearchTest3 extends AbstractModelSearchTest {
       /* All Fields */
       ISearchField field = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
       ISearchField stateField = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-      ISearchCondition stateCondition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition stateCondition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       /* Contains Any - Multi Condition (require all: false) */
       {
@@ -1653,7 +1652,7 @@ public class ModelSearchTest3 extends AbstractModelSearchTest {
       /* All Fields */
       ISearchField field = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
       ISearchField stateField = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-      ISearchCondition stateCondition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS_NOT, EnumSet.of(INews.State.NEW));
+      ISearchCondition stateCondition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS_NOT, INews.State.asSet(INews.State.NEW));
 
       /* Contains Any - Multi Condition (require all: false) */
       {

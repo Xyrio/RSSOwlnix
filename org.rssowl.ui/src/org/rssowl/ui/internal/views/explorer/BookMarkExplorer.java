@@ -147,7 +147,6 @@ import org.rssowl.ui.internal.util.JobRunner;
 import org.rssowl.ui.internal.util.WidgetTreeNode;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -1659,7 +1658,7 @@ public class BookMarkExplorer extends ViewPart {
     /* Check for Unread news if required */
     if (data instanceof INewsMark) {
       INewsMark newsmark = (INewsMark) data;
-      if (unread && newsmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
+      if (unread && newsmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
         return false;
     }
 

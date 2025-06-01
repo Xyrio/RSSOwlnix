@@ -40,7 +40,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +56,7 @@ public class SyncItem implements Serializable {
   private static final long serialVersionUID = 4093540431879243015L;
 
   /* Set of unread states */
-  private static final Set<INews.State> UNREAD_STATES = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+  private static final Set<INews.State> UNREAD_STATES = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
 
   private final String fId;
   private final String fStreamId;
@@ -148,7 +147,7 @@ public class SyncItem implements Serializable {
     Set<ILabel> newLabels = item.getLabels();
 
     if (!Arrays.equals(oldLabels.toArray(), newLabels.toArray())) {
-      Set<String> oldLabelNames = new HashSet<String>(oldLabels.size());
+      Set<String> oldLabelNames = new HashSet<>(oldLabels.size());
       for (ILabel oldLabel : oldLabels) {
         oldLabelNames.add(oldLabel.getName());
       }
@@ -292,7 +291,7 @@ public class SyncItem implements Serializable {
    */
   public void addLabel(String label) {
     if (fAddedLabels == null)
-      fAddedLabels = new ArrayList<String>(3);
+      fAddedLabels = new ArrayList<>(3);
 
     if (!fAddedLabels.contains(label))
       fAddedLabels.add(label);
@@ -306,7 +305,7 @@ public class SyncItem implements Serializable {
    */
   public void removeLabel(String label) {
     if (fRemovedLabels == null)
-      fRemovedLabels = new ArrayList<String>(1);
+      fRemovedLabels = new ArrayList<>(1);
 
     if (!fRemovedLabels.contains(label))
       fRemovedLabels.add(label);
@@ -432,7 +431,7 @@ public class SyncItem implements Serializable {
         labelsObj = new String[0];
 
       if (labelsObj instanceof String[]) {
-        Set<String> labels = new HashSet<String>(Arrays.asList((String[]) labelsObj));
+        Set<String> labels = new HashSet<>(Arrays.asList((String[]) labelsObj));
         if (fAddedLabels != null)
           labels.addAll(fAddedLabels);
         if (fRemovedLabels != null)

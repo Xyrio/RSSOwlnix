@@ -79,7 +79,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -1167,39 +1166,39 @@ public class ApplicationLayerTest extends LargeBlockSizeTest {
     INewsDAO newsDao = OwlDAO.getDAO(INewsDAO.class);
 
     /* All states */
-    Collection<INews> newsCollection = newsDao.loadAll(feedRef, EnumSet.allOf(INews.State.class));
+    Collection<INews> newsCollection = newsDao.loadAll(feedRef, State.all());
     assertEquals(feed.getNews().size(), newsCollection.size());
     for (INews newsItem : feed.getNews())
       assertEquals(true, newsCollection.contains(newsItem));
 
-    newsCollection = newsDao.loadAll(anotherFeedRef, EnumSet.allOf(INews.State.class));
+    newsCollection = newsDao.loadAll(anotherFeedRef, State.all());
     assertEquals(anotherFeed.getNews().size(), newsCollection.size());
     for (INews newsItem : anotherFeed.getNews())
       assertEquals(true, newsCollection.contains(newsItem));
 
     /* Two matching states */
-    newsCollection = newsDao.loadAll(feedRef, EnumSet.of(INews.State.UNREAD, INews.State.UPDATED));
+    newsCollection = newsDao.loadAll(feedRef, INews.State.asSet(INews.State.UNREAD, INews.State.UPDATED));
     assertEquals(2, newsCollection.size());
     assertEquals(true, newsCollection.contains(feed.getNews().get(1)));
     assertEquals(true, newsCollection.contains(feed.getNews().get(2)));
 
     /* One matching state */
-    newsCollection = newsDao.loadAll(anotherFeedRef, EnumSet.of(INews.State.DELETED));
+    newsCollection = newsDao.loadAll(anotherFeedRef, INews.State.asSet(INews.State.DELETED));
     assertEquals(1, newsCollection.size());
     assertEquals(anotherFeed.getNews().get(2), newsCollection.iterator().next());
 
     /* No matching state */
-    newsCollection = newsDao.loadAll(feedRef, EnumSet.of(INews.State.DELETED));
+    newsCollection = newsDao.loadAll(feedRef, INews.State.asSet(INews.State.DELETED));
     assertEquals(0, newsCollection.size());
 
     /* One state with two matches and two states with no matches */
-    newsCollection = newsDao.loadAll(anotherFeedRef, EnumSet.of(INews.State.NEW, INews.State.HIDDEN, INews.State.UPDATED));
+    newsCollection = newsDao.loadAll(anotherFeedRef, INews.State.asSet(INews.State.NEW, INews.State.HIDDEN, INews.State.UPDATED));
     assertEquals(2, newsCollection.size());
     assertEquals(true, newsCollection.contains(anotherFeed.getNews().get(0)));
     assertEquals(true, newsCollection.contains(anotherFeed.getNews().get(1)));
 
     /* Empty states */
-    newsCollection = newsDao.loadAll(feedRef, EnumSet.noneOf(INews.State.class));
+    newsCollection = newsDao.loadAll(feedRef, INews.State.none());
     assertEquals(0, newsCollection.size());
   }
 

@@ -67,7 +67,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -346,9 +345,9 @@ public class InformationPropertyPage implements IEntityPropertyPage {
           else if (entity instanceof INewsMark) {
             INewsMark newsmark = (INewsMark) entity;
             totalCount = newsmark.getNewsCount(INews.State.getVisible());
-            newCount = newsmark.getNewsCount(EnumSet.of(INews.State.NEW));
-            unreadCount = newsmark.getNewsCount(EnumSet.of(INews.State.UNREAD));
-            updatedCount = newsmark.getNewsCount(EnumSet.of(INews.State.UPDATED));
+            newCount = newsmark.getNewsCount(INews.State.asSet(INews.State.NEW));
+            unreadCount = newsmark.getNewsCount(INews.State.asSet(INews.State.UNREAD));
+            updatedCount = newsmark.getNewsCount(INews.State.asSet(INews.State.UPDATED));
           }
 
           /* Resolve news counts from folder */
@@ -358,9 +357,9 @@ public class InformationPropertyPage implements IEntityPropertyPage {
 
             NewsContainer newsContainer = resolver.resolveNewsContainer(monitor);
             totalCount = newsContainer.getNewsCount(INews.State.getVisible());
-            newCount = newsContainer.getNewsCount(EnumSet.of(INews.State.NEW));
-            unreadCount = newsContainer.getNewsCount(EnumSet.of(INews.State.UNREAD));
-            updatedCount = newsContainer.getNewsCount(EnumSet.of(INews.State.UPDATED));
+            newCount = newsContainer.getNewsCount(INews.State.asSet(INews.State.NEW));
+            unreadCount = newsContainer.getNewsCount(INews.State.asSet(INews.State.UNREAD));
+            updatedCount = newsContainer.getNewsCount(INews.State.asSet(INews.State.UPDATED));
           }
         }
 

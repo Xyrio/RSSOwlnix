@@ -71,8 +71,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Helper to build the queries to search for {@link INews}.
@@ -265,7 +265,7 @@ public class ModelSearchQueries {
   private static void addStateClause(BooleanQuery statesQuery, ISearchCondition condition) {
     String fieldName = String.valueOf(INews.STATE);
     Occur occur = condition.getSpecifier().isNegation() ? Occur.MUST_NOT : Occur.SHOULD;
-    EnumSet<INews.State> newsStates = (EnumSet<State>) condition.getValue();
+    Set<INews.State> newsStates = (Set<State>) condition.getValue();
     for (INews.State state : newsStates) {
       String value = String.valueOf(state.ordinal());
       TermQuery stateQuery = new TermQuery(new Term(fieldName, value));
@@ -291,7 +291,7 @@ public class ModelSearchQueries {
 
     /* Require all words to be contained or not contained */
     if (condition.getSpecifier() == SearchSpecifier.CONTAINS_ALL) {
-      List<ISearchCondition> tokenConditions = new ArrayList<ISearchCondition>();
+      List<ISearchCondition> tokenConditions = new ArrayList<>();
 
       List<String> tokens = StringUtils.tokenizePhraseAware((String) condition.getValue(), true);
       for (String token : tokens) {
@@ -321,7 +321,7 @@ public class ModelSearchQueries {
 
     /* Require any word to be contained or not contained */
     else {
-      List<ISearchCondition> allFieldsConditions = new ArrayList<ISearchCondition>(5);
+      List<ISearchCondition> allFieldsConditions = new ArrayList<>(5);
 
       /* Title */
       ISearchField field = factory.createSearchField(INews.TITLE, condition.getField().getEntityName());
@@ -351,7 +351,7 @@ public class ModelSearchQueries {
 
       /* Create Clauses out of Conditions */
       boolean anyClauseIsEmpty = false;
-      List<BooleanClause> clauses = new ArrayList<BooleanClause>();
+      List<BooleanClause> clauses = new ArrayList<>();
       for (ISearchCondition allFieldCondition : allFieldsConditions) {
         BooleanClause clause = createBooleanClause(analyzer, allFieldCondition, matchAllConditions);
         clause.setOccur(Occur.SHOULD);

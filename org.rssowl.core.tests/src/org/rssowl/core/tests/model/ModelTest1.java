@@ -73,7 +73,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -121,7 +120,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     final IFolder savedChildFolder1 = savedFolder.getFolders().get(0);
     final IFolder savedChildFolder2 = savedFolder.getFolders().get(1);
     final IFolder savedChildFolder3 = savedFolder.getFolders().get(2);
-    List<IFolder> foldersToRemove = new ArrayList<IFolder>();
+    List<IFolder> foldersToRemove = new ArrayList<>();
     foldersToRemove.add(savedChildFolder1);
     foldersToRemove.add(savedChildFolder2);
 
@@ -370,7 +369,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     feed = OwlDAO.save(feed);
 
     int newNewsCount = 4;
-    List<INews> newNews = new ArrayList<INews>();
+    List<INews> newNews = new ArrayList<>();
     for (int i = 0; i < newNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("new News: " + i);
@@ -379,7 +378,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     }
 
     int readNewsCount = 2;
-    List<INews> readNews = new ArrayList<INews>();
+    List<INews> readNews = new ArrayList<>();
     for (int i = 0; i < readNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("read News: " + i);
@@ -388,7 +387,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     }
 
     int unreadNewsCount = 3;
-    List<INews> unreadNews = new ArrayList<INews>();
+    List<INews> unreadNews = new ArrayList<>();
     for (int i = 0; i < unreadNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("unread News: " + i);
@@ -397,7 +396,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     }
 
     int updatedNewsCount = 6;
-    List<INews> updatedNews = new ArrayList<INews>();
+    List<INews> updatedNews = new ArrayList<>();
     for (int i = 0; i < updatedNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("updated News: " + i);
@@ -406,7 +405,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     }
 
     int hiddenNewsCount = 8;
-    List<INews> hiddenNews = new ArrayList<INews>();
+    List<INews> hiddenNews = new ArrayList<>();
     for (int i = 0; i < hiddenNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("hidden News: " + i);
@@ -415,7 +414,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
     }
 
     int deletedNewsCount = 7;
-    List<INews> deletedNews = new ArrayList<INews>();
+    List<INews> deletedNews = new ArrayList<>();
     for (int i = 0; i < deletedNewsCount; ++i) {
       INews news = fFactory.createNews(null, feed, new Date());
       news.setTitle("deleted News: " + i);
@@ -423,44 +422,44 @@ public class ModelTest1 extends LargeBlockSizeTest {
       deletedNews.add(news);
     }
 
-    assertEquals(newNewsCount, feed.getNewsByStates(EnumSet.of(State.NEW)).size());
+    assertEquals(newNewsCount, feed.getNewsByStates(State.asSet(State.NEW)).size());
     int counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.NEW))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.NEW))) {
       INews newsItem = newNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
 
-    assertEquals(readNewsCount, feed.getNewsByStates(EnumSet.of(State.READ)).size());
+    assertEquals(readNewsCount, feed.getNewsByStates(State.asSet(State.READ)).size());
     counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.READ))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.READ))) {
       INews newsItem = readNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
 
-    assertEquals(unreadNewsCount, feed.getNewsByStates(EnumSet.of(State.UNREAD)).size());
+    assertEquals(unreadNewsCount, feed.getNewsByStates(State.asSet(State.UNREAD)).size());
     counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.UNREAD))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.UNREAD))) {
       INews newsItem = unreadNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
 
-    assertEquals(updatedNewsCount, feed.getNewsByStates(EnumSet.of(State.UPDATED)).size());
+    assertEquals(updatedNewsCount, feed.getNewsByStates(State.asSet(State.UPDATED)).size());
     counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.UPDATED))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.UPDATED))) {
       INews newsItem = updatedNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
 
-    assertEquals(hiddenNewsCount, feed.getNewsByStates(EnumSet.of(State.HIDDEN)).size());
+    assertEquals(hiddenNewsCount, feed.getNewsByStates(State.asSet(State.HIDDEN)).size());
     counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.HIDDEN))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.HIDDEN))) {
       INews newsItem = hiddenNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
 
-    assertEquals(deletedNewsCount, feed.getNewsByStates(EnumSet.of(State.DELETED)).size());
+    assertEquals(deletedNewsCount, feed.getNewsByStates(State.asSet(State.DELETED)).size());
     counter = 0;
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.DELETED))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.DELETED))) {
       INews newsItem = deletedNews.get(counter++);
       assertEquals(newsItem.getTitle(), news.getTitle());
     }
@@ -508,7 +507,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
       fail("No match was found. A news that had the wrong state was returned");
     }
 
-    for (INews news : feed.getNewsByStates(EnumSet.of(State.NEW, State.HIDDEN, State.DELETED))) {
+    for (INews news : feed.getNewsByStates(State.asSet(State.NEW, State.HIDDEN, State.DELETED))) {
       boolean matchFound = false;
       for (INews newsItem : newNews) {
         if (news.getTitle().equals(newsItem.getTitle())) {
@@ -822,9 +821,9 @@ public class ModelTest1 extends LargeBlockSizeTest {
     SearchValueType valueTypeString2 = new SearchValueType(ISearchValueType.STRING);
     SearchValueType valueTypeDate = new SearchValueType(ISearchValueType.DATE);
 
-    SearchValueType valueTypeEnum1 = new SearchValueType(new ArrayList<String>(Arrays.asList(new String[] { "Foo", "Bar" })));
-    SearchValueType valueTypeEnum2 = new SearchValueType(new ArrayList<String>(Arrays.asList(new String[] { "Foo", "Bar" })));
-    SearchValueType valueTypeEnum3 = new SearchValueType(new ArrayList<String>(Arrays.asList(new String[] { "Foo" })));
+    SearchValueType valueTypeEnum1 = new SearchValueType(new ArrayList<>(Arrays.asList(new String[] { "Foo", "Bar" })));
+    SearchValueType valueTypeEnum2 = new SearchValueType(new ArrayList<>(Arrays.asList(new String[] { "Foo", "Bar" })));
+    SearchValueType valueTypeEnum3 = new SearchValueType(new ArrayList<>(Arrays.asList(new String[] { "Foo" })));
 
     assertTrue(valueTypeString1.equals(valueTypeString2));
     assertFalse(valueTypeString1.equals(valueTypeDate));
@@ -870,9 +869,9 @@ public class ModelTest1 extends LargeBlockSizeTest {
     SearchValueType valueTypeString2 = new SearchValueType(ISearchValueType.STRING);
     SearchValueType valueTypeDate = new SearchValueType(ISearchValueType.DATE);
 
-    SearchValueType valueTypeEnum1 = new SearchValueType(new ArrayList<String>(Arrays.asList("Foo", "Bar")));
-    SearchValueType valueTypeEnum2 = new SearchValueType(new ArrayList<String>(Arrays.asList("Foo", "Bar")));
-    SearchValueType valueTypeEnum3 = new SearchValueType(new ArrayList<String>(Arrays.asList("Foo")));
+    SearchValueType valueTypeEnum1 = new SearchValueType(new ArrayList<>(Arrays.asList("Foo", "Bar")));
+    SearchValueType valueTypeEnum2 = new SearchValueType(new ArrayList<>(Arrays.asList("Foo", "Bar")));
+    SearchValueType valueTypeEnum3 = new SearchValueType(new ArrayList<>(Arrays.asList("Foo")));
 
     assertTrue(valueTypeString1.hashCode() == valueTypeString2.hashCode());
     assertFalse(valueTypeString1.hashCode() == valueTypeDate.hashCode());
@@ -1062,7 +1061,7 @@ public class ModelTest1 extends LargeBlockSizeTest {
 
     ISearchField locationField = fFactory.createSearchField(INews.LOCATION, INews.class.getName());
 
-    List<IFolderChild> childs = new ArrayList<IFolderChild>(2);
+    List<IFolderChild> childs = new ArrayList<>(2);
     childs.add(bookmark1);
     childs.add(bookmark2);
 

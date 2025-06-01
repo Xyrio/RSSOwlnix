@@ -28,6 +28,7 @@ import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.persist.reference.NewsReference;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -138,8 +139,16 @@ public interface INews extends IEntity, MergeCapable<INews>, Reparentable<IFeed>
     /** News is ready to be deleted from the Database */
     DELETED;
 
-    private static final transient Set<State> VISIBLE_STATES = EnumSet.of(NEW, READ, UNREAD, UPDATED);
+    public static final transient Set<INews.State> UNREAD_STATES = State.asSet(State.NEW, State.UNREAD, State.UPDATED);
+    public static final transient Set<State> VISIBLE_STATES = State.asSet(NEW, READ, UNREAD, UPDATED);
     private static final transient State[] VALUES = values();
+
+    /**
+     * @return an unmodifiable set containing the unread states (NEW, UNREAD, UPDATED).
+     */
+    public static final Set<State> getUnread() {
+      return Collections.unmodifiableSet(UNREAD_STATES);
+    }
 
     /**
      * Returns an unmodifiable set containing the visible states (all of them
@@ -160,6 +169,27 @@ public interface INews extends IEntity, MergeCapable<INews>, Reparentable<IFeed>
      */
     public static final State getState(int ordinal) {
       return VALUES[ordinal];
+    }
+
+    public static EnumSet<State> all() {
+      return EnumSet.allOf(State.class);
+    }
+    public static EnumSet<State> none() {
+      return EnumSet.noneOf(State.class);
+    }
+    public static EnumSet<State> asSet(State... enums) {
+      EnumSet<State> result = EnumSet.noneOf(State.class);
+      for (State e : enums)
+        result.add(e);
+      return result;
+    }
+//    public static Set<State> asSet(State... enums) {
+//      // Set.of() lacks 0 parameter constructor
+//      // which db4o rejects with error message
+//      return new HashSet<>(Arrays.asList(enums));
+//    }
+    public static EnumSet<State> copyOf(Collection<State> c) {
+      return EnumSet.copyOf(c);
     }
   };
 

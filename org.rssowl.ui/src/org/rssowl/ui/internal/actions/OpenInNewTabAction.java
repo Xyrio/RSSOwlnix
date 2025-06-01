@@ -33,8 +33,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.rssowl.core.persist.IFolder;
 import org.rssowl.ui.internal.OwlUI;
+import org.rssowl.ui.internal.OwlUI.FeedViewOpenMode;
 
-import java.util.EnumSet;
 
 /**
  * @author bpasero
@@ -93,7 +93,7 @@ public class OpenInNewTabAction extends Action {
     BusyIndicator.showWhile(PlatformUI.getWorkbench().getDisplay(), new Runnable() {
       @Override
       public void run() {
-        OwlUI.openInFeedView(fPage, selection, EnumSet.of(OwlUI.FeedViewOpenMode.IGNORE_REUSE));
+        OwlUI.openInFeedView(fPage, selection, FeedViewOpenMode.asSet(OwlUI.FeedViewOpenMode.IGNORE_REUSE));
       }
     });
   }

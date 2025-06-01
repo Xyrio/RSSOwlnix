@@ -24,8 +24,8 @@
 
 package org.rssowl.core.tests.model;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
@@ -61,7 +61,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -138,7 +137,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
       assertTrue(listenerCalled.get());
 
       List<INews> news = bm.getFeedLinkReference().resolve().getNews();
-      assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.READ)));
+      assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.READ)));
       assertEquals(3, news.size());
       for (INews newsitem : news) {
         assertEquals(INews.State.READ, newsitem.getState());
@@ -177,7 +176,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     fAppService.handleFeedReload(bm, feed, null, false, true, new NullProgressMonitor());
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.UNREAD)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.UNREAD)));
     assertEquals(3, news.size());
     for (INews newsitem : news) {
       assertEquals(INews.State.UNREAD, newsitem.getState());
@@ -213,7 +212,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     fAppService.handleFeedReload(bm, feed, null, false, true, new NullProgressMonitor());
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     assertEquals(3, news.size());
     for (INews newsitem : news) {
       assertEquals(true, newsitem.isFlagged());
@@ -254,7 +253,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       assertEquals(1, newsitem.getLabels().size());
       assertEquals(label, newsitem.getLabels().iterator().next());
@@ -292,7 +291,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.DELETED)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.DELETED)));
     for (INews newsitem : news) {
       assertEquals(INews.State.DELETED, newsitem.getState());
     }
@@ -333,14 +332,14 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       assertEquals(INews.State.NEW, newsitem.getState());
       assertEquals(0, newsitem.getParentId());
     }
 
     List<INews> binNews = bin.getNews();
-    assertEquals(3, bin.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bin.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : binNews) {
       assertEquals(INews.State.NEW, newsitem.getState());
       assertEquals(bin.getId(), (Long) newsitem.getParentId());
@@ -383,13 +382,13 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.DELETED)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.DELETED)));
     for (INews newsitem : news) {
       assertEquals(INews.State.DELETED, newsitem.getState());
     }
 
     List<INews> binNews = bin.getNews();
-    assertEquals(3, bin.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bin.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : binNews) {
       assertEquals(INews.State.NEW, newsitem.getState());
       assertEquals(bin.getId(), (Long) newsitem.getParentId());
@@ -434,13 +433,13 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.DELETED)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.DELETED)));
     for (INews newsitem : news) {
       assertEquals(INews.State.DELETED, newsitem.getState());
     }
 
     List<INews> binNews = bin.getNews();
-    assertEquals(3, bin.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bin.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : binNews) {
       assertEquals(INews.State.NEW, newsitem.getState());
       assertEquals(bin.getId(), (Long) newsitem.getParentId());
@@ -499,8 +498,8 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(1, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(2, bm.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(1, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(2, bm.getNewsCount(INews.State.asSet(INews.State.READ)));
     for (INews newsitem : news) {
       if (newsitem.equals(news1)) {
         assertEquals(INews.State.NEW, news1.getState());
@@ -562,7 +561,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.READ)));
     for (INews newsitem : news) {
       if (newsitem.equals(news1))
         assertEquals(INews.State.READ, news1.getState());
@@ -623,7 +622,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.READ)));
     for (INews newsitem : news) {
       if (newsitem.equals(news1))
         assertEquals(INews.State.READ, news1.getState());
@@ -735,9 +734,9 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(4, news.size());
-    assertEquals(2, bm.getNewsCount(EnumSet.of(INews.State.READ)));
-    assertEquals(1, bm.getNewsCount(EnumSet.of(INews.State.DELETED)));
-    assertEquals(1, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(2, bm.getNewsCount(INews.State.asSet(INews.State.READ)));
+    assertEquals(1, bm.getNewsCount(INews.State.asSet(INews.State.DELETED)));
+    assertEquals(1, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       if (newsitem.equals(news1)) {
         assertEquals(INews.State.READ, news1.getState());
@@ -758,8 +757,8 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     }
 
     assertEquals(3, bin1.getNews().size());
-    assertEquals(1, bin1.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(2, bin1.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(1, bin1.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(2, bin1.getNewsCount(INews.State.asSet(INews.State.READ)));
 
     List<INews> binNews = bin1.getNews();
     for (INews newsitem : binNews) {
@@ -781,8 +780,8 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     }
 
     assertEquals(3, bin2.getNews().size());
-    assertEquals(1, bin2.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(2, bin2.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(1, bin2.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(2, bin2.getNewsCount(INews.State.asSet(INews.State.READ)));
 
     binNews = bin2.getNews();
     for (INews newsitem : binNews) {
@@ -840,7 +839,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       assertEquals(1, newsitem.getLabels().size());
       assertEquals(label, newsitem.getLabels().iterator().next());
@@ -903,8 +902,8 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(0, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.DELETED)));
+    assertEquals(0, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.DELETED)));
     for (INews newsitem : news) {
       assertEquals(0, newsitem.getLabels().size());
     }
@@ -947,7 +946,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       assertEquals(1, newsitem.getLabels().size());
       assertEquals(label, newsitem.getLabels().iterator().next());
@@ -991,7 +990,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     boolean labelFound = false;
     for (INews newsitem : news) {
       if (news1.equals(newsitem)) {
@@ -1041,7 +1040,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm2.getFeedLinkReference().resolve().getNews();
     assertEquals(1, news.size());
-    assertEquals(1, bm2.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(1, bm2.getNewsCount(INews.State.asSet(INews.State.READ)));
     for (INews newsitem : news) {
       assertEquals(1, newsitem.getLabels().size());
       assertEquals(INews.State.READ, newsitem.getState()); //Because the news is duplicate in another feed and read
@@ -1084,7 +1083,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     fAppService.handleFeedReload(bm1, feed, null, false, true, new NullProgressMonitor());
 
     List<INews> news = bm1.getFeedLinkReference().resolve().getNews();
-    assertEquals(3, bm1.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(3, bm1.getNewsCount(INews.State.asSet(INews.State.READ)));
     assertEquals(3, news.size());
     for (INews newsitem : news) {
       assertEquals(INews.State.READ, newsitem.getState());
@@ -1125,7 +1124,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
     fAppService.handleFeedReload(bm1, feed, null, false, true, new NullProgressMonitor());
 
     List<INews> news = bm1.getFeedLinkReference().resolve().getNews();
-    assertEquals(0, bm1.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(0, bm1.getNewsCount(INews.State.asSet(INews.State.READ)));
     assertEquals(3, news.size());
     for (INews newsitem : news) {
       assertEquals(INews.State.NEW, newsitem.getState());
@@ -1166,7 +1165,7 @@ public class NewsFilterTest extends LargeBlockSizeTest {
 
     List<INews> news = bm.getFeedLinkReference().resolve().getNews();
     assertEquals(3, news.size());
-    assertEquals(3, bm.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(3, bm.getNewsCount(INews.State.asSet(INews.State.NEW)));
     for (INews newsitem : news) {
       assertEquals(INews.State.NEW, newsitem.getState());
     }

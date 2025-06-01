@@ -24,8 +24,8 @@
 
 package org.rssowl.core.tests.model;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Test;
@@ -41,8 +41,8 @@ import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.ISource;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.reference.NewsReference;
 import org.rssowl.core.persist.service.PersistenceException;
 import org.rssowl.core.tests.TestUtils;
@@ -52,7 +52,6 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -141,7 +140,7 @@ public class ModelSearchTest1 extends AbstractModelSearchTest {
       /* Condition 1a: Enum (match) */
       {
         ISearchField field = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(State.READ));
+        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, State.asSet(State.READ));
 
         List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition), false);
         assertSame(result, news1);
@@ -150,7 +149,7 @@ public class ModelSearchTest1 extends AbstractModelSearchTest {
       /* Condition 1b: Enum (no match) */
       {
         ISearchField field = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(State.DELETED));
+        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, State.asSet(State.DELETED));
 
         List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition), false);
         assertEquals(0, result.size());
@@ -509,7 +508,7 @@ public class ModelSearchTest1 extends AbstractModelSearchTest {
       /* Condition 1a: Enum */
       {
         ISearchField field = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS_NOT, EnumSet.of(State.READ));
+        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS_NOT, State.asSet(State.READ));
 
         List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition), false);
         assertSame(result, news2, news3, news4, news5);
@@ -518,7 +517,7 @@ public class ModelSearchTest1 extends AbstractModelSearchTest {
       /* Condition 1b: Enum */
       {
         ISearchField field = fFactory.createSearchField(INews.STATE, fNewsEntityName);
-        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS_NOT, EnumSet.of(State.DELETED));
+        ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS_NOT, State.asSet(State.DELETED));
 
         List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition), false);
         assertSame(result, news1, news2, news3, news4, news5);

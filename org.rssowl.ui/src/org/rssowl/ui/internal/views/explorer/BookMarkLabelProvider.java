@@ -49,7 +49,6 @@ import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.ui.internal.EntityGroup;
 import org.rssowl.ui.internal.OwlUI;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -218,8 +217,8 @@ public class BookMarkLabelProvider extends CellLabelProvider {
       INewsMark newsmark = (INewsMark) element;
 
       if (fIndicateState) {
-        unreadNewsCount = newsmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
-        hasNew = newsmark.getNewsCount(EnumSet.of(INews.State.NEW)) != 0;
+        unreadNewsCount = newsmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+        hasNew = newsmark.getNewsCount(INews.State.asSet(INews.State.NEW)) != 0;
       }
 
       /* Font */
@@ -311,7 +310,7 @@ public class BookMarkLabelProvider extends CellLabelProvider {
   }
 
   private Image getIconForSearchMark(ISearchMark searchmark, boolean hasNew, int unreadNewsCount) {
-    boolean hasMatchingNews = unreadNewsCount > 0 || searchmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED, INews.State.READ)) != 0;
+    boolean hasMatchingNews = unreadNewsCount > 0 || searchmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED, INews.State.READ)) != 0;
 
     if (hasNew)
       return fSearchMarkNewIcon;
@@ -322,7 +321,7 @@ public class BookMarkLabelProvider extends CellLabelProvider {
   }
 
   private Image getIconForNewsBin(INewsBin newsbin, boolean hasNew, int unreadNewsCount) {
-    boolean hasMatchingNews = unreadNewsCount > 0 || newsbin.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED, INews.State.READ)) != 0;
+    boolean hasMatchingNews = unreadNewsCount > 0 || newsbin.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED, INews.State.READ)) != 0;
     boolean isArchive = newsbin.getProperty(DefaultPreferences.ARCHIVE_BIN_MARKER) != null;
 
     if (hasNew)
@@ -360,7 +359,7 @@ public class BookMarkLabelProvider extends CellLabelProvider {
       if (child instanceof INewsMark) {
         INewsMark newsMark = (INewsMark) child;
         helper.fUnreadCount += getUnreadNewsCount(newsMark);
-        helper.fNewCount += newsMark.getNewsCount(EnumSet.of(INews.State.NEW));
+        helper.fNewCount += newsMark.getNewsCount(INews.State.asSet(INews.State.NEW));
 
         if (!helper.fHasSticky && newsMark instanceof IBookMark && ((IBookMark) newsMark).getStickyNewsCount() > 0)
           helper.fHasSticky = true;
@@ -373,7 +372,7 @@ public class BookMarkLabelProvider extends CellLabelProvider {
   }
 
   private int getUnreadNewsCount(INewsMark newsMark) {
-    return newsMark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+    return newsMark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
   }
 
   void erase(Event event, Object element) {

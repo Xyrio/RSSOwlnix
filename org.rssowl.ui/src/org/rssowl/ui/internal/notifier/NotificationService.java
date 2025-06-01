@@ -61,7 +61,6 @@ import org.rssowl.ui.internal.dialogs.preferences.NotifierPreferencesPage;
 import org.rssowl.ui.internal.util.JobRunner;
 
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class NotificationService {
   private final FolderListener fFolderListener;
   private final IPreferenceScope fGlobalPreferences;
   private final BatchedBuffer<NotificationItem> fBatchedBuffer;
-  private final Map<String /* Feed Link */, Boolean /* Enablement State */> fNotifierEnablementCache = new ConcurrentHashMap<String, Boolean>();
+  private final Map<String /* Feed Link */, Boolean /* Enablement State */> fNotifierEnablementCache = new ConcurrentHashMap<>();
 
   /* Singleton instance */
   private static NotificationPopup fgNotificationPopup;
@@ -122,7 +121,7 @@ public class NotificationService {
       }
     };
 
-    fBatchedBuffer = new BatchedBuffer<NotificationItem>(receiver, BATCH_INTERVAL);
+    fBatchedBuffer = new BatchedBuffer<>(receiver, BATCH_INTERVAL);
     fGlobalPreferences = Owl.getPreferenceService().getGlobalScope();
     fNewsListener = registerNewsListener();
     fSearchMarkListener = registerSearchMarkListener();
@@ -168,7 +167,7 @@ public class NotificationService {
   public void show(List<INews> news, RGB color, Mode mode, boolean direct) {
 
     /* Create Notification Items */
-    Set<NotificationItem> items = new TreeSet<NotificationItem>();
+    Set<NotificationItem> items = new TreeSet<>();
     for (INews newsitem : news)
       items.add(new NewsNotificationItem(newsitem, color));
 
@@ -275,7 +274,7 @@ public class NotificationService {
       return;
 
     /* Filter Events if user decided to show Notifier only for selected Elements */
-    Set<SearchMarkEvent> filteredEvents = new HashSet<SearchMarkEvent>(events.size());
+    Set<SearchMarkEvent> filteredEvents = new HashSet<>(events.size());
     if (fGlobalPreferences.getBoolean(DefaultPreferences.LIMIT_NOTIFIER_TO_SELECTION)) {
       for (SearchMarkEvent event : events) {
 
@@ -311,9 +310,9 @@ public class NotificationService {
     }
 
     /* Create Items */
-    Set<NotificationItem> items = new TreeSet<NotificationItem>();
+    Set<NotificationItem> items = new TreeSet<>();
     for (SearchMarkEvent event : filteredEvents)
-      items.add(new SearchNotificationItem(event.getEntity(), event.getEntity().getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED))));
+      items.add(new SearchNotificationItem(event.getEntity(), event.getEntity().getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED))));
 
     /* Add into Buffer */
     if (!isPopupVisible())
@@ -345,7 +344,7 @@ public class NotificationService {
           eventsToShow = filterEvents(eventsToShow);
 
         /* Create Items */
-        Set<NotificationItem> items = new TreeSet<NotificationItem>();
+        Set<NotificationItem> items = new TreeSet<>();
         for (NewsEvent event : eventsToShow) {
           INews news = event.getEntity();
           if (news.getState().equals(INews.State.NEW)) //Only show NEW news in Notifier
@@ -427,7 +426,7 @@ public class NotificationService {
   }
 
   private Set<NewsEvent> filterEvents(Set<NewsEvent> events) {
-    Set<NewsEvent> filteredEvents = new HashSet<NewsEvent>();
+    Set<NewsEvent> filteredEvents = new HashSet<>();
 
     for (NewsEvent event : events) {
       if (!event.getEntity().isVisible())

@@ -24,11 +24,11 @@
 
 package org.rssowl.core.tests.model;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.Before;
@@ -76,10 +76,10 @@ import org.rssowl.core.persist.ISearchFilter;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.ISource;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IConditionalGetDAO;
 import org.rssowl.core.persist.dao.IFeedDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.BookMarkAdapter;
 import org.rssowl.core.persist.event.BookMarkEvent;
 import org.rssowl.core.persist.event.BookMarkListener;
@@ -123,7 +123,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -177,7 +176,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
    */
   @Test
   public void testAddDuplicateNewsDeadlocks() {
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     IFeed feed = createFeed();
     INews news = createNews(feed);
     newsList.add(news);
@@ -219,7 +218,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     feed = null;
     System.gc();
 
-    final Set<NewsEvent> newsEvents = new HashSet<NewsEvent>();
+    final Set<NewsEvent> newsEvents = new HashSet<>();
     NewsListener newsListener = new NewsListener() {
       @Override
       public void entitiesAdded(Set<NewsEvent> events) {
@@ -238,7 +237,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     };
     OwlDAO.addEntityListener(INews.class, newsListener);
     try {
-      fNewsDAO.setState(EnumSet.of(INews.State.HIDDEN), INews.State.DELETED, false);
+      fNewsDAO.setState(INews.State.asSet(INews.State.HIDDEN), INews.State.DELETED, false);
       assertEquals(2, newsEvents.size());
       for (NewsEvent newsEvent : newsEvents) {
         String guid = newsEvent.getEntity().getGuid().getValue();
@@ -306,7 +305,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     OwlDAO.save(newsCopy);
     OwlDAO.save(newsBin);
 
-    assertEquals(1, newsBin.getNews(EnumSet.of(INews.State.NEW)).size());
+    assertEquals(1, newsBin.getNews(INews.State.asSet(INews.State.NEW)).size());
   }
 
   /**
@@ -394,13 +393,13 @@ public class DBManagerTest extends LargeBlockSizeTest {
     OwlDAO.save(newsCopy);
     OwlDAO.save(newsBin);
 
-    assertEquals(1, bookMark.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(1, newsBin.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(1, bookMark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(1, newsBin.getNewsCount(INews.State.asSet(INews.State.NEW)));
 
     fNewsDAO.setState(Collections.singleton(newsCopy), INews.State.READ, false, false);
 
-    assertEquals(1, bookMark.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(0, newsBin.getNewsCount(EnumSet.of(INews.State.NEW)));
+    assertEquals(1, bookMark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(0, newsBin.getNewsCount(INews.State.asSet(INews.State.NEW)));
   }
 
   /**
@@ -426,8 +425,8 @@ public class DBManagerTest extends LargeBlockSizeTest {
 
     fNewsDAO.setState(Collections.singleton(newsCopy), INews.State.HIDDEN, false, false);
     assertEquals(1, newsBin.getNewsRefs().size());
-    assertEquals(1, newsBin.getNewsRefs(EnumSet.of(INews.State.HIDDEN)).size());
-    assertEquals(0, newsBin.getNewsRefs(EnumSet.of(INews.State.NEW)).size());
+    assertEquals(1, newsBin.getNewsRefs(INews.State.asSet(INews.State.HIDDEN)).size());
+    assertEquals(0, newsBin.getNewsRefs(INews.State.asSet(INews.State.NEW)).size());
     assertEquals(newsCopy, newsBin.getNews().get(0));
 
     fNewsDAO.setState(Collections.singleton(newsCopy), INews.State.DELETED, false, false);
@@ -1508,7 +1507,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     try {
       IFeed feed = createFeed();
       INews news = createNews(feed);
-      List<IAttachment> attachments = new ArrayList<IAttachment>(news.getAttachments());
+      List<IAttachment> attachments = new ArrayList<>(news.getAttachments());
       for (IAttachment attachment : attachments)
         news.removeAttachment(attachment);
 
@@ -2040,7 +2039,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
         }
       };
       OwlDAO.addEntityListener(INews.class, newsListener);
-      List<INews> newsList = new ArrayList<INews>();
+      List<INews> newsList = new ArrayList<>();
       newsList.add(news);
       Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList, State.NEW, true, false);
       OwlDAO.removeEntityListener(INews.class, newsListener);
@@ -2068,7 +2067,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     NewsReference newsRef = null;
     newsItem = OwlDAO.save(initialNews);
     newsRef = new NewsReference(newsItem.getId());
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     newsList.add(newsItem);
     Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList, State.UPDATED, true, false);
     INews news = newsRef.resolve();
@@ -2106,7 +2105,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     NewsReference newsRef = null;
     newsItem = OwlDAO.save(initialNews);
     newsRef = new NewsReference(newsItem.getId());
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     newsList.add(newsItem);
     Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList, State.DELETED, true, false);
     INews news = newsRef.resolve();
@@ -2123,7 +2122,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     NewsReference newsRef = null;
     newsItem = OwlDAO.save(initialNews);
     newsRef = new NewsReference(newsItem.getId());
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     newsList.add(newsItem);
     Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList, State.HIDDEN, true, false);
     INews news = newsRef.resolve();
@@ -2265,10 +2264,10 @@ public class DBManagerTest extends LargeBlockSizeTest {
       OwlDAO.removeEntityListener(INews.class, newsAdapter);
     }
     try {
-      List<INews> newsList1 = new ArrayList<INews>();
+      List<INews> newsList1 = new ArrayList<>();
       newsList1.add(newsItem1);
 
-      List<INews> newsList2 = new ArrayList<INews>();
+      List<INews> newsList2 = new ArrayList<>();
       newsList2.add(newsItem2);
 
       Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList1, State.UPDATED, true, false);
@@ -2409,10 +2408,10 @@ public class DBManagerTest extends LargeBlockSizeTest {
       OwlDAO.removeEntityListener(INews.class, newsAdapter);
     }
     try {
-      List<INews> newsList1 = new ArrayList<INews>();
+      List<INews> newsList1 = new ArrayList<>();
       newsList1.add(newsItem1);
 
-      List<INews> newsList2 = new ArrayList<INews>();
+      List<INews> newsList2 = new ArrayList<>();
       newsList2.add(newsItem2);
 
       Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList1, State.UPDATED, true, false);
@@ -2502,7 +2501,7 @@ public class DBManagerTest extends LargeBlockSizeTest {
     NewsReference newsRef = null;
     newsItem = OwlDAO.save(initialNews);
     newsRef = new NewsReference(newsItem.getId());
-    List<INews> newsList = new ArrayList<INews>();
+    List<INews> newsList = new ArrayList<>();
     newsList.add(newsItem);
     Owl.getPersistenceService().getDAOService().getNewsDAO().setState(newsList, State.UPDATED, true, false);
     INews news = newsRef.resolve();

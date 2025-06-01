@@ -44,6 +44,7 @@ import org.rssowl.core.persist.IFolder;
 import org.rssowl.core.persist.ILabel;
 import org.rssowl.core.persist.IModelFactory;
 import org.rssowl.core.persist.INews;
+import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.INewsBin;
 import org.rssowl.core.persist.IPersistable;
 import org.rssowl.core.persist.IPreference;
@@ -65,7 +66,6 @@ import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -104,7 +104,7 @@ public class OPMLImporter implements ITypeImporter {
   private List<IEntity> processBody(Element body, DateFormat dateFormat) {
     IFolder defaultRootFolder = Owl.getModelFactory().createFolder(null, null, Messages.OPMLImporter_BOOKMARKS);
     defaultRootFolder.setProperty(ITypeImporter.TEMPORARY_FOLDER, true);
-    List<IEntity> importedEntities = new ArrayList<IEntity>();
+    List<IEntity> importedEntities = new ArrayList<>();
 
     /* Interpret Children */
     List<?> feedChildren = body.getChildren();
@@ -381,9 +381,9 @@ public class OPMLImporter implements ITypeImporter {
 
     /* Treat set of Locations separately */
     if (locationElements.size() > 0) {
-      List<Long> folderIds = new ArrayList<Long>(locationElements.size());
-      List<Long> bookmarkIds = new ArrayList<Long>(locationElements.size());
-      List<Long> newsbinIds = new ArrayList<Long>(locationElements.size());
+      List<Long> folderIds = new ArrayList<>(locationElements.size());
+      List<Long> bookmarkIds = new ArrayList<>(locationElements.size());
+      List<Long> newsbinIds = new ArrayList<>(locationElements.size());
 
       for (int i = 0; i < locationElements.size(); i++) {
         Element locationElement = (Element) locationElements.get(i);
@@ -409,14 +409,14 @@ public class OPMLImporter implements ITypeImporter {
 
     /* Treat set of News States separately */
     else if (newsStateElements.size() > 0) {
-      List<INews.State> states = new ArrayList<INews.State>(newsStateElements.size());
+      List<INews.State> states = new ArrayList<>(newsStateElements.size());
       for (int i = 0; i < newsStateElements.size(); i++) {
         Element newsStateElement = (Element) newsStateElements.get(i);
         int ordinal = Integer.parseInt(newsStateElement.getAttributeValue(Attributes.VALUE.get()));
         states.add(INews.State.values()[ordinal]);
       }
 
-      value = EnumSet.copyOf(states);
+      value = State.copyOf(states);
     }
 
     /* Any other Value */

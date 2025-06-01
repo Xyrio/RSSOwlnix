@@ -57,7 +57,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -148,7 +147,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
     ISearchMark search = fFactory.createSearchMark(null, childFolder, "search");
     search.addSearchCondition(condition);
 
@@ -185,13 +184,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW));
       assertTrue(news.contains(news1));
       assertTrue(news.contains(othernews1));
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertTrue(news.contains(news1));
       assertTrue(news.contains(news2));
       assertTrue(news.contains(copiedNews1));
@@ -201,8 +200,8 @@ public class FolderNewsMarkTest {
 
     {
       assertEquals(7, mark.getNewsCount(INews.State.getVisible()));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW)));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
     }
 
     {
@@ -228,13 +227,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW));
       assertTrue(news.contains(news1.toReference()));
       assertTrue(news.contains(othernews1.toReference()));
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertTrue(news.contains(news1.toReference()));
       assertTrue(news.contains(news2.toReference()));
       assertTrue(news.contains(copiedNews1.toReference()));
@@ -311,7 +310,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
     ISearchMark search = fFactory.createSearchMark(null, childFolder, "search");
     search.addSearchCondition(condition);
 
@@ -351,13 +350,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW));
       assertTrue(news.contains(news1));
       assertTrue(news.contains(othernews1));
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertTrue(news.contains(news1));
       assertTrue(news.contains(news2));
       assertTrue(news.contains(copiedNews1));
@@ -367,8 +366,8 @@ public class FolderNewsMarkTest {
 
     {
       assertEquals(7, mark.getNewsCount(INews.State.getVisible()));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW)));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
     }
 
     {
@@ -394,13 +393,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW));
       assertTrue(news.contains(news1.toReference()));
       assertTrue(news.contains(othernews1.toReference()));
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertTrue(news.contains(news1.toReference()));
       assertTrue(news.contains(news2.toReference()));
       assertTrue(news.contains(copiedNews1.toReference()));
@@ -468,7 +467,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
     ISearchMark search = fFactory.createSearchMark(null, childFolder, "search");
     search.addSearchCondition(condition);
 
@@ -480,7 +479,7 @@ public class FolderNewsMarkTest {
     FolderNewsMark mark = new FolderNewsMark(childFolder);
     mark.resolve(NewsFilter.Type.SHOW_ALL, null);
 
-    List<NewsEvent> events = new ArrayList<NewsEvent>();
+    List<NewsEvent> events = new ArrayList<>();
     News oldNews = new News((News) news1, -1);
     oldNews.setId(news1.getId());
     NewsEvent event1 = new NewsEvent(oldNews, news1, true);
@@ -518,12 +517,12 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW));
       assertEquals(4, news.size());
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertEquals(4, news.size());
       assertTrue(news.contains(news2));
       assertTrue(news.contains(copiedNews2));
@@ -531,8 +530,8 @@ public class FolderNewsMarkTest {
 
     {
       assertEquals(4, mark.getNewsCount(INews.State.getVisible()));
-      assertEquals(4, mark.getNewsCount(EnumSet.of(INews.State.NEW)));
-      assertEquals(4, mark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+      assertEquals(4, mark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+      assertEquals(4, mark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
     }
 
     {
@@ -554,12 +553,12 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW));
       assertEquals(4, news.size());
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertEquals(4, news.size());
       assertTrue(news.contains(news2.toReference()));
       assertTrue(news.contains(copiedNews2.toReference()));
@@ -626,7 +625,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
     ISearchMark search = fFactory.createSearchMark(null, childFolder, "search");
     search.addSearchCondition(condition);
 
@@ -638,7 +637,7 @@ public class FolderNewsMarkTest {
     FolderNewsMark mark = new FolderNewsMark(childFolder);
     mark.resolve(NewsFilter.Type.SHOW_ALL, null);
 
-    List<NewsEvent> events = new ArrayList<NewsEvent>();
+    List<NewsEvent> events = new ArrayList<>();
 
     News oldNews = new News((News) news1, -1);
     oldNews.setId(news1.getId());
@@ -684,13 +683,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW));
       assertEquals(7, news.size());
       assertTrue(news.contains(copiedNews1));
     }
 
     {
-      List<INews> news = mark.getNews(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<INews> news = mark.getNews(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertEquals(7, news.size());
       assertTrue(news.contains(news2));
       assertTrue(news.contains(copiedNews1));
@@ -700,8 +699,8 @@ public class FolderNewsMarkTest {
 
     {
       assertEquals(7, mark.getNewsCount(INews.State.getVisible()));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW)));
-      assertEquals(7, mark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW)));
+      assertEquals(7, mark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
     }
 
     {
@@ -727,13 +726,13 @@ public class FolderNewsMarkTest {
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW));
       assertEquals(7, news.size());
       assertTrue(news.contains(copiedNews1.toReference()));
     }
 
     {
-      List<NewsReference> news = mark.getNewsRefs(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      List<NewsReference> news = mark.getNewsRefs(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
       assertEquals(7, news.size());
       assertTrue(news.contains(news2.toReference()));
       assertTrue(news.contains(copiedNews1.toReference()));
@@ -806,7 +805,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
     ISearchMark search = fFactory.createSearchMark(null, childFolder, "search");
     search.setMatchAllConditions(true);
     search.addSearchCondition(condition);
@@ -892,7 +891,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition1 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition1 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
     ISearchField ageField = fFactory.createSearchField(INews.AGE_IN_DAYS, INews.class.getName());
     ISearchCondition condition2 = fFactory.createSearchCondition(ageField, SearchSpecifier.IS_LESS_THAN, 2);
@@ -987,7 +986,7 @@ public class FolderNewsMarkTest {
     OwlDAO.save(copiedNews3);
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    ISearchCondition condition1 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+    ISearchCondition condition1 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
     ISearchField ageField = fFactory.createSearchField(INews.AGE_IN_DAYS, INews.class.getName());
     ISearchCondition condition2 = fFactory.createSearchCondition(ageField, SearchSpecifier.IS_LESS_THAN, 2);

@@ -36,7 +36,6 @@ import org.rssowl.core.persist.event.NewsEvent;
 import com.db4o.ObjectContainer;
 
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +62,7 @@ public final class NewsCounterService {
       return;
 
     boolean isSaveRootOnNewsCounterItemCreated = false;
-    Map<String, NewsCounterItem> changedCounterItems = new HashMap<String, NewsCounterItem>();
+    Map<String, NewsCounterItem> changedCounterItems = new HashMap<>();
     synchronized (fNewsCounter) {
       for (NewsEvent newsEvent : newsEvents) {
         INews news = newsEvent.getEntity();
@@ -112,7 +111,7 @@ public final class NewsCounterService {
    * @param newsEvents the updated news
    */
   public void onNewsUpdated(Collection<NewsEvent> newsEvents) {
-    Map<String, NewsCounterItem> changedCounterItems = new HashMap<String, NewsCounterItem>();
+    Map<String, NewsCounterItem> changedCounterItems = new HashMap<>();
     synchronized (fNewsCounter) {
       for (NewsEvent event : newsEvents) {
         INews currentNews = event.getEntity();
@@ -176,7 +175,7 @@ public final class NewsCounterService {
    * @param newsEvents the deleted news
    */
   public void onNewsRemoved(Collection<NewsEvent> newsEvents) {
-    Map<String, NewsCounterItem> changedCounterItems = new HashMap<String, NewsCounterItem>();
+    Map<String, NewsCounterItem> changedCounterItems = new HashMap<>();
 
     synchronized (fNewsCounter) {
       for (NewsEvent newsEvent : newsEvents) {
@@ -192,7 +191,7 @@ public final class NewsCounterService {
           counterItem.decrementNewCounter();
         if (isUnread(news.getState()))
           counterItem.decrementUnreadCounter();
-        if (news.isFlagged() && !EnumSet.of(INews.State.DELETED, INews.State.HIDDEN).contains(news.getState()))
+        if (news.isFlagged() && !INews.State.asSet(INews.State.DELETED, INews.State.HIDDEN).contains(news.getState()))
           counterItem.decrementStickyCounter();
 
         changedCounterItems.put(news.getFeedLinkAsText(), counterItem);

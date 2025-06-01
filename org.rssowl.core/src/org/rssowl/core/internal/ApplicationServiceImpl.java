@@ -97,7 +97,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -629,7 +628,7 @@ public class ApplicationServiceImpl implements IApplicationService {
   }
 
   private List<INews> getNewNewsAdded(IFeed feed) {
-    List<INews> newsList = feed.getNewsByStates(EnumSet.of(INews.State.NEW));
+    List<INews> newsList = feed.getNewsByStates(INews.State.asSet(INews.State.NEW));
 
     for (ListIterator<INews> it = newsList.listIterator(newsList.size()); it.hasPrevious();) {
       INews news = it.previous();

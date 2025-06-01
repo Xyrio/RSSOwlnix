@@ -64,8 +64,8 @@ import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.ISource;
 import org.rssowl.core.persist.ITextInput;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.persist.reference.FeedReference;
@@ -93,7 +93,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -284,7 +283,7 @@ public class PerformanceTest {
   }
 
   private List<ITask> getRealWorldReloadTasks(String feedDirectory) {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
 
     /* Create Folder with all Bookmarks */
     IFolder rootFolder = new Folder(null, null, "Root");
@@ -334,7 +333,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void savedSearchServiceTest() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Run Saved Search Service on 216 Feeds */
     List<ITask> tasks = getSavedSearchServiceTestTasks(ex);
@@ -356,7 +355,7 @@ public class PerformanceTest {
   }
 
   List<ITask> getSavedSearchServiceTestTasks(final List<Exception> ex) {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
 
     /* Create Saved Searches */
     createSavedSearches();
@@ -395,7 +394,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "New and Updated News");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(State.NEW));
+      factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, State.asSet(State.NEW));
     }
 
     /* SearchCondition: Recent News */
@@ -430,7 +429,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(IEntity.ALL_FIELDS, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.CONTAINS, "Foo");
@@ -447,7 +446,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(IEntity.ALL_FIELDS, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.CONTAINS, "Foo");
@@ -481,7 +480,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(INews.CATEGORIES, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.IS, "windows");
@@ -499,7 +498,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(INews.CATEGORIES, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.IS, "windows");
@@ -519,7 +518,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(INews.CATEGORIES, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.IS_NOT, "windows");
@@ -533,7 +532,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(INews.AGE_IN_DAYS, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.IS_LESS_THAN, 5);
@@ -547,7 +546,7 @@ public class PerformanceTest {
       ISearchMark mark = factory.createSearchMark(null, folder, "Complex Search");
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition cond1 = factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchField field4 = factory.createSearchField(IEntity.ALL_FIELDS, newsEntityName);
       ISearchCondition cond4 = factory.createSearchCondition(null, mark, field4, SearchSpecifier.CONTAINS, "pasero");
@@ -562,7 +561,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void saveAndIndexFeeds() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Save and Index 216 Feeds */
     List<ITask> tasks = getSaveAndIndexFeedsTasks(ex);
@@ -603,7 +602,7 @@ public class PerformanceTest {
   }
 
   private List<ITask> getSaveAndIndexFeedsTasks(final List<Exception> ex) {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     List<IFeed> feeds = interpretFeedsHelper();
 
     for (final IFeed feed : feeds) {
@@ -629,10 +628,10 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void searchNews() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
     final int[] results = new int[] { 0 };
     final IModelFactory factory = Owl.getModelFactory();
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     fModelSearch.startup();
 
     /* Save some Feeds first */
@@ -642,10 +641,10 @@ public class PerformanceTest {
     ITask task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(INews.STATE, INews.class.getName());
-        conditions.add(factory.createSearchCondition(field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, State.UNREAD, State.UPDATED, State.READ)));
+        conditions.add(factory.createSearchCondition(field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, State.UNREAD, State.UPDATED, State.READ)));
 
         results[0] = fModelSearch.searchNews(conditions, false).size();
 
@@ -665,7 +664,7 @@ public class PerformanceTest {
     task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(IEntity.ALL_FIELDS, INews.class.getName());
         conditions.add(factory.createSearchCondition(field1, SearchSpecifier.CONTAINS, "news"));
@@ -692,7 +691,7 @@ public class PerformanceTest {
     task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(INews.TITLE, INews.class.getName());
         conditions.add(factory.createSearchCondition(field1, SearchSpecifier.CONTAINS, "news"));
@@ -725,7 +724,7 @@ public class PerformanceTest {
     task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(INews.TITLE, INews.class.getName());
         conditions.add(factory.createSearchCondition(field1, SearchSpecifier.CONTAINS, "news"));
@@ -755,7 +754,7 @@ public class PerformanceTest {
     task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(INews.PUBLISH_DATE, INews.class.getName());
         conditions.add(factory.createSearchCondition(field1, SearchSpecifier.IS_BEFORE, new Date()));
@@ -785,10 +784,10 @@ public class PerformanceTest {
     task = new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+        List<ISearchCondition> conditions = new ArrayList<>();
 
         ISearchField field1 = factory.createSearchField(INews.STATE, INews.class.getName());
-        conditions.add(factory.createSearchCondition(field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+        conditions.add(factory.createSearchCondition(field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
 
         ISearchField field4 = factory.createSearchField(INews.HAS_ATTACHMENTS, INews.class.getName());
         conditions.add(factory.createSearchCondition(field4, SearchSpecifier.IS, true));
@@ -852,7 +851,7 @@ public class PerformanceTest {
   }
 
   private List<ITask> getReloadFeedsTasks(boolean withRetention) {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     Random rand = new Random();
 
     /* Create Folder with all Bookmarks */
@@ -1013,10 +1012,10 @@ public class PerformanceTest {
 
   private List<ITask> getSetNewsStateTask(final boolean updateEquivalent, final boolean resolveFeed, boolean allNewsNew) {
 
-    final EnumSet<INews.State> unreadStates = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+    final Set<INews.State> unreadStates = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
     /* Save some Feeds first */
     List<IFeed> feeds = interpretFeedsHelper();
-    final List<FeedLinkReference> feedRefs = new ArrayList<FeedLinkReference>();
+    final List<FeedLinkReference> feedRefs = new ArrayList<>();
     for (IFeed feed : feeds) {
       List<INews> news = feed.getNews();
       if (!allNewsNew && (!news.isEmpty())) {
@@ -1033,11 +1032,11 @@ public class PerformanceTest {
     System.gc();
 
     final INewsDAO newsDAO = OwlDAO.getDAO(INewsDAO.class);
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     tasks.add(new TaskAdapter() {
       @Override
       public IStatus run(IProgressMonitor monitor) {
-        List<INews> news = new ArrayList<INews>();
+        List<INews> news = new ArrayList<>();
         for (FeedLinkReference feedRef : feedRefs) {
           if (resolveFeed) {
             news.addAll(feedRef.resolve().getNewsByStates(unreadStates));
@@ -1084,8 +1083,8 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void interpretFeeds() throws Exception {
-    List<ITask> tasks = new ArrayList<ITask>();
-    final List<Exception> ex = new ArrayList<Exception>();
+    List<ITask> tasks = new ArrayList<>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Prepare Tasks */
     for (int i = 1; i < FEEDS + 1; i++) {
@@ -1126,7 +1125,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void saveFeeds() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Save 216 Feeds */
     List<ITask> tasks = getSaveFeedsTasks(ex);
@@ -1148,7 +1147,7 @@ public class PerformanceTest {
   }
 
   private List<ITask> getSaveFeedsTasks(final List<Exception> ex) {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
     List<IFeed> feeds = interpretFeedsHelper();
 
     for (final IFeed feed : feeds) {
@@ -1174,8 +1173,8 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void resolveFeeds() throws Exception {
-    List<ITask> tasks = new ArrayList<ITask>();
-    final List<Exception> ex = new ArrayList<Exception>();
+    List<ITask> tasks = new ArrayList<>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Prepare Tasks */
     List<FeedReference> feedRefs = saveFeedsHelper();
@@ -1213,8 +1212,8 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void resolveFeedsAndNews() throws Exception {
-    List<ITask> tasks = new ArrayList<ITask>();
-    final List<Exception> ex = new ArrayList<Exception>();
+    List<ITask> tasks = new ArrayList<>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Prepare Tasks */
     List<FeedReference> feedRefs = saveFeedsHelper();
@@ -1257,8 +1256,8 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void resolveNewsStatesByResolving() throws Exception {
-    List<ITask> tasks = new ArrayList<ITask>();
-    final List<Exception> ex = new ArrayList<Exception>();
+    List<ITask> tasks = new ArrayList<>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Prepare Tasks */
     List<FeedReference> feedRefs = saveFeedsHelper();
@@ -1300,8 +1299,8 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void resolveFeedCompletly() throws Exception {
-    List<ITask> tasks = new ArrayList<ITask>();
-    final List<Exception> ex = new ArrayList<Exception>();
+    List<ITask> tasks = new ArrayList<>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Prepare Tasks */
     List<FeedReference> feedRefs = saveFeedsHelper();
@@ -1380,7 +1379,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void deleteFeeds() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Delete 216 Feeds */
     List<ITask> tasks = getDeleteFeedsTasks(ex);
@@ -1402,7 +1401,7 @@ public class PerformanceTest {
   }
 
   private List<ITask> getDeleteFeedsTasks(final List<Exception> ex) throws PersistenceException {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
 
     List<FeedReference> feedRefs = saveFeedsHelper();
     for (final FeedReference feedRef : feedRefs) {
@@ -1428,7 +1427,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void updateFeeds() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Update 216 Feeds */
     List<ITask> tasks = getUpdateFeedsTasks(ex);
@@ -1450,11 +1449,11 @@ public class PerformanceTest {
 
   @SuppressWarnings("nls")
   private List<ITask> getUpdateFeedsTasks(final List<Exception> ex) throws PersistenceException {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
 
     /* Save some Feeds first */
     List<IFeed> feeds = interpretFeedsHelper();
-    List<IFeed> savedFeeds = new ArrayList<IFeed>(feeds.size());
+    List<IFeed> savedFeeds = new ArrayList<>(feeds.size());
     for (IFeed feed : feeds)
       savedFeeds.add(OwlDAO.save(feed));
 
@@ -1520,7 +1519,7 @@ public class PerformanceTest {
   @SuppressWarnings("nls")
   @Test
   public void resolveSaveFeeds() throws Exception {
-    final List<Exception> ex = new ArrayList<Exception>();
+    final List<Exception> ex = new ArrayList<>();
 
     /* Cold-Start: Save and Resolve 216 Feeds */
     List<ITask> tasks = getResolveSaveFeedsTasks(ex);
@@ -1543,10 +1542,10 @@ public class PerformanceTest {
   }
 
   private List<ITask> getResolveSaveFeedsTasks(final List<Exception> ex) throws PersistenceException {
-    List<ITask> tasks = new ArrayList<ITask>();
+    List<ITask> tasks = new ArrayList<>();
 
     /* Save some Feeds first */
-    final List<FeedReference> feedRefs = new ArrayList<FeedReference>();
+    final List<FeedReference> feedRefs = new ArrayList<>();
     final List<IFeed> feeds = interpretFeedsHelper();
     final int limit = feeds.size() / 2;
     for (int i = 0; i < limit; i++)
@@ -1588,7 +1587,7 @@ public class PerformanceTest {
 
   private List<FeedReference> saveFeedsHelper() throws PersistenceException {
     List<IFeed> feeds = interpretFeedsHelper();
-    List<FeedReference> feedRefs = new ArrayList<FeedReference>();
+    List<FeedReference> feedRefs = new ArrayList<>();
     for (IFeed feed : feeds)
       feedRefs.add(new FeedReference(OwlDAO.save(feed).getId()));
 
@@ -1597,7 +1596,7 @@ public class PerformanceTest {
 
   @SuppressWarnings("nls")
   private List<IFeed> interpretFeedsHelper() {
-    List<IFeed> feeds = new ArrayList<IFeed>();
+    List<IFeed> feeds = new ArrayList<>();
     for (int i = 1; i < FEEDS + 1; i++) {
       try {
         URI feedLink = fPluginLocation.resolve("data/performance/" + i + ".xml").toURL().toURI();

@@ -47,7 +47,6 @@ import com.db4o.query.Query;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -93,7 +92,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
    */
   @Override
   public Collection<INews> loadAll() {
-    return new LazyList<INews>(fDb.query(News.class), fDb);
+    return new LazyList<>(fDb.query(News.class), fDb);
   }
 
   /*
@@ -151,7 +150,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
          * link.
          */
         int capacity = news.size() + (news.size() / 4);
-        changedNews = new HashSet<INews>(capacity);
+        changedNews = new HashSet<>(capacity);
         for (INews newsItem : news) {
           if (newsItem.getId() == null)
             throw new IllegalArgumentException("newsItem was never saved to the database"); //$NON-NLS-1$
@@ -244,7 +243,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
    */
   @Override
   public void saveAll(Collection<INews> news) {
-    IdentityHashMap<INews, Object> map = new IdentityHashMap<INews, Object>();
+    IdentityHashMap<INews, Object> map = new IdentityHashMap<>();
     for (INews newsItem : news)
       map.put(newsItem, newsItem);
     super.saveAll(map.keySet());
@@ -283,7 +282,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
     else
       hits = modelSearch.searchNewsByLink(newsItem.getLink(), false);
 
-    List<INews> news = new ArrayList<INews>(hits.size());
+    List<INews> news = new ArrayList<>(hits.size());
     for (NewsReference hit : hits) {
       if (newsItem.getId() != null && (hit.getId() == newsItem.getId().longValue()))
         news.add(newsItem);
@@ -300,7 +299,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
   }
 
   private Set<INews> setState(Collection<INews> news, State state, boolean force) {
-    Set<INews> changedNews = new HashSet<INews>(news.size());
+    Set<INews> changedNews = new HashSet<>(news.size());
     for (INews newsItem : news) {
       if (newsItem.getState() != state || force) {
         newsItem.setState(state);
@@ -321,14 +320,14 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
     Assert.isNotNull(feedRef, "feedRef"); //$NON-NLS-1$
     Assert.isNotNull(states, "states"); //$NON-NLS-1$
     if (states.isEmpty())
-      return new ArrayList<INews>(0);
+      return new ArrayList<>(0);
 
     try {
       Query query = fDb.query();
       query.constrain(News.class);
       query.descend("fFeedLink").constrain(feedRef.getLink().toString()); //$NON-NLS-1$
       query.descend("fParentId").constrain(0); //$NON-NLS-1$
-      if (!states.containsAll(EnumSet.allOf(INews.State.class))) {
+      if (!states.containsAll(State.all())) {
         Constraint constraint = null;
         for (INews.State state : states) {
           if (constraint == null)
@@ -341,7 +340,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
       Collection<INews> news = getList(query);
       activateAll(news);
 
-      return new ArrayList<INews>(news);
+      return new ArrayList<>(news);
     } catch (Db4oException e) {
       throw new PersistenceException(e);
     }
@@ -361,7 +360,7 @@ public final class NewsDAOImpl extends AbstractEntityDAO<INews, NewsListener, Ne
     try {
       Query query = fDb.query();
       query.constrain(News.class);
-      if (!originalStates.containsAll(EnumSet.allOf(INews.State.class))) {
+      if (!originalStates.containsAll(State.all())) {
         Constraint constraint = null;
         for (INews.State originalState : originalStates) {
           if (constraint == null)

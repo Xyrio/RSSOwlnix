@@ -47,8 +47,8 @@ import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.ISearchFilter;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.util.CoreUtils;
 import org.rssowl.core.util.StringUtils;
@@ -62,7 +62,6 @@ import org.rssowl.ui.internal.util.ImportUtils;
 import org.rssowl.ui.internal.util.JobRunner;
 import org.rssowl.ui.internal.views.explorer.BookMarkExplorer;
 
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -400,7 +399,7 @@ public class ImportWizard extends Wizard implements IImportWizard {
       mark.setMatchAllConditions(true);
 
       ISearchField field1 = factory.createSearchField(INews.STATE, newsEntityName);
-      factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+      factory.createSearchCondition(null, mark, field1, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
     }
 
     /* SearchCondition: Todays News */

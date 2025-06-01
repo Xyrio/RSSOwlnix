@@ -143,7 +143,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -2426,7 +2425,7 @@ public class FeedView extends EditorPart implements IReusableEditor {
   public boolean navigate(boolean respectSelection, final boolean onInputSet, final boolean next, final boolean unread) {
 
     /* Check for unread counter */
-    if (unread && fInput.getMark().getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
+    if (unread && fInput.getMark().getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
       return false;
 
     /* Navigate in maximized Browser */

@@ -36,7 +36,6 @@ import org.rssowl.core.util.Pair;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -63,12 +62,12 @@ public class SearchMark extends Mark implements ISearchMark {
    */
   public SearchMark(Long id, IFolder folder, String name) {
     super(id, folder, name);
-    fSearchConditions = new ArrayList<ISearchCondition>(5);
+    fSearchConditions = new ArrayList<>(5);
     fNewsContainer = createNewsContainer();
   }
 
   private NewsContainer createNewsContainer() {
-    Map<INews.State, Boolean> statesToSortedMap = new EnumMap<INews.State, Boolean>(INews.State.class);
+    Map<INews.State, Boolean> statesToSortedMap = new EnumMap<>(INews.State.class);
     statesToSortedMap.put(INews.State.NEW, Boolean.TRUE);
     return new NewsContainer(statesToSortedMap);
   }
@@ -125,7 +124,7 @@ public class SearchMark extends Mark implements ISearchMark {
    */
   @Override
   public synchronized List<ISearchCondition> getSearchConditions() {
-    return new ArrayList<ISearchCondition>(fSearchConditions);
+    return new ArrayList<>(fSearchConditions);
   }
 
   /*
@@ -153,7 +152,7 @@ public class SearchMark extends Mark implements ISearchMark {
   /* getNews(states) takes care of synchronization, so not done here */
   @Override
   public List<INews> getNews() {
-    return getNews(EnumSet.allOf(INews.State.class));
+    return getNews(State.all());
   }
 
   /*

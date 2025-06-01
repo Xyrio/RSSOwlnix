@@ -56,7 +56,6 @@ import org.rssowl.ui.internal.editors.feed.PerformAfterInputSet;
 import org.rssowl.ui.internal.views.explorer.BookMarkExplorer;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -191,7 +190,7 @@ public class NavigationActionFactory implements IExecutableExtensionFactory, IEx
     }
 
     private boolean navigateOnModel() {
-      List<IFolderChild> startingNodes = new ArrayList<IFolderChild>();
+      List<IFolderChild> startingNodes = new ArrayList<>();
 
       /* Check Current Active FeedView */
       FeedView activeFeedView = OwlUI.getActiveFeedView();
@@ -219,7 +218,7 @@ public class NavigationActionFactory implements IExecutableExtensionFactory, IEx
             /* Check for Unread news if required */
             if (data instanceof INewsMark) {
               INewsMark newsmark = (INewsMark) data;
-              if (fType.isUnread() && newsmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
+              if (fType.isUnread() && newsmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
                 return false;
             }
 

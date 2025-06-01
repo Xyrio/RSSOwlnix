@@ -132,7 +132,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1112,7 +1111,7 @@ public class NewsBrowserViewer extends ContentViewer implements ILinkHandler {
     }
 
     /* Update News Div Visibility */
-    Set<Dynamic> elements = EnumSet.of(Dynamic.SUBLINE, Dynamic.DELETE, Dynamic.CONTENT, Dynamic.FOOTER);
+    Set<Dynamic> elements = Dynamic.asSet(Dynamic.SUBLINE, Dynamic.DELETE, Dynamic.CONTENT, Dynamic.FOOTER);
     for (Dynamic element : elements) {
       if (expanded)
         js.append(getElementById(element.getId(news))).append(".style.display='block'; "); //$NON-NLS-1$

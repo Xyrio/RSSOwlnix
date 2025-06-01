@@ -37,7 +37,6 @@ import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.editors.feed.FeedView;
 import org.rssowl.ui.internal.util.EditorUtils;
 
-import java.util.EnumSet;
 
 /**
  * Instance of {@link NotificationItem} to display new search results from a
@@ -56,7 +55,7 @@ public class SearchNotificationItem extends NotificationItem {
   public SearchNotificationItem(ISearchMark searchmark, int unreadResultCount) {
     super(makeText(searchmark, unreadResultCount), OwlUI.SEARCHMARK);
     fSearchmark = searchmark;
-    fTotalResultCount = fSearchmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.READ, INews.State.UPDATED));
+    fTotalResultCount = fSearchmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.READ, INews.State.UPDATED));
   }
 
   private static String makeText(ISearchMark searchmark, int unreadResultCount) {

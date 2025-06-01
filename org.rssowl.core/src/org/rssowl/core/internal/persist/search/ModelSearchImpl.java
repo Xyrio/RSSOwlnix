@@ -97,8 +97,8 @@ public class ModelSearchImpl implements IModelSearch {
   private volatile IndexSearcher fSearcher;
   private volatile Indexer fIndexer;
   private volatile Directory fDirectory;
-  private final List<IndexListener> fIndexListeners = new CopyOnWriteArrayList<IndexListener>();
-  private final Map<IndexSearcher, AtomicInteger> fSearchers = new ConcurrentHashMap<IndexSearcher, AtomicInteger>(3, 0.75f, 1);
+  private final List<IndexListener> fIndexListeners = new CopyOnWriteArrayList<>();
+  private final Map<IndexSearcher, AtomicInteger> fSearchers = new ConcurrentHashMap<>(3, 0.75f, 1);
 
   /*
    * @see org.rssowl.core.model.search.IModelSearch#startup()
@@ -221,7 +221,7 @@ public class ModelSearchImpl implements IModelSearch {
 
     private final IndexSearcher fSearcher;
     private final List<NewsReference> fResultList;
-    private final Map<Long, Long> fSearchResultNewsIds = new HashMap<Long, Long>();
+    private final Map<Long, Long> fSearchResultNewsIds = new HashMap<>();
 
     SimpleHitCollector(IndexSearcher searcher, List<NewsReference> resultList) {
       fSearcher = searcher;
@@ -261,7 +261,7 @@ public class ModelSearchImpl implements IModelSearch {
    * grouped by {@link IGuid}.
    */
   public Map<IGuid, List<NewsReference>> searchNewsByGuids(List<IGuid> guids, boolean copy, IProgressMonitor monitor) {
-    Map<IGuid, List<NewsReference>> linkToRefs = new HashMap<IGuid, List<NewsReference>>(guids.size());
+    Map<IGuid, List<NewsReference>> linkToRefs = new HashMap<>(guids.size());
     IndexSearcher currentSearcher = getCurrentSearcher();
     try {
       for (IGuid guid : guids) {
@@ -289,7 +289,7 @@ public class ModelSearchImpl implements IModelSearch {
    * grouped by the {@link URI}.
    */
   public Map<URI, List<NewsReference>> searchNewsByLinks(List<URI> links, boolean copy, IProgressMonitor monitor) {
-    Map<URI, List<NewsReference>> linkToRefs = new HashMap<URI, List<NewsReference>>(links.size());
+    Map<URI, List<NewsReference>> linkToRefs = new HashMap<>(links.size());
     IndexSearcher currentSearcher = getCurrentSearcher();
     try {
       for (URI link : links) {
@@ -357,7 +357,7 @@ public class ModelSearchImpl implements IModelSearch {
   }
 
   private List<NewsReference> simpleSearch(IndexSearcher currentSearcher, Query query) {
-    List<NewsReference> resultList = new ArrayList<NewsReference>(2);
+    List<NewsReference> resultList = new ArrayList<>(2);
 
     /* Use custom hit collector for performance reasons */
     try {
@@ -437,8 +437,8 @@ public class ModelSearchImpl implements IModelSearch {
 
       /* Make sure the searcher is in sync */
       final IndexSearcher currentSearcher = getCurrentSearcher();
-      final List<SearchHit<NewsReference>> resultList = new ArrayList<SearchHit<NewsReference>>();
-      final Map<Long, Long> searchResultNewsIds = new HashMap<Long, Long>();
+      final List<SearchHit<NewsReference>> resultList = new ArrayList<>();
+      final Map<Long, Long> searchResultNewsIds = new HashMap<>();
 
       /* Use custom hit collector for performance reasons */
       HitCollector collector = new HitCollector() {
@@ -451,7 +451,7 @@ public class ModelSearchImpl implements IModelSearch {
             long newsId = Long.parseLong(document.get(SearchDocument.ENTITY_ID_TEXT));
             INews.State newsState = NEWS_STATES[Integer.parseInt(document.get(NewsDocument.STATE_ID_TEXT))];
 
-            Map<Integer, INews.State> data = new HashMap<Integer, INews.State>(1);
+            Map<Integer, INews.State> data = new HashMap<>(1);
             data.put(INews.STATE, newsState);
 
             /*
@@ -462,7 +462,7 @@ public class ModelSearchImpl implements IModelSearch {
              * the search. See http://dev.rssowl.org/show_bug.cgi?id=1264
              */
             if (!searchResultNewsIds.containsKey(newsId)) {
-              resultList.add(new SearchHit<NewsReference>(new NewsReference(newsId), score, data));
+              resultList.add(new SearchHit<>(new NewsReference(newsId), score, data));
               searchResultNewsIds.put(newsId, newsId);
             }
           } catch (IOException e) {
@@ -571,7 +571,7 @@ public class ModelSearchImpl implements IModelSearch {
          * Most times we should be able to succeed without having to sleep.
          */
         while (true) {
-          AtomicInteger refCount = fSearchers.get(currentSearcher);
+          AtomicInteger refCount = currentSearcher == null ? null : fSearchers.get(currentSearcher);
           if (refCount == null)
             break;
           else if (refCount.get() == 0) {
@@ -698,7 +698,7 @@ public class ModelSearchImpl implements IModelSearch {
       while (iterator.hasNext()) {
 
         /* Obtain the next chunk of news from the List */
-        List<INews> newsChunkToBeIndexed = new ArrayList<INews>(INDEX_CHUNK_SIZE);
+        List<INews> newsChunkToBeIndexed = new ArrayList<>(INDEX_CHUNK_SIZE);
         for (int i = 0; i < INDEX_CHUNK_SIZE && iterator.hasNext(); i++)
           newsChunkToBeIndexed.add(iterator.next());
 
@@ -720,7 +720,7 @@ public class ModelSearchImpl implements IModelSearch {
           }
 
           /* We don't pass the whole list at once to be able to report progress. */
-          List<INews> indexList = new ArrayList<INews>(1);
+          List<INews> indexList = new ArrayList<>(1);
           indexList.add(newsitem);
           fIndexer.index(indexList, false, false); //Disable ACID Support
           monitor.worked(1);
@@ -760,7 +760,7 @@ public class ModelSearchImpl implements IModelSearch {
     monitor.subTask(Messages.ModelSearchImpl_CLEANUP_SEARCH_INDEX);
 
     /* Find News to delete */
-    Set<NewsReference> newsToDelete = new HashSet<NewsReference>();
+    Set<NewsReference> newsToDelete = new HashSet<>();
     INewsDAO newsDao = InternalOwl.getInstance().getPersistenceService().getDAOService().getNewsDAO();
     for (NewsReference newsRef : results) {
 

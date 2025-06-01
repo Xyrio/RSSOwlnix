@@ -33,7 +33,6 @@ import org.rssowl.core.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -86,7 +85,7 @@ public final class NewsContainer {
     boolean changed = false;
     boolean isNewNewsAdded = false;
 
-    Set<INews.State> statesToReset = EnumSet.allOf(INews.State.class);
+    Set<INews.State> statesToReset = State.all();
     statesToReset.removeAll(newsMap.keySet());
 
     /* Reset all ArrayLists whose state is not present in newsMap */
@@ -211,7 +210,7 @@ public final class NewsContainer {
    * contains.
    */
   public List<NewsReference> getNews() {
-    return getNews(EnumSet.allOf(INews.State.class));
+    return getNews(State.all());
   }
 
   /**
@@ -220,7 +219,7 @@ public final class NewsContainer {
    * contains with the given news states.
    */
   public List<NewsReference> getNews(Set<INews.State> states) {
-    List<NewsReference> newsRefs = new ArrayList<NewsReference>(getNewsCount(states));
+    List<NewsReference> newsRefs = new ArrayList<>(getNewsCount(states));
 
     for (INews.State state : states) {
       int index = state.ordinal();
@@ -274,7 +273,7 @@ public final class NewsContainer {
       if (info.getOldState() == null) {
         boolean itemRemoved = fNewsIds[INews.State.NEW.ordinal()].removeByElement(newsId);
         if (!itemRemoved) {
-          EnumSet<State> remainingStates = EnumSet.allOf(INews.State.class);
+          Set<State> remainingStates = State.all();
           remainingStates.remove(INews.State.NEW);
           remainingStates.remove(info.getNewState());
           for (INews.State state : remainingStates) {

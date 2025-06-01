@@ -41,7 +41,6 @@ import org.rssowl.core.util.StringMatcher;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -312,12 +311,12 @@ public class BookMarkFilter extends ViewerFilter {
 
         /* Show: Feeds with New News */
         case SHOW_NEW:
-          isMatch = newsmark.getNewsCount(EnumSet.of(INews.State.NEW)) > 0;
+          isMatch = newsmark.getNewsCount(INews.State.asSet(INews.State.NEW)) > 0;
           break;
 
         /* Show: Unread Marks */
         case SHOW_UNREAD:
-          isMatch = newsmark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > 0;
+          isMatch = newsmark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > 0;
           break;
 
         /* Show: Sticky Marks */
@@ -360,7 +359,7 @@ public class BookMarkFilter extends ViewerFilter {
    * @return an array of words
    */
   private String[] getWords(String text) {
-    List<String> words = new ArrayList<String>();
+    List<String> words = new ArrayList<>();
 
     /*
      * Break the text up into words, separating based on whitespace and common

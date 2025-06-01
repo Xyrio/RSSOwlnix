@@ -37,6 +37,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.keys.IBindingService;
 import org.rssowl.core.persist.INews;
+import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.dao.INewsDAO;
 import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.ui.internal.Controller;
@@ -46,7 +47,6 @@ import org.rssowl.ui.internal.undo.NewsStateOperation;
 import org.rssowl.ui.internal.undo.UndoStack;
 import org.rssowl.ui.internal.util.ModelUtils;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -56,9 +56,6 @@ public class ToggleReadStateAction extends Action implements IWorkbenchWindowAct
 
   /** Action ID */
   public static final String ID = "org.rssowl.ui.ToggleReadState"; //$NON-NLS-1$
-
-  /* Unread States (New, Unread, Updated) */
-  private static final EnumSet<INews.State> UNREAD_STATES = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
 
   private IStructuredSelection fSelection;
   private INewsDAO fNewsDAO = OwlDAO.getDAO(INewsDAO.class);
@@ -89,7 +86,7 @@ public class ToggleReadStateAction extends Action implements IWorkbenchWindowAct
   private boolean shouldMarkRead(IStructuredSelection selection) {
     List<INews> entities = ModelUtils.getEntities(selection, INews.class);
     for (INews entity : entities) {
-      if (UNREAD_STATES.contains(entity.getState())) {
+      if (State.getUnread().contains(entity.getState())) {
         return true;
       }
     }

@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Function;
 
@@ -324,11 +323,11 @@ public class BookMarkGrouping {
           new EntityGroupItem(gSticky, mark);
 
         /* Contains New */
-        else if (mark.getNewsCount(EnumSet.of(INews.State.NEW)) > 0)
+        else if (mark.getNewsCount(INews.State.asSet(INews.State.NEW)) > 0)
           new EntityGroupItem(gNew, mark);
 
         /* Contains Unread */
-        else if (mark.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > 0)
+        else if (mark.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > 0)
           new EntityGroupItem(gUnread, mark);
 
         /* Other */

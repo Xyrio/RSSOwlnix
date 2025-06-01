@@ -33,7 +33,6 @@ import org.rssowl.core.persist.reference.NewsReference;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -131,7 +130,7 @@ public class NewsBin extends Mark implements INewsBin {
    */
   @Override
   public synchronized List<INews> getNews() {
-    return getNews(EnumSet.allOf(INews.State.class));
+    return getNews(State.all());
   }
 
   /*

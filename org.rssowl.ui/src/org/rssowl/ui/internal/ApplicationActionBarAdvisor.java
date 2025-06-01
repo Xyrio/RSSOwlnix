@@ -154,7 +154,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -2088,10 +2087,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         return true;
 
       case SHOW_NEW:
-        return hasNewsWithState(child, EnumSet.of(INews.State.NEW));
+        return hasNewsWithState(child, INews.State.asSet(INews.State.NEW));
 
       case SHOW_UNREAD:
-        return hasNewsWithState(child, EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
+        return hasNewsWithState(child, INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED));
 
       case SHOW_STICKY:
         return hasStickyNews(child);
@@ -2112,7 +2111,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
       if (child instanceof INewsMark || (child instanceof IFolder && ((IFolder) child).getChildren().isEmpty())) {
         String name = child.getName();
         if (child instanceof INewsMark) {
-          int unreadNewsCount = (((INewsMark) child).getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+          int unreadNewsCount = (((INewsMark) child).getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
           if (unreadNewsCount > 0)
             name = NLS.bind(Messages.ApplicationActionBarAdvisor_MARK_UNREAD_COUNT, name, unreadNewsCount);
         }
@@ -2169,7 +2168,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
   }
 
   private static ImageDescriptor getImageDescriptor(IFolderChild child) {
-    boolean hasNewNews = hasNewsWithState(child, EnumSet.of(INews.State.NEW));
+    boolean hasNewNews = hasNewsWithState(child, INews.State.asSet(INews.State.NEW));
 
     /* Bookmark */
     if (child instanceof IBookMark) {
@@ -2214,14 +2213,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     return null;
   }
 
-  private static boolean hasNewsWithState(IFolderChild child, EnumSet<INews.State> states) {
+  private static boolean hasNewsWithState(IFolderChild child, Set<INews.State> states) {
     if (child instanceof IFolder)
       return hasNewsWithStates((IFolder) child, states);
 
     return ((INewsMark) child).getNewsCount(states) != 0;
   }
 
-  private static boolean hasNewsWithStates(IFolder folder, EnumSet<INews.State> states) {
+  private static boolean hasNewsWithStates(IFolder folder, Set<INews.State> states) {
     List<IMark> marks = folder.getMarks();
     for (IMark mark : marks) {
       if (mark instanceof INewsMark && ((INewsMark) mark).getNewsCount(states) != 0)

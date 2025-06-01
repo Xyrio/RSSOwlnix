@@ -44,7 +44,7 @@ import org.rssowl.ui.internal.Application;
 import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.util.LayoutUtils;
 
-import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * The <code>StateConditionControl</code> is a <code>Composite</code> providing
@@ -68,30 +68,30 @@ public class StateConditionControl extends Composite {
     initComponents();
   }
 
-  EnumSet<INews.State> getSelection() {
-    EnumSet<INews.State> set = null;
+  Set<INews.State> getSelection() {
+    Set<INews.State> set = null;
 
     if (fNewState.getSelection()) {
-      set = EnumSet.of(INews.State.NEW);
+      set = INews.State.asSet(INews.State.NEW);
     }
 
     if (fUnreadState.getSelection()) {
       if (set == null)
-        set = EnumSet.of(INews.State.UNREAD);
+        set = INews.State.asSet(INews.State.UNREAD);
       else
         set.add(INews.State.UNREAD);
     }
 
     if (fUpdatedState.getSelection()) {
       if (set == null)
-        set = EnumSet.of(INews.State.UPDATED);
+        set = INews.State.asSet(INews.State.UPDATED);
       else
         set.add(INews.State.UPDATED);
     }
 
     if (fReadState.getSelection()) {
       if (set == null)
-        set = EnumSet.of(INews.State.READ);
+        set = INews.State.asSet(INews.State.READ);
       else
         set.add(INews.State.READ);
     }
@@ -106,7 +106,7 @@ public class StateConditionControl extends Composite {
    * @param selectedStates the news states to select in the Control or
    * <code>NULL</code> if none.
    */
-  void select(EnumSet<INews.State> selectedStates) {
+  void select(Set<INews.State> selectedStates) {
     fNewState.setSelection(selectedStates != null && selectedStates.contains(INews.State.NEW));
     fUnreadState.setSelection(selectedStates != null && selectedStates.contains(INews.State.UNREAD));
     fUpdatedState.setSelection(selectedStates != null && selectedStates.contains(INews.State.UPDATED));

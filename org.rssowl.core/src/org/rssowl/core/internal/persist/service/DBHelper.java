@@ -46,9 +46,9 @@ import org.rssowl.core.persist.INewsBin.StatesUpdateInfo;
 import org.rssowl.core.persist.IPersistable;
 import org.rssowl.core.persist.NewsCounter;
 import org.rssowl.core.persist.dao.DAOService;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsBinDAO;
 import org.rssowl.core.persist.dao.INewsCounterDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.FeedEvent;
 import org.rssowl.core.persist.event.ModelEvent;
 import org.rssowl.core.persist.event.NewsBinEvent;
@@ -82,7 +82,6 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -420,8 +419,8 @@ public final class DBHelper {
 
     EntitiesToBeIndexedDAOImpl dao = getEntitiesToBeIndexedDAO();
     EntityIdsByEventType newsToBeIndexed = dao.load();
-    Set<NewsEvent> updateEvents = new HashSet<NewsEvent>(newsEventRunnables.getUpdateEvents().size());
-    Set<NewsEvent> deleteEvents = new HashSet<NewsEvent>(newsEventRunnables.getRemoveEvents());
+    Set<NewsEvent> updateEvents = new HashSet<>(newsEventRunnables.getUpdateEvents().size());
+    Set<NewsEvent> deleteEvents = new HashSet<>(newsEventRunnables.getRemoveEvents());
     Set<NewsEvent> persistEvents = filterPersistedNewsForIndexing(newsEventRunnables.getPersistEvents());
     for (NewsEvent event : newsEventRunnables.getUpdateEvents())
       indexTypeForNewsUpdate(event, persistEvents, updateEvents, deleteEvents);
@@ -440,7 +439,7 @@ public final class DBHelper {
   }
 
   public static Set<NewsEvent> filterPersistedNewsForIndexing(Collection<NewsEvent> events) {
-    Set<NewsEvent> result = new HashSet<NewsEvent>(events.size());
+    Set<NewsEvent> result = new HashSet<>(events.size());
     for (NewsEvent event : events)
       if (event.getEntity().isVisible())
         result.add(event);
@@ -479,13 +478,13 @@ public final class DBHelper {
     if (newsEventRunnable == null)
       return;
 
-    Map<Long, List<StatesUpdateInfo>> statesUpdateInfos = new HashMap<Long, List<StatesUpdateInfo>>(5);
+    Map<Long, List<StatesUpdateInfo>> statesUpdateInfos = new HashMap<>(5);
     for (NewsEvent newsEvent : newsEventRunnable.getUpdateEvents()) {
       INews news = newsEvent.getEntity();
       if (news.getParentId() != 0 && (newsEvent.getOldNews().getState() != news.getState())) {
         List<StatesUpdateInfo> list = statesUpdateInfos.get(news.getParentId());
         if (list == null) {
-          list = new ArrayList<StatesUpdateInfo>();
+          list = new ArrayList<>();
           statesUpdateInfos.put(news.getParentId(), list);
         }
         list.add(new StatesUpdateInfo(newsEvent.getOldNews().getState(), news.getState(), news.toReference()));
@@ -497,7 +496,7 @@ public final class DBHelper {
       if (news.getParentId() != 0) {
         List<StatesUpdateInfo> list = statesUpdateInfos.get(news.getParentId());
         if (list == null) {
-          list = new ArrayList<StatesUpdateInfo>();
+          list = new ArrayList<>();
           statesUpdateInfos.put(news.getParentId(), list);
         }
         list.add(new StatesUpdateInfo(null, news.getState(), news.toReference()));
@@ -505,12 +504,12 @@ public final class DBHelper {
     }
 
     if (!statesUpdateInfos.isEmpty()) {
-      Set<FeedLinkReference> removedFeedRefs = new HashSet<FeedLinkReference>();
+      Set<FeedLinkReference> removedFeedRefs = new HashSet<>();
       INewsBinDAO newsBinDAO = OwlDAO.getDAO(INewsBinDAO.class);
       for (Map.Entry<Long, List<StatesUpdateInfo>> mapEntry : statesUpdateInfos.entrySet()) {
         INewsBin newsBin = newsBinDAO.load(mapEntry.getKey());
         if (newsBin.updateNewsStates(mapEntry.getValue())) {
-          removeNews(db, removedFeedRefs, newsBin.removeNews(EnumSet.of(INews.State.DELETED)));
+          removeNews(db, removedFeedRefs, newsBin.removeNews(INews.State.asSet(INews.State.DELETED)));
           putEventTemplate(new NewsBinEvent(newsBin, null, true));
           db.ext().set(newsBin, Integer.MAX_VALUE);
         }
@@ -583,6 +582,6 @@ public final class DBHelper {
 
   public static Collection<IFeed> loadAllFeeds(ObjectContainer db) {
     ObjectSet<? extends IFeed> entities = db.query(Feed.class);
-    return new LazyList<IFeed>(entities, db);
+    return new LazyList<>(entities, db);
   }
 }

@@ -49,7 +49,6 @@ import org.rssowl.ui.internal.util.JobRunner;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -145,7 +144,7 @@ public class FeedReloadService {
    * Instantiates the Feed Reload Service.
    */
   public FeedReloadService() {
-    fMapBookMarkToInterval = new ConcurrentHashMap<IBookMark, Long>();
+    fMapBookMarkToInterval = new ConcurrentHashMap<>();
 
     /* Register Listeners */
     registerListeners();
@@ -171,8 +170,8 @@ public class FeedReloadService {
     Collection<IBookMark> bookmarks = OwlDAO.loadAll(IBookMark.class);
     Collection<INewsBin> newsbins = OwlDAO.loadAll(INewsBin.class);
 
-    final Set<IBookMark> bookmarksToReloadOnStartup = new HashSet<IBookMark>();
-    final List<INewsMark> newsmarksToOpenOnStartup = new ArrayList<INewsMark>();
+    final Set<IBookMark> bookmarksToReloadOnStartup = new HashSet<>();
+    final List<INewsMark> newsmarksToOpenOnStartup = new ArrayList<>();
 
     /* For each Bookmark */
     for (IBookMark bookMark : bookmarks) {
@@ -235,7 +234,7 @@ public class FeedReloadService {
               return;
 
             /* Open in Feedview */
-            OwlUI.openInFeedView(page, new StructuredSelection(newsmarksToOpenOnStartup), EnumSet.of(FeedViewOpenMode.IGNORE_ALREADY_OPENED, FeedViewOpenMode.IGNORE_REUSE));
+            OwlUI.openInFeedView(page, new StructuredSelection(newsmarksToOpenOnStartup), FeedViewOpenMode.asSet(FeedViewOpenMode.IGNORE_ALREADY_OPENED, FeedViewOpenMode.IGNORE_REUSE));
           }
         }
       });

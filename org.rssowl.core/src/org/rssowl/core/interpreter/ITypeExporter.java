@@ -28,6 +28,7 @@ import org.rssowl.core.persist.IFolderChild;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -53,6 +54,13 @@ public interface ITypeExporter {
 
     /** Export Settings */
     EXPORT_PREFERENCES;
+
+    public static EnumSet<Options> asSet(Options... enums) {
+      EnumSet<Options> result = EnumSet.noneOf(Options.class);
+      for (Options e : enums)
+        result.add(e);
+      return result;
+    }
   }
 
   /**

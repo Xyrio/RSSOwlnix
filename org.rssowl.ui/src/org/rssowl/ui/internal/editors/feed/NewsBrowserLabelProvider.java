@@ -88,6 +88,7 @@ import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -185,6 +186,13 @@ public class NewsBrowserLabelProvider extends LabelProvider {
 
     String getId(NewsReference newsRef) {
       return fId + newsRef.getId();
+    }
+
+    public static EnumSet<Dynamic> asSet(Dynamic... enums) {
+      EnumSet<Dynamic> result = EnumSet.noneOf(Dynamic.class);
+      for (Dynamic e : enums)
+        result.add(e);
+      return result;
     }
   }
 

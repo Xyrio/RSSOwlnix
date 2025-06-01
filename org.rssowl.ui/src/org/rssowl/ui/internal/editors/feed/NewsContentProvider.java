@@ -48,8 +48,8 @@ import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.NewsAdapter;
 import org.rssowl.core.persist.event.NewsEvent;
 import org.rssowl.core.persist.event.NewsListener;
@@ -86,7 +86,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -149,7 +148,7 @@ public class NewsContentProvider implements ITreeContentProvider {
     fFeedView = feedView;
     fGrouping = feedView.getGrouper();
     fFilter = feedView.getFilter();
-    fCachedNews = new HashMap<Long, INews>();
+    fCachedNews = new HashMap<>();
     fNewsDao = OwlDAO.getDAO(INewsDAO.class);
     fFactory = Owl.getModelFactory();
     fSearch = Owl.getPersistenceService().getModelSearch();
@@ -161,7 +160,7 @@ public class NewsContentProvider implements ITreeContentProvider {
    */
   @Override
   public Object[] getElements(Object inputElement) {
-    List<Object> elements = new ArrayList<Object>();
+    List<Object> elements = new ArrayList<>();
 
     /* Wrap into Object Array */
     if (!(inputElement instanceof Object[]))
@@ -233,7 +232,7 @@ public class NewsContentProvider implements ITreeContentProvider {
    */
   @Override
   public Object[] getChildren(Object parentElement) {
-    List<Object> children = new ArrayList<Object>();
+    List<Object> children = new ArrayList<>();
 
     /* Handle EntityGroup */
     if (parentElement instanceof EntityGroup) {
@@ -335,7 +334,7 @@ public class NewsContentProvider implements ITreeContentProvider {
       return;
 
     /* Obtain the News */
-    List<INews> resolvedNews = new ArrayList<INews>();
+    List<INews> resolvedNews = new ArrayList<>();
 
     /* Check if ContentProvider was already disposed or RSSOwl shutting down */
     if (canceled(monitor))
@@ -345,9 +344,9 @@ public class NewsContentProvider implements ITreeContentProvider {
     Type filter = fFilter.getType();
     Set<State> states;
     if (filter == Type.SHOW_NEW)
-      states = EnumSet.of(INews.State.NEW);
+      states = INews.State.asSet(INews.State.NEW);
     else if (filter == Type.SHOW_UNREAD)
-      states = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+      states = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
     else
       states = INews.State.getVisible();
 
@@ -421,7 +420,7 @@ public class NewsContentProvider implements ITreeContentProvider {
       return false;
 
     /* Check for number of new, unread and updated news */
-    if (input.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > BOOKMARK_SCOPE_SEARCH_LIMIT)
+    if (input.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) > BOOKMARK_SCOPE_SEARCH_LIMIT)
       return true;
 
     /* Return if bookmark retention is setup, assuming that the number of elements is limited already */
@@ -452,11 +451,11 @@ public class NewsContentProvider implements ITreeContentProvider {
   private boolean shouldResolve(INewsMark input, NewsFilter.Type filter) {
 
     /* Check for NEW News in Input */
-    if (filter == Type.SHOW_NEW && input.getNewsCount(EnumSet.of(INews.State.NEW)) == 0)
+    if (filter == Type.SHOW_NEW && input.getNewsCount(INews.State.asSet(INews.State.NEW)) == 0)
       return false;
 
     /* Check for UNREAD News in Input */
-    else if (filter == Type.SHOW_UNREAD && input.getNewsCount(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
+    else if (filter == Type.SHOW_UNREAD && input.getNewsCount(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)) == 0)
       return false;
 
     /* Check for Sticky News in Bookmark */
@@ -504,7 +503,7 @@ public class NewsContentProvider implements ITreeContentProvider {
         }
 
         /* Fill Newsreferences from Search Results */
-        List<NewsReference> newsRefs = new ArrayList<NewsReference>(result.size());
+        List<NewsReference> newsRefs = new ArrayList<>(result.size());
         for (SearchHit<NewsReference> item : result) {
           newsRefs.add(item.getResult());
         }
@@ -527,7 +526,7 @@ public class NewsContentProvider implements ITreeContentProvider {
       List<SearchHit<NewsReference>> result = fSearch.searchNews(Arrays.asList(locationCondition, filterCondition), true);
 
       /* Fill Newsreferences from Search Results */
-      List<NewsReference> newsRefs = new ArrayList<NewsReference>(result.size());
+      List<NewsReference> newsRefs = new ArrayList<>(result.size());
       for (SearchHit<NewsReference> item : result) {
         newsRefs.add(item.getResult());
       }
@@ -571,8 +570,8 @@ public class NewsContentProvider implements ITreeContentProvider {
 
   private synchronized Triple<Boolean /* Was Empty */, Collection<NewsEvent>, Collection<INews>> addToCache(Collection<NewsEvent> events, Collection<INews> addedNews) {
     boolean wasEmpty = fCachedNews.isEmpty();
-    Collection<NewsEvent> visibleEvents = new ArrayList<NewsEvent>();
-    Collection<INews> visibleNews = new ArrayList<INews>();
+    Collection<NewsEvent> visibleEvents = new ArrayList<>();
+    Collection<INews> visibleNews = new ArrayList<>();
 
     /* Check if ContentProvider was already disposed or RSSOwl shutting down */
     if (canceled())
@@ -582,7 +581,7 @@ public class NewsContentProvider implements ITreeContentProvider {
     if (isFilteredByState() || isFilteredByOtherThanState()) {
 
       /* Quickly Map from News to Event */
-      Map<INews, NewsEvent> mapNewsToEvent = new HashMap<INews, NewsEvent>(events.size());
+      Map<INews, NewsEvent> mapNewsToEvent = new HashMap<>(events.size());
       for (NewsEvent event : events) {
         mapNewsToEvent.put(event.getEntity(), event);
       }
@@ -618,8 +617,8 @@ public class NewsContentProvider implements ITreeContentProvider {
   }
 
   private synchronized Pair<List<NewsEvent>, List<INews>> updateCache(Set<NewsEvent> events, List<INews> updatedNews) {
-    List<NewsEvent> visibleEvents = new ArrayList<NewsEvent>(events.size());
-    List<INews> visibleNews = new ArrayList<INews>(updatedNews.size());
+    List<NewsEvent> visibleEvents = new ArrayList<>(events.size());
+    List<INews> visibleNews = new ArrayList<>(updatedNews.size());
 
     /* Check if ContentProvider was already disposed or RSSOwl shutting down */
     if (canceled())
@@ -636,8 +635,8 @@ public class NewsContentProvider implements ITreeContentProvider {
   }
 
   private synchronized Pair<List<NewsEvent>, List<INews>> removeFromCache(Set<NewsEvent> events, List<INews> deletedNews) {
-    List<NewsEvent> visibleEvents = new ArrayList<NewsEvent>(events.size());
-    List<INews> visibleNews = new ArrayList<INews>(deletedNews.size());
+    List<NewsEvent> visibleEvents = new ArrayList<>(events.size());
+    List<INews> visibleNews = new ArrayList<>(deletedNews.size());
 
     /* Check if ContentProvider was already disposed or RSSOwl shutting down */
     if (canceled())
@@ -669,7 +668,7 @@ public class NewsContentProvider implements ITreeContentProvider {
 
     boolean needToFilter = true;
     boolean wasEmpty = fCachedNews.isEmpty();
-    List<INews> addedNews = new ArrayList<INews>();
+    List<INews> addedNews = new ArrayList<>();
 
     /* Update Saved Search from Events */
     if (fInput instanceof ISearchMark) {
@@ -760,7 +759,7 @@ public class NewsContentProvider implements ITreeContentProvider {
   }
 
   private Set<Long> extractNewsIds(List<SearchMarkEvent> events) {
-    Set<Long> set = new HashSet<Long>();
+    Set<Long> set = new HashSet<>();
     for (SearchMarkEvent event : events) {
       LongArrayList[] newsIds = ((SearchMark) event.getEntity()).internalGetNewsContainer().internalGetNewsIds();
       for (int i = 0; i < newsIds.length; i++) {
@@ -793,7 +792,7 @@ public class NewsContentProvider implements ITreeContentProvider {
     /* First add those news that are Labeled or Sticky if this group mode is active */
     List<INews> priorityItems = Collections.emptyList();
     if (isGroupingByLabel() || isGroupingByStickyness()) {
-      priorityItems = new ArrayList<INews>();
+      priorityItems = new ArrayList<>();
       for (INews news : resolvedNews) {
         if (isGroupingByLabel() && !news.getLabels().isEmpty() || isGroupingByStickyness() && news.isFlagged())
           priorityItems.add(news);
@@ -810,7 +809,7 @@ public class NewsContentProvider implements ITreeContentProvider {
 
     /* Pick top N remaining Elements */
     int limit = MAX_FOLDER_ELEMENTS - priorityItems.size();
-    List<INews> limitedResult = new ArrayList<INews>(Math.min(elements.length, MAX_FOLDER_ELEMENTS));
+    List<INews> limitedResult = new ArrayList<>(Math.min(elements.length, MAX_FOLDER_ELEMENTS));
     for (int i = 0, c = 0; i < elements.length && c < limit; i++) {
       INews news = (INews) elements[i];
       if (!priorityItems.contains(news)) {
@@ -830,7 +829,7 @@ public class NewsContentProvider implements ITreeContentProvider {
   }
 
   synchronized Collection<INews> getCachedNewsCopy() {
-    return new ArrayList<INews>(fCachedNews.values());
+    return new ArrayList<>(fCachedNews.values());
   }
 
   synchronized boolean hasCachedNews() {
@@ -859,7 +858,7 @@ public class NewsContentProvider implements ITreeContentProvider {
     fSearchMarkListener = new SearchMarkAdapter() {
       @Override
       public void newsChanged(Set<SearchMarkEvent> events) {
-        final List<SearchMarkEvent> eventsRelatedToInput = new ArrayList<SearchMarkEvent>(1);
+        final List<SearchMarkEvent> eventsRelatedToInput = new ArrayList<>(1);
 
         /* Check if ContentProvider was already disposed or RSSOwl shutting down */
         if (canceled())
@@ -953,7 +952,7 @@ public class NewsContentProvider implements ITreeContentProvider {
             for (NewsEvent event : events) {
               if (event.getEntity().isVisible() && isInputRelatedTo(event, NewsEventType.PERSISTED)) {
                 if (addedNews == null)
-                  addedNews = new HashSet<NewsEvent>();
+                  addedNews = new HashSet<>();
 
                 addedNews.add(event);
               }
@@ -1008,7 +1007,7 @@ public class NewsContentProvider implements ITreeContentProvider {
                 /* News got Deleted */
                 if (!news.isVisible()) {
                   if (deletedNews == null)
-                    deletedNews = new HashSet<NewsEvent>();
+                    deletedNews = new HashSet<>();
 
                   deletedNews.add(event);
                 }
@@ -1016,7 +1015,7 @@ public class NewsContentProvider implements ITreeContentProvider {
                 /* News got Restored */
                 else if (isRestored) {
                   if (restoredNews == null)
-                    restoredNews = new HashSet<NewsEvent>();
+                    restoredNews = new HashSet<>();
 
                   restoredNews.add(event);
                 }
@@ -1024,7 +1023,7 @@ public class NewsContentProvider implements ITreeContentProvider {
                 /* News got Updated */
                 else {
                   if (updatedNews == null)
-                    updatedNews = new HashSet<NewsEvent>();
+                    updatedNews = new HashSet<>();
 
                   updatedNews.add(event);
                 }
@@ -1090,7 +1089,7 @@ public class NewsContentProvider implements ITreeContentProvider {
               INews news = event.getEntity();
               if ((news.isVisible() || news.getParentId() != 0) && isInputRelatedTo(event, NewsEventType.REMOVED)) {
                 if (deletedNews == null)
-                  deletedNews = new HashSet<NewsEvent>();
+                  deletedNews = new HashSet<>();
 
                 deletedNews.add(event);
               }
@@ -1171,7 +1170,7 @@ public class NewsContentProvider implements ITreeContentProvider {
      * instead.
      */
     if (!browserShowsCollection()) {
-      List<INews> items = new ArrayList<INews>(events.size());
+      List<INews> items = new ArrayList<>(events.size());
       for (NewsEvent event : events) {
         items.add(event.getEntity());
       }
@@ -1224,7 +1223,7 @@ public class NewsContentProvider implements ITreeContentProvider {
       return false;
 
     /* Receive added News */
-    List<INews> addedNews = new ArrayList<INews>(events.size());
+    List<INews> addedNews = new ArrayList<>(events.size());
     for (NewsEvent event : events) {
       addedNews.add(event.getEntity());
     }
@@ -1315,7 +1314,7 @@ public class NewsContentProvider implements ITreeContentProvider {
   private boolean handleUpdatedNews(Set<NewsEvent> events) {
 
     /* Receive updated News */
-    List<INews> updatedNews = new ArrayList<INews>(events.size());
+    List<INews> updatedNews = new ArrayList<>(events.size());
     for (NewsEvent event : events) {
       updatedNews.add(event.getEntity());
     }
@@ -1371,7 +1370,7 @@ public class NewsContentProvider implements ITreeContentProvider {
   private boolean handleDeletedNews(Set<NewsEvent> events) {
 
     /* Receive deleted News */
-    List<INews> deletedNews = new ArrayList<INews>(events.size());
+    List<INews> deletedNews = new ArrayList<>(events.size());
     for (NewsEvent event : events) {
       deletedNews.add(event.getEntity());
     }

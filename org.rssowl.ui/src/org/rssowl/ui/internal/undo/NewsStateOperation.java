@@ -28,15 +28,14 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.osgi.util.NLS;
 import org.rssowl.core.persist.INews;
 import org.rssowl.core.persist.INews.State;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.reference.NewsReference;
 import org.rssowl.core.util.CoreUtils;
 import org.rssowl.ui.internal.Controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -50,7 +49,7 @@ import java.util.Set;
  * @author bpasero
  */
 public class NewsStateOperation implements IUndoOperation {
-  private static final EnumSet<INews.State> SUPPORTED_STATES = EnumSet.of(INews.State.HIDDEN, INews.State.READ, INews.State.UNREAD);
+  private static final Set<INews.State> SUPPORTED_STATES = INews.State.asSet(INews.State.HIDDEN, INews.State.READ, INews.State.UNREAD);
 
   /* Limit when this operation is becoming a long running one */
   private static final int LONG_RUNNING_LIMIT = 50;
@@ -111,7 +110,7 @@ public class NewsStateOperation implements IUndoOperation {
       INews.State oldState = entry.getKey();
       List<NewsReference> newsRefs = entry.getValue();
 
-      List<INews> resolvedNews = new ArrayList<INews>(newsRefs.size());
+      List<INews> resolvedNews = new ArrayList<>(newsRefs.size());
       for (NewsReference newsRef : newsRefs) {
         INews news = newsRef.resolve();
 
@@ -138,7 +137,7 @@ public class NewsStateOperation implements IUndoOperation {
       INews.State oldState = entry.getKey();
       List<NewsReference> newsRefs = entry.getValue();
 
-      List<INews> resolvedNews = new ArrayList<INews>(newsRefs.size());
+      List<INews> resolvedNews = new ArrayList<>(newsRefs.size());
       for (NewsReference newsRef : newsRefs) {
         INews news = newsRef.resolve();
 

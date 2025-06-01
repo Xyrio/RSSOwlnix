@@ -41,6 +41,7 @@ import org.rssowl.core.persist.IBookMark;
 import org.rssowl.core.persist.IEntity;
 import org.rssowl.core.persist.IFeed;
 import org.rssowl.core.persist.IFolder;
+import org.rssowl.core.persist.IFolderChild;
 import org.rssowl.core.persist.ILabel;
 import org.rssowl.core.persist.IModelFactory;
 import org.rssowl.core.persist.INews;
@@ -50,26 +51,31 @@ import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IBookMarkDAO;
 import org.rssowl.core.persist.dao.IFolderDAO;
 import org.rssowl.core.persist.dao.ILabelDAO;
 import org.rssowl.core.persist.dao.INewsBinDAO;
 import org.rssowl.core.persist.dao.ISearchMarkDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.persist.reference.FeedLinkReference;
 import org.rssowl.core.persist.reference.NewsReference;
+import org.rssowl.core.tests.model.CachingDAOTest.HierarchyBuilder.HierarchyNode;
 import org.rssowl.core.util.LongOperationMonitor;
 
 import java.net.URI;
+import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * Tests specifically for the CachingDAOs in RSSOwl.
@@ -180,7 +186,8 @@ public class CachingDAOTest extends LargeBlockSizeTest {
     entity.addSearchCondition(OwlDAO.save(fFactory.createSearchCondition(modifiedDateField, SearchSpecifier.IS_AFTER, new Date(1000))));
 
     ISearchField stateField = fFactory.createSearchField(INews.STATE, INews.class.getName());
-    entity.addSearchCondition(OwlDAO.save(fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(State.NEW, State.UNREAD, State.UPDATED, State.READ))));
+    ISearchCondition searchCondition = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, State.VISIBLE_STATES);
+    entity.addSearchCondition(OwlDAO.save(searchCondition));
 
     OwlDAO.save(entity);
   }
@@ -364,25 +371,289 @@ public class CachingDAOTest extends LargeBlockSizeTest {
   }
 
   private void assertProperties(INewsBin entity) {
+
     assertProperties((IEntity) entity);
     assertEquals(new Date(10000), entity.getCreationDate());
     assertEquals(new Date(100), entity.getLastVisitDate());
     assertEquals(1000, entity.getPopularity());
 
-    assertEquals(1, entity.getNewsCount(EnumSet.of(INews.State.NEW)));
-    assertEquals(1, entity.getNewsCount(EnumSet.of(INews.State.UNREAD)));
-    assertEquals(1, entity.getNewsCount(EnumSet.of(INews.State.READ)));
+    assertEquals(1, entity.getNewsCount(INews.State.asSet(INews.State.NEW)));
+    assertEquals(1, entity.getNewsCount(INews.State.asSet(INews.State.UNREAD)));
+    assertEquals(1, entity.getNewsCount(INews.State.asSet(INews.State.READ)));
 
-    assertEquals(1, entity.getNews(EnumSet.of(INews.State.NEW)).size());
-    assertEquals(1, entity.getNews(EnumSet.of(INews.State.UNREAD)).size());
-    assertEquals(1, entity.getNews(EnumSet.of(INews.State.READ)).size());
+    assertEquals(1, entity.getNews(INews.State.asSet(INews.State.NEW)).size());
+    assertEquals(1, entity.getNews(INews.State.asSet(INews.State.UNREAD)).size());
+    assertEquals(1, entity.getNews(INews.State.asSet(INews.State.READ)).size());
 
-    Set<NewsReference> set = new HashSet<NewsReference>();
+    Set<NewsReference> set = new HashSet<>();
     set.addAll(entity.getNewsRefs());
     assertEquals(3, set.size());
     for (NewsReference newsRef : set) {
       assertNotNull(newsRef.resolve());
     }
+  }
+
+  private void setProperties2(Object o) {
+    if (o instanceof IBookMark)
+      setProperties((IBookMark) o);
+    else if (o instanceof ISearchMark)
+      setProperties((ISearchMark) o);
+    else if (o instanceof INewsBin)
+      setProperties((INewsBin) o);
+    else
+      setProperties((IEntity) o);
+  }
+
+  public static class HierarchyBuilder {
+    private IModelFactory fFactory;
+    private Consumer<IFolderChild> fInitializer;
+
+    private Deque<HierarchyNode<IFolderChild>> fStackCurrentHierarchyPath;
+    private HierarchyNode<IFolderChild> fHierarchy;
+
+    private HierarchyNode<IFolderChild> currentHierarchy() {
+      return fStackCurrentHierarchyPath.peek();
+    }
+    private IFolder currentFolder() {
+//      return currentHierarchy().as();
+      return currentHierarchy() == null ? null : currentHierarchy().as();
+    }
+
+    public static HierarchyBuilder create(IModelFactory factory, Consumer<IFolderChild> initializer) {
+      return new HierarchyBuilder(factory, initializer);
+    }
+    public HierarchyNode<IFolderChild> build() {
+      return fHierarchy;
+    }
+
+    private HierarchyBuilder(IModelFactory factory, Consumer<IFolderChild> initializer) {
+      this.fFactory = factory;
+      this.fInitializer = initializer;
+      this.fStackCurrentHierarchyPath = new ArrayDeque<>();
+      this.fHierarchy = new HierarchyNode<>(null);
+      this.fStackCurrentHierarchyPath.push(this.fHierarchy);
+    }
+
+    public HierarchyBuilder enterSubFolder(String name) {
+      IFolder child = OwlDAO.save(fFactory.createFolder(null, currentFolder(), name));
+      fInitializer.accept(child);
+      fStackCurrentHierarchyPath.push(currentHierarchy().put(name, child));
+      return this;
+    }
+    public HierarchyBuilder exitSubFolder() {
+      fStackCurrentHierarchyPath.pop();
+      return this;
+    }
+    public HierarchyBuilder newFeed(String name, String link) {
+      IFeed feed = fFactory.createFeed(null, URI.create(link));
+      IBookMark child = OwlDAO.save(fFactory.createBookMark(null, currentFolder(), new FeedLinkReference(feed.getLink()), name));
+      fInitializer.accept(child);
+      fHierarchy.put(name, child);
+      return this;
+    }
+    public HierarchyBuilder newNewsBin(String name) {
+      INewsBin child = OwlDAO.save(fFactory.createNewsBin(null, currentFolder(), name));
+      fInitializer.accept(child);
+      fHierarchy.put(name, child);
+      return this;
+    }
+    public HierarchyBuilder newSearch(String name) {
+      ISearchMark child = OwlDAO.save(fFactory.createSearchMark(null, currentFolder(), name));
+      fInitializer.accept(child);
+      fHierarchy.put(name, child);
+      return this;
+    }
+
+    public static class HierarchyNode<TData> extends Node1NMap<HierarchyNode<TData>, String, HierarchyNode<TData>> {
+      private TData data;
+
+      public HierarchyNode(TData data) {
+        super();
+        this.data = data;
+      }
+      public TData get() {
+        return data;
+      }
+      public Long getId() {
+        return ((IEntity)data).getId();
+      }
+      public Long getIdOfPath(String... names) {
+        return getChildOfPath(names).getId();
+      }
+      /** dynamically chooses return type depending on type it is assigned to */
+      public <TReturn> TReturn as() {
+        return (TReturn) data;
+      }
+      public IFolder getFolder(String name) {
+        return (IFolder) get(name);
+      }
+      public INewsBin getNewsBin(String name) {
+        return (INewsBin) get(name);
+      }
+      public ISearchMark getSearch(String name) {
+        return (ISearchMark) get(name);
+      }
+
+      public void set(TData data) {
+        this.data = data;
+      }
+
+      // methods for shorter code
+      public TData get(String key) {
+        return getChild(key).get();
+      }
+      public HierarchyNode<TData> put(String key, TData data) {
+        HierarchyNode<TData> child = new HierarchyNode<>(data);
+        putChild(key, child);
+        return child;
+      }
+    }
+
+  }
+
+  public static class Node1NMap<TParent extends Node1NMap, TKey, TChild extends Node1NMap> {
+    protected TParent parent;
+    protected Map<TKey, TChild> childs = new HashMap<>();
+
+    public TParent getParent() {
+      return parent;
+    }
+    public TParent getParent(int n) {
+      Node1NMap<TParent, TKey, TChild> node = this;
+      for (int i=0; i<n; i++)
+        node = node.getParent();
+      return (TParent) node;
+    }
+    public TChild getChildOfPath(TKey... keys) {
+      Node1NMap<TParent, TKey, TChild> node = this;
+      for (TKey key: keys)
+        node = node.getChild(key);
+      return (TChild) node;
+    }
+
+    public Map<TKey, TChild> getChildsMap() {
+      return childs;
+    }
+    // delegators to childs map
+    public TChild getChild(TKey key) {
+      return childs.get(key);
+    }
+    public void putChild(TKey key, TChild child) {
+      childs.put(key, child);
+    }
+  }
+
+  @Test
+  public void testNewsStateAfterReload() throws Exception {
+
+    Long rootFolderId;
+    Long rootBM1Id;
+    Long rootNB1Id;
+    Long rootSM1Id;
+
+    HierarchyNode<IFolderChild> h;
+
+    h = HierarchyBuilder.create(fFactory, e -> setProperties2(e))
+      .enterSubFolder("Root")
+        .newFeed("Root Bookmark 1", "1")
+        .newNewsBin("Root Newsbin 1")
+        .newSearch("Root Searchmark 1")
+      .exitSubFolder()
+      .build();
+
+    rootFolderId = h.getIdOfPath("Root");
+    rootBM1Id = h.getIdOfPath("Root Bookmark 1");
+    rootNB1Id = h.getIdOfPath("Root Newsbin 1");
+    rootSM1Id = h.getIdOfPath("Root Searchmark 1");
+
+    OwlDAO.save(h.getChildOfPath("Root").as());
+
+    IFolder root;
+    IBookMark rootBM1;
+    INewsBin rootNB1;
+    ISearchMark rootSM1;
+
+    root = OwlDAO.save(fFactory.createFolder(null, null, "Root"));
+    rootFolderId = root.getId();
+    setProperties(root);
+
+    IFeed feed1 = fFactory.createFeed(null, URI.create("1"));
+    rootBM1 = OwlDAO.save(fFactory.createBookMark(null, root, new FeedLinkReference(feed1.getLink()), "Root Bookmark 1"));
+    rootBM1Id = rootBM1.getId();
+    setProperties(rootBM1);
+
+    rootNB1 = OwlDAO.save(fFactory.createNewsBin(null, root, "Root Newsbin 1"));
+    rootNB1Id = rootNB1.getId();
+    setProperties(rootNB1);
+
+    rootSM1 = OwlDAO.save(fFactory.createSearchMark(null, root, "Root Searchmark 1"));
+    rootSM1Id = rootSM1.getId();
+    setProperties(rootSM1);
+
+    OwlDAO.save(root);
+
+    //restart
+    /* Reopen Database */
+    Owl.getPersistenceService().shutdown(false);
+    h = null;
+    root = null;
+    rootBM1 = null;
+    rootNB1 = null;
+    rootSM1 = null;
+    System.gc();
+    Owl.getPersistenceService().startup(new NullOperationMonitor(), false, false);
+    //restart end
+
+    CachingDAO dao;
+    dao = (CachingDAO) OwlDAO.getDAO(IFolderDAO.class);
+    root = (IFolder) dao.load(rootFolderId);
+    assertNotNull(root);
+    assertEquals("Root", root.getName());
+    assertProperties(root);
+
+    dao = (CachingDAO) OwlDAO.getDAO(IBookMarkDAO.class);
+    rootBM1 = (IBookMark) dao.load(rootBM1Id);
+    assertNotNull(rootBM1);
+    assertEquals("Root Bookmark 1", rootBM1.getName());
+    assertProperties(rootBM1);
+
+    dao = (CachingDAO) OwlDAO.getDAO(INewsBinDAO.class);
+    rootNB1 = (INewsBin) dao.load(rootNB1Id);
+    assertNotNull(rootNB1);
+    assertEquals("Root Newsbin 1", rootNB1.getName());
+    assertProperties(rootNB1);
+
+    dao = (CachingDAO) OwlDAO.getDAO(ISearchMarkDAO.class);
+    rootSM1 = (ISearchMark) dao.load(rootSM1Id);
+    assertNotNull(rootSM1);
+    assertEquals("Root Searchmark 1", rootSM1.getName());
+    assertProperties(rootSM1);
+
+  }
+
+  private void assertFolderChild(IFolderDAO dao, Long id, String name) {
+    IFolder o = dao.load(id);
+    assertNotNull(o);
+    assertEquals(name, o.getName());
+    assertProperties(o);
+  }
+  private void assertFolderChild(IBookMarkDAO dao, Long id, String name) {
+    IBookMark o = dao.load(id);
+    assertNotNull(o);
+    assertEquals(name, o.getName());
+    assertProperties(o);
+  }
+  private void assertFolderChild(INewsBinDAO dao, Long id, String name) {
+    INewsBin o = dao.load(id);
+    assertNotNull(o);
+    assertEquals(name, o.getName());
+    assertProperties(o);
+  }
+  private void assertFolderChild(ISearchMarkDAO dao, Long id, String name) {
+    ISearchMark o = dao.load(id);
+    assertNotNull(o);
+    assertEquals(name, o.getName());
+    assertProperties(o);
   }
 
   /**
@@ -569,165 +840,46 @@ public class CachingDAOTest extends LargeBlockSizeTest {
     Owl.getPersistenceService().startup(new NullOperationMonitor(), false, false);
 
     /* Assert Folders */
-    CachingDAO dao = (CachingDAO) OwlDAO.getDAO(IFolderDAO.class);
-    root = (IFolder) dao.load(rootFolderId);
-    assertNotNull(root);
-    assertEquals("Root", root.getName());
-    assertProperties(root);
-
-    subRoot1 = (IFolder) dao.load(subRootFolder1Id);
-    assertNotNull(subRoot1);
-    assertEquals("Sub Root 1", subRoot1.getName());
-    assertProperties(subRoot1);
-
-    subRoot2 = (IFolder) dao.load(subRootFolder2Id);
-    assertNotNull(subRoot2);
-    assertEquals("Sub Root 2", subRoot2.getName());
-    assertProperties(subRoot2);
-
-    subRoot3 = (IFolder) dao.load(subRootFolder3Id);
-    assertNotNull(subRoot3);
-    assertEquals("Sub Root 3", subRoot3.getName());
-    assertProperties(subRoot3);
-
-    subSubRoot1 = (IFolder) dao.load(subSubRootFolder1Id);
-    assertNotNull(subSubRoot1);
-    assertEquals("Sub Sub Root 1", subSubRoot1.getName());
-    assertProperties(subSubRoot1);
-
-    subSubSubRoot1 = (IFolder) dao.load(subSubSubRootFolder1Id);
-    assertNotNull(subSubSubRoot1);
-    assertEquals("Sub Sub Sub Root 1", subSubSubRoot1.getName());
-    assertProperties(subSubSubRoot1);
+    IFolderDAO daoF = OwlDAO.getDAO(IFolderDAO.class);
+    assertFolderChild(daoF, rootFolderId, "Root");
+    assertFolderChild(daoF, subRootFolder1Id, "Sub Root 1");
+    assertFolderChild(daoF, subRootFolder2Id, "Sub Root 2");
+    assertFolderChild(daoF, subRootFolder3Id, "Sub Root 3");
+    assertFolderChild(daoF, subSubRootFolder1Id, "Sub Sub Root 1");
+    assertFolderChild(daoF, subSubSubRootFolder1Id, "Sub Sub Sub Root 1");
 
     /* Assert Bookmarks */
-    dao = (CachingDAO) OwlDAO.getDAO(IBookMarkDAO.class);
-
-    rootBM1 = (IBookMark) dao.load(rootBM1Id);
-    assertNotNull(rootBM1);
-    assertEquals("Root Bookmark 1", rootBM1.getName());
-    assertProperties(rootBM1);
-
-    rootBM2 = (IBookMark) dao.load(rootBM2Id);
-    assertNotNull(rootBM2);
-    assertEquals("Root Bookmark 2", rootBM2.getName());
-    assertProperties(rootBM2);
-
-    subRoot1BM1 = (IBookMark) dao.load(subRoot1BM1Id);
-    assertNotNull(subRoot1BM1);
-    assertEquals("Sub Root 1 Bookmark 1", subRoot1BM1.getName());
-    assertProperties(subRoot1BM1);
-
-    subRoot1BM2 = (IBookMark) dao.load(subRoot1BM2Id);
-    assertNotNull(subRoot1BM2);
-    assertEquals("Sub Root 1 Bookmark 2", subRoot1BM2.getName());
-    assertProperties(subRoot1BM2);
-
-    subRoot2BM1 = (IBookMark) dao.load(subRoot2BM1Id);
-    assertNotNull(subRoot2BM1);
-    assertEquals("Sub Root 2 Bookmark 1", subRoot2BM1.getName());
-    assertProperties(subRoot2BM1);
-
-    subRoot3BM1 = (IBookMark) dao.load(subRoot3BM1Id);
-    assertNotNull(subRoot3BM1);
-    assertEquals("Sub Root 3 Bookmark 1", subRoot3BM1.getName());
-    assertProperties(subRoot3BM1);
-
-    subSubRoot1BM1 = (IBookMark) dao.load(subSubRoot1BM1Id);
-    assertNotNull(subSubRoot1BM1);
-    assertEquals("Sub Sub Root 1 Bookmark 1", subSubRoot1BM1.getName());
-    assertProperties(subSubRoot1BM1);
-
-    subSubSubRoot1BM1 = (IBookMark) dao.load(subSubSubRoot1BM1Id);
-    assertNotNull(subSubSubRoot1BM1);
-    assertEquals("Sub Sub Sub Root 1 Bookmark 1", subSubSubRoot1BM1.getName());
-    assertProperties(subSubSubRoot1BM1);
+    IBookMarkDAO daoBM = OwlDAO.getDAO(IBookMarkDAO.class);
+    assertFolderChild(daoBM, rootBM1Id, "Root Bookmark 1");
+    assertFolderChild(daoBM, rootBM2Id, "Root Bookmark 2");
+    assertFolderChild(daoBM, subRoot1BM1Id, "Sub Root 1 Bookmark 1");
+    assertFolderChild(daoBM, subRoot1BM2Id, "Sub Root 1 Bookmark 2");
+    assertFolderChild(daoBM, subRoot2BM1Id, "Sub Root 2 Bookmark 1");
+    assertFolderChild(daoBM, subRoot3BM1Id, "Sub Root 3 Bookmark 1");
+    assertFolderChild(daoBM, subSubRoot1BM1Id, "Sub Sub Root 1 Bookmark 1");
+    assertFolderChild(daoBM, subSubSubRoot1BM1Id, "Sub Sub Sub Root 1 Bookmark 1");
 
     /* Assert News Bins */
-    dao = (CachingDAO) OwlDAO.getDAO(INewsBinDAO.class);
-
-    rootNB1 = (INewsBin) dao.load(rootNB1Id);
-    assertNotNull(rootNB1);
-    assertEquals("Root Newsbin 1", rootNB1.getName());
-    assertProperties(rootNB1);
-
-    rootNB2 = (INewsBin) dao.load(rootNB2Id);
-    assertNotNull(rootNB2);
-    assertEquals("Root Newsbin 2", rootNB2.getName());
-    assertProperties(rootNB2);
-
-    subRoot1NB1 = (INewsBin) dao.load(subRoot1NB1Id);
-    assertNotNull(subRoot1NB1);
-    assertEquals("Sub Root 1 Newsbin 1", subRoot1NB1.getName());
-    assertProperties(subRoot1NB1);
-
-    subRoot1NB2 = (INewsBin) dao.load(subRoot1NB2Id);
-    assertNotNull(subRoot1NB2);
-    assertEquals("Sub Root 1 Newsbin 2", subRoot1NB2.getName());
-    assertProperties(subRoot1NB2);
-
-    subRoot2NB1 = (INewsBin) dao.load(subRoot2NB1Id);
-    assertNotNull(subRoot2NB1);
-    assertEquals("Sub Root 2 Newsbin 1", subRoot2NB1.getName());
-    assertProperties(subRoot2NB1);
-
-    subRoot3NB1 = (INewsBin) dao.load(subRoot3NB1Id);
-    assertNotNull(subRoot3NB1);
-    assertEquals("Sub Root 3 Newsbin 1", subRoot3NB1.getName());
-    assertProperties(subRoot3NB1);
-
-    subSubRoot1NB1 = (INewsBin) dao.load(subSubRoot1NB1Id);
-    assertNotNull(subSubRoot1NB1);
-    assertEquals("Sub Sub Root 1 Newsbin 1", subSubRoot1NB1.getName());
-    assertProperties(subSubRoot1NB1);
-
-    subSubSubRoot1NB1 = (INewsBin) dao.load(subSubSubRoot1NB1Id);
-    assertNotNull(subSubSubRoot1NB1);
-    assertEquals("Sub Sub Sub Root 1 Newsbin 1", subSubSubRoot1NB1.getName());
-    assertProperties(subSubSubRoot1NB1);
+    INewsBinDAO daoNB = OwlDAO.getDAO(INewsBinDAO.class);
+    assertFolderChild(daoNB, rootNB1Id, "Root Newsbin 1");
+    assertFolderChild(daoNB, rootNB2Id, "Root Newsbin 2");
+    assertFolderChild(daoNB, subRoot1NB1Id, "Sub Root 1 Newsbin 1");
+    assertFolderChild(daoNB, subRoot1NB2Id, "Sub Root 1 Newsbin 2");
+    assertFolderChild(daoNB, subRoot2NB1Id, "Sub Root 2 Newsbin 1");
+    assertFolderChild(daoNB, subRoot3NB1Id, "Sub Root 3 Newsbin 1");
+    assertFolderChild(daoNB, subSubRoot1NB1Id, "Sub Sub Root 1 Newsbin 1");
+    assertFolderChild(daoNB, subSubSubRoot1NB1Id, "Sub Sub Sub Root 1 Newsbin 1");
 
     /* Assert Search Marks */
-    dao = (CachingDAO) OwlDAO.getDAO(ISearchMarkDAO.class);
-
-    rootSM1 = (ISearchMark) dao.load(rootSM1Id);
-    assertNotNull(rootSM1);
-    assertEquals("Root Searchmark 1", rootSM1.getName());
-    assertProperties(rootSM1);
-
-    rootSM2 = (ISearchMark) dao.load(rootSM2Id);
-    assertNotNull(rootSM2);
-    assertEquals("Root Searchmark 2", rootSM2.getName());
-    assertProperties(rootSM2);
-
-    subRoot1SM1 = (ISearchMark) dao.load(subRoot1SM1Id);
-    assertNotNull(subRoot1SM1);
-    assertEquals("Sub Root 1 Searchmark 1", subRoot1SM1.getName());
-    assertProperties(subRoot1SM1);
-
-    subRoot1SM2 = (ISearchMark) dao.load(subRoot1SM2Id);
-    assertNotNull(subRoot1SM2);
-    assertEquals("Sub Root 1 Searchmark 2", subRoot1SM2.getName());
-    assertProperties(subRoot1SM2);
-
-    subRoot2SM1 = (ISearchMark) dao.load(subRoot2SM1Id);
-    assertNotNull(subRoot2SM1);
-    assertEquals("Sub Root 2 Searchmark 1", subRoot2SM1.getName());
-    assertProperties(subRoot2SM1);
-
-    subRoot3SM1 = (ISearchMark) dao.load(subRoot3SM1Id);
-    assertNotNull(subRoot3SM1);
-    assertEquals("Sub Root 3 Searchmark 1", subRoot3SM1.getName());
-    assertProperties(subRoot3SM1);
-
-    subSubRoot1SM1 = (ISearchMark) dao.load(subSubRoot1SM1Id);
-    assertNotNull(subSubRoot1SM1);
-    assertEquals("Sub Sub Root 1 Searchmark 1", subSubRoot1SM1.getName());
-    assertProperties(subSubRoot1SM1);
-
-    subSubSubRoot1SM1 = (ISearchMark) dao.load(subSubSubRoot1SM1Id);
-    assertNotNull(subSubSubRoot1SM1);
-    assertEquals("Sub Sub Sub Root 1 Searchmark 1", subSubSubRoot1SM1.getName());
-    assertProperties(subSubSubRoot1SM1);
+    ISearchMarkDAO daoSM = OwlDAO.getDAO(ISearchMarkDAO.class);
+    assertFolderChild(daoSM, rootSM1Id, "Root Searchmark 1");
+    assertFolderChild(daoSM, rootSM2Id, "Root Searchmark 2");
+    assertFolderChild(daoSM, subRoot1SM1Id, "Sub Root 1 Searchmark 1");
+    assertFolderChild(daoSM, subRoot1SM2Id, "Sub Root 1 Searchmark 2");
+    assertFolderChild(daoSM, subRoot2SM1Id, "Sub Root 2 Searchmark 1");
+    assertFolderChild(daoSM, subRoot3SM1Id, "Sub Root 3 Searchmark 1");
+    assertFolderChild(daoSM, subSubRoot1SM1Id, "Sub Sub Root 1 Searchmark 1");
+    assertFolderChild(daoSM, subSubSubRoot1SM1Id, "Sub Sub Sub Root 1 Searchmark 1");
   }
 
   /**
@@ -1165,9 +1317,9 @@ public class CachingDAOTest extends LargeBlockSizeTest {
     all = dao.loadAll();
     assertEquals(20, all.size());
     for (Object object : all) {
-      if (object instanceof ISearchMark)
+      if (object instanceof ISearchMark) {
         assertProperties((ISearchMark) object);
-      else
+      } else
         fail();
     }
   }

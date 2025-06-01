@@ -64,7 +64,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -120,7 +119,7 @@ public class OPMLExporter implements ITypeExporter {
 
     /* Export Folder Childs */
     if (elements != null && !elements.isEmpty()) {
-      Map<IFolder, Element> mapFolderToElement = new HashMap<IFolder, Element>();
+      Map<IFolder, Element> mapFolderToElement = new HashMap<>();
       mapFolderToElement.put(null, body);
 
       /* Ensure that all Parent Elements exist */
@@ -166,7 +165,7 @@ public class OPMLExporter implements ITypeExporter {
   private void repairHierarchy(Map<IFolder, Element> mapFolderToElement, Collection<? extends IFolderChild> elementsToExport, boolean exportPreferences) {
 
     /* Retrieve all Parents */
-    Set<IFolder> allParentFolders = new HashSet<IFolder>();
+    Set<IFolder> allParentFolders = new HashSet<>();
     for (IFolderChild element : elementsToExport) {
       fillParents(allParentFolders, element);
     }
@@ -453,7 +452,7 @@ public class OPMLExporter implements ITypeExporter {
     }
 
     /* Single Value */
-    else if (!EnumSet.class.isAssignableFrom(condition.getValue().getClass())) {
+    else if (false == condition.getValue() instanceof Collection) {
       Element searchValue = new Element(Tag.SEARCH_VALUE.get(), RSSOWL_NS);
       searchValue.setAttribute(Attributes.TYPE.get(), String.valueOf(condition.getField().getSearchValueType().getId()));
       searchValue.setAttribute(Attributes.VALUE.get(), getValueString(df, condition));
@@ -462,13 +461,14 @@ public class OPMLExporter implements ITypeExporter {
 
     /* Multiple Values */
     else {
-      EnumSet<?> values = ((EnumSet<?>) condition.getValue());
+      Collection<?> values = ((Collection<?>) condition.getValue());
 
       Element searchValue = new Element(Tag.SEARCH_VALUE.get(), RSSOWL_NS);
       searchValue.setAttribute(Attributes.TYPE.get(), String.valueOf(condition.getField().getSearchValueType().getId()));
       conditionElement.addContent(searchValue);
 
-      for (Enum<?> enumValue : values) {
+      for (Object e : values) {
+        Enum<?> enumValue = (Enum) e;
         Element state = new Element(Tag.STATE.get(), RSSOWL_NS);
         state.setAttribute(Attributes.VALUE.get(), String.valueOf(enumValue.ordinal()));
         searchValue.addContent(state);

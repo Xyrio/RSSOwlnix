@@ -72,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -336,8 +335,8 @@ public class SearchConditionItem extends Composite {
 
       /* Pre-Select input if given */
       Object presetInput = (input == null) ? fInputValue : input;
-      if (presetInput != null && presetInput instanceof EnumSet)
-        stateConditionControl.select((EnumSet<State>) presetInput);
+      if (presetInput != null && presetInput instanceof Set)
+        stateConditionControl.select((Set<State>) presetInput);
 
       /* Update Input Value */
       fInputValue = stateConditionControl.getSelection();
@@ -609,7 +608,7 @@ public class SearchConditionItem extends Composite {
               @Override
               public void run() {
                 if (!text.isDisposed()) {
-                  Set<String> values = new TreeSet<String>(new Comparator<String>() {
+                  Set<String> values = new TreeSet<>(new Comparator<String>() {
                     @Override
                     public int compare(String o1, String o2) {
                       return o1.compareToIgnoreCase(o2);
@@ -700,12 +699,12 @@ public class SearchConditionItem extends Composite {
   }
 
   private List<ISearchField> createFields(ISearchCondition condition) {
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     String entityName = condition.getField().getEntityName();
 
     /* Return all Fields of News */
     if (INews.class.getName().equals(entityName)) {
-      List<Integer> newsFields = new ArrayList<Integer>();
+      List<Integer> newsFields = new ArrayList<>();
       newsFields.add(IEntity.ALL_FIELDS);
       newsFields.add(INews.STATE);
       newsFields.add(INews.LOCATION);
@@ -738,7 +737,7 @@ public class SearchConditionItem extends Composite {
   }
 
   private List<SearchSpecifier> createSpecifier(ISearchField field) {
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     String entityName = field.getEntityName();
 
     /* Return all Specifiers for News-Fields */

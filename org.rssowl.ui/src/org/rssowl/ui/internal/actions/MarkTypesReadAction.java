@@ -39,7 +39,6 @@ import org.rssowl.core.persist.IEntity;
 import org.rssowl.core.persist.IFolder;
 import org.rssowl.core.persist.IFolderChild;
 import org.rssowl.core.persist.INews;
-import org.rssowl.core.persist.INews.State;
 import org.rssowl.core.persist.INewsMark;
 import org.rssowl.core.persist.dao.IFolderDAO;
 import org.rssowl.core.persist.dao.INewsDAO;
@@ -61,7 +60,6 @@ import org.rssowl.ui.internal.util.ModelUtils;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -128,7 +126,7 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
     for (Object element : entities) {
       if (element instanceof IFolder) {
         if (folders == null)
-          folders = new HashSet<IFolder>();
+          folders = new HashSet<>();
         folders.add((IFolder) element);
       }
     }
@@ -139,7 +137,7 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
         CoreUtils.normalize(folder, entities);
 
     /* Use Map for follow-up Retention */
-    Map<IBookMark, Collection<INews>> retentionHelperMap = new HashMap<IBookMark, Collection<INews>>();
+    Map<IBookMark, Collection<INews>> retentionHelperMap = new HashMap<>();
 
     /* Retrieve affected News */
     Collection<INews> news;
@@ -197,10 +195,10 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
   }
 
   private Collection<INews> getNews(FeedView feedView) {
-    EnumSet<State> enumSet = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+    Set<INews.State> enumSet = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
 
     Collection<INews> newsCache = feedView.getCachedNewsCopy();
-    Set<INews> news = new HashSet<INews>();
+    Set<INews> news = new HashSet<>();
     for (INews item : newsCache) {
       if (item != null && enumSet.contains(item.getState()) && !feedView.isHidden(item))
         news.add(item);
@@ -210,8 +208,8 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
   }
 
   private Set<INews> resolveNews(List<IEntity> entities, Map<IBookMark, Collection<INews>> retentionHelperMap) {
-    EnumSet<State> enumSet = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
-    Set<INews> news = new HashSet<INews>();
+    Set<INews.State> enumSet = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+    Set<INews> news = new HashSet<>();
     for (IEntity element : entities) {
       if (element instanceof IFolder)
         fillNews((IFolder) element, news, retentionHelperMap);
@@ -236,7 +234,7 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
 
     /* Determine if any included Bookmark requires retention */
     boolean requiresRetention = false;
-    Set<IBookMark> bookmarks = new HashSet<IBookMark>();
+    Set<IBookMark> bookmarks = new HashSet<>();
     CoreUtils.fillBookMarks(bookmarks, Collections.singleton(folder));
     for (IBookMark bookmark : bookmarks) {
       if (Owl.getPreferenceService().getEntityScope(bookmark).getBoolean(DefaultPreferences.DEL_READ_NEWS_STATE)) {
@@ -283,7 +281,7 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
     IPreferenceScope bookMarkPrefs = Owl.getPreferenceService().getEntityScope(bookmark);
     boolean requiresRetention = bookMarkPrefs.getBoolean(DefaultPreferences.DEL_READ_NEWS_STATE);
 
-    final EnumSet<State> enumSet = EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
+    final Set<INews.State> enumSet = INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED);
 
     /* Retention on read News required, load *read* as well */
     if (requiresRetention) {
@@ -304,7 +302,7 @@ public class MarkTypesReadAction extends Action implements IWorkbenchWindowActio
   }
 
   private void fillNews(INewsMark newsmark, Collection<INews> news) {
-    news.addAll(newsmark.getNews(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+    news.addAll(newsmark.getNews(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
   }
 
   /*

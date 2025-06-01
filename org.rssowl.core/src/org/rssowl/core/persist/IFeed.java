@@ -96,7 +96,7 @@ public interface IFeed extends IEntity, MergeCapable<IFeed> {
   public static final int CATEGORIES = 17;
 
   /** Used by the skipDays Element */
-  static final List<String> DAYS = new ArrayList<String>(Arrays.asList(new String[] { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" })); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+  static final List<String> DAYS = new ArrayList<>(Arrays.asList(new String[] { "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday" })); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
   /** Used by the skipDays Element */
   static final int MONDAY = 0;
@@ -120,7 +120,7 @@ public interface IFeed extends IEntity, MergeCapable<IFeed> {
   static final int SUNDAY = 6;
 
   /** Used by the updatePeriod Element */
-  static final List<String> PERIODS = new ArrayList<String>(Arrays.asList(new String[] { "hourly", "daily", "weekly", "monthly", "yearly" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+  static final List<String> PERIODS = new ArrayList<>(Arrays.asList(new String[] { "hourly", "daily", "weekly", "monthly", "yearly" })); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
   /** Used by the updatePeriod Element */
   static final int HOURLY = 0;

@@ -61,7 +61,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -693,7 +692,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), false);
       assertSame(result, news1);
@@ -702,7 +701,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), true);
       assertSame(result, news1);
@@ -711,7 +710,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder, subFolder2 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), false);
       assertSame(result, news1);
@@ -720,7 +719,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), false);
       assertTrue(result.isEmpty());
@@ -729,7 +728,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), false);
       assertTrue(result.isEmpty());
@@ -746,7 +745,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, new Long[][] { { null }, { null }, { null } });
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, INews.State.UNREAD));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, INews.State.UNREAD));
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2), false);
       assertTrue(result.isEmpty());
@@ -755,7 +754,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), false);
@@ -765,7 +764,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -775,7 +774,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { rootFolder })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "One");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -785,7 +784,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), false);
@@ -795,7 +794,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -805,7 +804,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "One");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -815,7 +814,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), false);
@@ -825,7 +824,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -835,7 +834,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "One");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -845,7 +844,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_ALL, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), false);
@@ -855,7 +854,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_ALL, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -865,7 +864,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_ALL, "One");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -875,7 +874,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_NOT, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), false);
@@ -885,7 +884,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_NOT, "Three");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -895,7 +894,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1, bm2, bm3 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS_NOT, "One");
 
       List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(cond1, cond2, cond3), true);
@@ -905,7 +904,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
       ISearchCondition cond4 = fFactory.createSearchCondition(fieldIsFlagged, SearchSpecifier.IS, true);
 
@@ -916,7 +915,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { subFolder1, subFolder2, bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.NEW));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
       ISearchCondition cond4 = fFactory.createSearchCondition(fieldIsFlagged, SearchSpecifier.IS, true);
 
@@ -927,7 +926,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     /* Search Test: Complex */
     {
       ISearchCondition cond1 = fFactory.createSearchCondition(fieldLoc, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Arrays.asList(new IFolderChild[] { subFolder1, subFolder2, bm1 })));
-      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+      ISearchCondition cond2 = fFactory.createSearchCondition(fieldState, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
       ISearchCondition cond3 = fFactory.createSearchCondition(fieldAllFields, SearchSpecifier.CONTAINS, "Three");
       ISearchCondition cond4 = fFactory.createSearchCondition(fieldIsFlagged, SearchSpecifier.IS, true);
 
@@ -1084,7 +1083,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     ISearchField field = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+    List<ISearchCondition> conditions = new ArrayList<>();
     for (int i = 0; i < 1030; i++) {
       ISearchCondition condition1 = fFactory.createSearchCondition(field, SearchSpecifier.CONTAINS, "foo" + i);
       conditions.add(condition1);
@@ -1119,7 +1118,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     OwlDAO.save(fFactory.createBookMark(null, (IFolder) root, new FeedLinkReference(feed4.getLink()), "BM1"));
 
     ISearchField field = fFactory.createSearchField(INews.LOCATION, fNewsEntityName);
-    List<ISearchCondition> conditions = new ArrayList<ISearchCondition>();
+    List<ISearchCondition> conditions = new ArrayList<>();
     conditions.add(fFactory.createSearchCondition(field, SearchSpecifier.IS, ModelUtils.toPrimitive(Collections.singletonList(root))));
 
     Query query = ModelSearchQueries.createQuery(conditions, null, false);
@@ -1652,7 +1651,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(authorField);
     fields.add(allField);
 
@@ -1848,7 +1847,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
      */
     //ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
 
     for (ISearchField field : fields) {
@@ -2251,7 +2250,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
         ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
         ISearchField descriptionField = fFactory.createSearchField(INews.DESCRIPTION, fNewsEntityName);
 
-        List<ISearchField> fields = new ArrayList<ISearchField>();
+        List<ISearchField> fields = new ArrayList<>();
         fields.add(allField);
         fields.add(descriptionField);
 
@@ -2333,7 +2332,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField attachmentField = fFactory.createSearchField(INews.ATTACHMENTS_CONTENT, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(attachmentField);
 
@@ -2380,7 +2379,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField attachmentField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(attachmentField);
 
@@ -2435,7 +2434,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField categoriesField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(categoriesField);
 
@@ -2482,11 +2481,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -2604,7 +2603,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -2704,11 +2703,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -2759,11 +2758,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -2816,11 +2815,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -2902,7 +2901,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3002,11 +3001,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3061,11 +3060,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3132,7 +3131,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3189,11 +3188,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3253,7 +3252,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3296,11 +3295,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3350,11 +3349,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3413,7 +3412,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3461,11 +3460,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3522,7 +3521,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3569,11 +3568,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3630,7 +3629,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3681,11 +3680,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3742,7 +3741,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3794,11 +3793,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3865,7 +3864,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -3917,11 +3916,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -3966,11 +3965,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -4023,11 +4022,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -4088,7 +4087,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField categoryField = fFactory.createSearchField(INews.CATEGORIES, fNewsEntityName);
     ISearchField authorField = fFactory.createSearchField(INews.AUTHOR, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(categoryField);
     fields.add(authorField);
 
@@ -4140,11 +4139,11 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchField allField = fFactory.createSearchField(IEntity.ALL_FIELDS, fNewsEntityName);
     ISearchField titleField = fFactory.createSearchField(INews.TITLE, fNewsEntityName);
 
-    List<ISearchField> fields = new ArrayList<ISearchField>();
+    List<ISearchField> fields = new ArrayList<>();
     fields.add(allField);
     fields.add(titleField);
 
-    List<SearchSpecifier> specifiers = new ArrayList<SearchSpecifier>();
+    List<SearchSpecifier> specifiers = new ArrayList<>();
     specifiers.add(SearchSpecifier.CONTAINS_ALL);
     specifiers.add(SearchSpecifier.CONTAINS);
 
@@ -4200,31 +4199,31 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Cond 1 AND Cond 2 */
     ISearchCondition condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    ISearchCondition condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    ISearchCondition condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news1, news2);
 
     /* Cond 1 OR Cond 2 */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), false);
     assertSame(result, news1, news2, news3, news4);
 
     /* Cond 1 NOT Cond 2 */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS_NOT, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS_NOT, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news3);
 
     /* NOT Cond 1 AND Cond 2 */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_NOT, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news4);
 
     /* NOT Cond 1 OR Cond 2 */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_NOT, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), false);
     assertSame(result, news1, news2, news4, news5);
   }
@@ -4276,7 +4275,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (AND) */
     ISearchCondition condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    ISearchCondition condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    ISearchCondition condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     List<SearchHit<NewsReference>> result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news1, news2);
     result = fModelSearch.searchNews(list(condition1, condition2), stickyCondition, true);
@@ -4284,7 +4283,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (AND, All Fields) */
     condition1 = fFactory.createSearchCondition(allField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news1, news2);
     result = fModelSearch.searchNews(list(condition1, condition2), stickyCondition, true);
@@ -4292,7 +4291,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Labeled (AND) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news1, news2);
     result = fModelSearch.searchNews(list(condition1, condition2), labelCondition, true);
@@ -4300,7 +4299,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Recent Age (AND) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), true);
     assertSame(result, news1, news2);
     result = fModelSearch.searchNews(list(condition1, condition2), ageCondition, true);
@@ -4308,25 +4307,25 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (OR) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), stickyCondition, false);
     assertSame(result, news1, news3);
 
     /* Scope Condition: Is Sticky (OR, All Fields) */
     condition1 = fFactory.createSearchCondition(allField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), stickyCondition, false);
     assertSame(result, news1, news3);
 
     /* Scope Condition: Is Labeled (OR) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), labelCondition, false);
     assertSame(result, news2, news4);
 
     /* Scope Condition: Recent Age (OR) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(condition1, condition2), ageCondition, false);
     assertSame(result, news1, news3, news4);
 
@@ -4334,7 +4333,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
     ISearchCondition conditionMatch = fFactory.createSearchCondition(locationField, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Collections.singleton((IFolderChild) mark1)));
     ISearchCondition conditionNoMatch = fFactory.createSearchCondition(locationField, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(Collections.singleton((IFolderChild) mark2)));
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), stickyCondition, true);
     assertSame(result, news1);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4342,7 +4341,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (AND, with Location, all fields) */
     condition1 = fFactory.createSearchCondition(allField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), stickyCondition, true);
     assertSame(result, news1);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4350,7 +4349,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Labeled (AND, with Location) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), labelCondition, true);
     assertSame(result, news2);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4358,7 +4357,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Recent Age (AND, with Location) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), ageCondition, true);
     assertSame(result, news1);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4366,7 +4365,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (OR, with Location) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), stickyCondition, false);
     assertSame(result, news1, news3);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4374,7 +4373,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Sticky (OR, with Location, all fields) */
     condition1 = fFactory.createSearchCondition(allField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), stickyCondition, false);
     assertSame(result, news1, news3);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4382,7 +4381,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Is Labeled (OR, with Location) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), labelCondition, false);
     assertSame(result, news2, news4);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);
@@ -4390,7 +4389,7 @@ public class ModelSearchTest4 extends AbstractModelSearchTest {
 
     /* Scope Condition: Recent Age (OR, with Location) */
     condition1 = fFactory.createSearchCondition(titleField, SearchSpecifier.CONTAINS_ALL, "GNC-*");
-    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, EnumSet.of(INews.State.READ));
+    condition2 = fFactory.createSearchCondition(stateField, SearchSpecifier.IS, INews.State.asSet(INews.State.READ));
     result = fModelSearch.searchNews(list(conditionMatch, condition1, condition2), ageCondition, false);
     assertSame(result, news1, news3, news4);
     result = fModelSearch.searchNews(list(conditionNoMatch, condition1, condition2), stickyCondition, true);

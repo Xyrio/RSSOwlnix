@@ -89,7 +89,6 @@ import org.rssowl.ui.internal.util.LayoutUtils;
 import org.rssowl.ui.internal.util.ModelUtils;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -745,10 +744,10 @@ public class FilterBar {
 
   private void onCreateSavedSearch(boolean withQuickSearch) {
     IModelFactory factory = Owl.getModelFactory();
-    List<ISearchCondition> conditions = new ArrayList<ISearchCondition>(2);
+    List<ISearchCondition> conditions = new ArrayList<>(2);
 
     /* Create Condition from Location */
-    List<IFolderChild> searchScope = new ArrayList<IFolderChild>(1);
+    List<IFolderChild> searchScope = new ArrayList<>(1);
     searchScope.add(((FeedViewInput) fFeedView.getEditorInput()).getMark());
     ISearchField field = factory.createSearchField(INews.LOCATION, INews.class.getName());
     conditions.add(factory.createSearchCondition(field, SearchSpecifier.SCOPE, ModelUtils.toPrimitive(searchScope)));
@@ -765,7 +764,7 @@ public class FilterBar {
 
       case SHOW_NEW:
         field = factory.createSearchField(INews.STATE, INews.class.getName());
-        conditions.add(factory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(INews.State.NEW)));
+        conditions.add(factory.createSearchCondition(field, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW)));
         break;
 
       case SHOW_RECENT:
@@ -790,7 +789,7 @@ public class FilterBar {
 
       case SHOW_UNREAD:
         field = factory.createSearchField(INews.STATE, INews.class.getName());
-        conditions.add(factory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
+        conditions.add(factory.createSearchCondition(field, SearchSpecifier.IS, INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED)));
         break;
     }
 

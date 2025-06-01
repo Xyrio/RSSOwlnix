@@ -86,7 +86,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1344,7 +1343,7 @@ public class DBManager {
 
   private static void addNewsCounterItem(NewsCounter newsCounter, Feed feed) {
     Map<State, Integer> stateToCountMap = feed.getNewsCount();
-    int unreadCount = getCount(stateToCountMap, EnumSet.of(State.NEW, State.UNREAD, State.UPDATED));
+    int unreadCount = getCount(stateToCountMap, State.asSet(State.NEW, State.UNREAD, State.UPDATED));
     Integer newCount = stateToCountMap.get(INews.State.NEW);
     newsCounter.put(feed.getLink().toString(), new NewsCounterItem(newCount, unreadCount, feed.getStickyCount()));
   }

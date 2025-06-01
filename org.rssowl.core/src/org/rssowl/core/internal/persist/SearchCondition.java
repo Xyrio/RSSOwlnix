@@ -30,6 +30,10 @@ import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.SearchSpecifier;
 import org.rssowl.core.persist.reference.SearchConditionReference;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * <p>
  * Instances of <code>ISearchCondition</code> are grouped under a single
@@ -167,6 +171,18 @@ public class SearchCondition extends AbstractEntity implements ISearchCondition 
   @Override
   public synchronized void setValue(Object value) {
     fValue = value;
+  }
+
+  private static volatile int idGen = 0;
+  private static final Map<Integer, Object> ids = new HashMap<>();
+  public static synchronized int getObjectId(Object o) {
+    for (Entry<Integer, Object> e : ids.entrySet()) {
+      if (o == e.getValue())
+        return e.getKey();
+    }
+    int id = ++idGen;
+    ids.put(id, o);
+    return id;
   }
 
   /**

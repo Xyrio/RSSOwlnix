@@ -468,6 +468,13 @@ public class OwlUI {
 
     /** Ignore Tab reuse for Feeds */
     IGNORE_REUSE;
+
+    public static Set<FeedViewOpenMode> asSet(FeedViewOpenMode... enums) {
+      EnumSet<FeedViewOpenMode> result = EnumSet.noneOf(FeedViewOpenMode.class);
+      for (FeedViewOpenMode e : enums)
+        result.add(e);
+      return result;
+    }
   }
 
   /** Supported Feedview Layouts */
@@ -1748,7 +1755,7 @@ public class OwlUI {
    * @param selection
    * @param openModes
    */
-  public static void openInFeedView(IWorkbenchPage page, IStructuredSelection selection, EnumSet<FeedViewOpenMode> openModes) {
+  public static void openInFeedView(IWorkbenchPage page, IStructuredSelection selection, Set<FeedViewOpenMode> openModes) {
     boolean forceActivate = openModes.contains(FeedViewOpenMode.FORCE_ACTIVATE);
     boolean ignoreAlreadyOpened = openModes.contains(FeedViewOpenMode.IGNORE_ALREADY_OPENED);
     boolean ignoreReuse = openModes.contains(FeedViewOpenMode.IGNORE_REUSE);

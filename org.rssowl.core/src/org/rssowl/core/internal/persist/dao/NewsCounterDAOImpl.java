@@ -35,7 +35,6 @@ import org.rssowl.core.persist.dao.INewsCounterDAO;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -121,7 +120,7 @@ public final class NewsCounterDAOImpl extends AbstractPersistableDAO<NewsCounter
 
     List<INews> newsList = feed.getVisibleNews();
     for (INews news : newsList) {
-      if (EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED).contains(news.getState()))
+      if (INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED).contains(news.getState()))
         counterItem.incrementUnreadCounter();
 
       if (INews.State.NEW.equals(news.getState()))
@@ -152,7 +151,7 @@ public final class NewsCounterDAOImpl extends AbstractPersistableDAO<NewsCounter
    */
   @Override
   public Collection<NewsCounter> loadAll() {
-    List<NewsCounter> newsCounters = new ArrayList<NewsCounter>(1);
+    List<NewsCounter> newsCounters = new ArrayList<>(1);
     newsCounters.add(load());
     return newsCounters;
   }

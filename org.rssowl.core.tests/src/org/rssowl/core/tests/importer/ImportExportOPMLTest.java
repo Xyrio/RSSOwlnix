@@ -24,11 +24,11 @@
 
 package org.rssowl.core.tests.importer;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,10 +56,10 @@ import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.ISearchFilter;
 import org.rssowl.core.persist.ISearchMark;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IFolderDAO;
 import org.rssowl.core.persist.dao.ILabelDAO;
 import org.rssowl.core.persist.dao.INewsBinDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.pref.IPreferenceScope;
 import org.rssowl.core.persist.pref.Preference;
 import org.rssowl.core.persist.reference.FeedLinkReference;
@@ -77,7 +77,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -142,11 +141,11 @@ public class ImportExportOPMLTest {
     OwlDAO.getDAO(IFolderDAO.class).save(fCustomSet);
 
     /* Export */
-    Set<IFolder> rootFolders = new HashSet<IFolder>();
+    Set<IFolder> rootFolders = new HashSet<>();
     rootFolders.add(fDefaultSet);
     rootFolders.add(fCustomSet);
 
-    List<IMark> marks = new ArrayList<IMark>(fDefaultSet.getMarks());
+    List<IMark> marks = new ArrayList<>(fDefaultSet.getMarks());
     marks.addAll(fCustomSet.getMarks());
     Iterator<IMark> iterator = marks.iterator();
     while (iterator.hasNext()) {
@@ -157,8 +156,8 @@ public class ImportExportOPMLTest {
     Owl.getInterpreter().exportTo(fTmpFile, rootFolders, null);
     Owl.getInterpreter().exportTo(fTmpFileOnlyMarks, marks, null);
     Owl.getInterpreter().exportTo(fTmpFileHierarchy, Arrays.asList(new IFolderChild[] { fBookMark2, fBookMark3 }), null);
-    Owl.getInterpreter().exportTo(fTmpFileInvalidLocations, Collections.singleton(fSearchmarkWithLocation), EnumSet.of(Options.EXPORT_FILTERS, Options.EXPORT_LABELS, Options.EXPORT_PREFERENCES));
-    Owl.getInterpreter().exportTo(fTmpBackupFile, rootFolders, EnumSet.of(Options.EXPORT_FILTERS, Options.EXPORT_LABELS, Options.EXPORT_PREFERENCES));
+    Owl.getInterpreter().exportTo(fTmpFileInvalidLocations, Collections.singleton(fSearchmarkWithLocation), Options.asSet(Options.EXPORT_FILTERS, Options.EXPORT_LABELS, Options.EXPORT_PREFERENCES));
+    Owl.getInterpreter().exportTo(fTmpBackupFile, rootFolders, Options.asSet(Options.EXPORT_FILTERS, Options.EXPORT_LABELS, Options.EXPORT_PREFERENCES));
 
     /* Clear */
     ((PersistenceServiceImpl)Owl.getPersistenceService()).recreateSchemaForTests();
@@ -432,7 +431,7 @@ public class ImportExportOPMLTest {
     /* 1) State IS new */
     {
       ISearchField field = fFactory.createSearchField(INews.STATE, newsName);
-      ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(State.NEW));
+      ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, State.asSet(State.NEW));
 
       fSearchmark = fFactory.createSearchMark(null, parent, "Search");
       fSearchmark.addSearchCondition(condition);
@@ -442,7 +441,7 @@ public class ImportExportOPMLTest {
     /* 2) State IS new, unread, updated */
     {
       ISearchField field = fFactory.createSearchField(INews.STATE, newsName);
-      ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(State.NEW, State.UNREAD, State.UPDATED));
+      ISearchCondition condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, State.asSet(State.NEW, State.UNREAD, State.UPDATED));
 
       ISearchMark searchmark = fFactory.createSearchMark(null, parent, "Search");
       searchmark.addSearchCondition(condition);
@@ -514,7 +513,7 @@ public class ImportExportOPMLTest {
       searchmark.addSearchCondition(condition);
 
       field = fFactory.createSearchField(INews.STATE, newsName);
-      condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, EnumSet.of(State.NEW));
+      condition = fFactory.createSearchCondition(field, SearchSpecifier.IS, State.asSet(State.NEW));
       searchmark.addSearchCondition(condition);
 
       searchmark.setMatchAllConditions(true);
@@ -1020,7 +1019,7 @@ public class ImportExportOPMLTest {
 
   private void assertSearchMarks(IFolder folder, boolean isBackup) {
     List<IMark> marks = folder.getMarks();
-    List<ISearchMark> searchmarks = new ArrayList<ISearchMark>();
+    List<ISearchMark> searchmarks = new ArrayList<>();
     for (IMark mark : marks) {
       if (mark instanceof ISearchMark)
         searchmarks.add((ISearchMark) mark);
@@ -1033,7 +1032,7 @@ public class ImportExportOPMLTest {
     assertEquals(1, conditions.size());
     assertEquals(INews.STATE, conditions.get(0).getField().getId());
     assertEquals(SearchSpecifier.IS, conditions.get(0).getSpecifier());
-    assertEquals(EnumSet.of(INews.State.NEW), conditions.get(0).getValue());
+    assertEquals(INews.State.asSet(INews.State.NEW), conditions.get(0).getValue());
     if (isBackup)
       assertProperties(Owl.getPreferenceService().getEntityScope(searchmark));
 
@@ -1043,7 +1042,7 @@ public class ImportExportOPMLTest {
     assertEquals(1, conditions.size());
     assertEquals(INews.STATE, conditions.get(0).getField().getId());
     assertEquals(SearchSpecifier.IS, conditions.get(0).getSpecifier());
-    assertEquals(EnumSet.of(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED), conditions.get(0).getValue());
+    assertEquals(INews.State.asSet(INews.State.NEW, INews.State.UNREAD, INews.State.UPDATED), conditions.get(0).getValue());
 
     /* 3) Entire News CONTAINS foo?bar */
     searchmark = searchmarks.get(2);
@@ -1108,7 +1107,7 @@ public class ImportExportOPMLTest {
 
         case INews.STATE:
           assertEquals(SearchSpecifier.IS, condition.getSpecifier());
-          assertEquals(EnumSet.of(INews.State.NEW), condition.getValue());
+          assertEquals(INews.State.asSet(INews.State.NEW), condition.getValue());
           break;
 
         case INews.HAS_ATTACHMENTS:
@@ -1170,7 +1169,7 @@ public class ImportExportOPMLTest {
     conditions = searchmark.getSearchConditions();
     assertEquals(3, conditions.size());
 
-    locations = new ArrayList<IFolderChild>();
+    locations = new ArrayList<>();
 
     for (ISearchCondition condition : conditions) {
       assertEquals(INews.LOCATION, condition.getField().getId());
