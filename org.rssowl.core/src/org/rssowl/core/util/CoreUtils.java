@@ -1829,6 +1829,8 @@ public class CoreUtils {
    * @return the rssowl user agent string.
    */
   public static String getUserAgent() {
+    if (System.getProperty("RSSOWLNIX_USER_AGENT") != null)  //$NON-NLS-1$
+      return System.getProperty("RSSOWLNIX_USER_AGENT"); //$NON-NLS-1$
     String version = Activator.getDefault().getVersion();
     String os = Platform.getOS();
     if (Platform.OS_WIN32.equals(os))
