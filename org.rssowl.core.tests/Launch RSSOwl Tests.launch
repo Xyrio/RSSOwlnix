@@ -58,7 +58,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-console -consoleLog -os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl}"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.rssowl.core.tests"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms40m -Xmx96m -DmultiInstance -Djdk.tls.client.protocols=TLSv1.2"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms40m -Xmx96m -DmultiInstance -Dorg.eclipse.swt.graphics.Resource.reportNonDisposed=true -Djdk.tls.client.protocols=TLSv1.2&#13;&#10;--add-opens=java.base/java.lang=ALL-UNNAMED&#13;&#10;--add-opens=java.base/java.util=ALL-UNNAMED"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.rssowl.ui.product"/>
     <booleanAttribute key="run_in_ui_thread" value="true"/>

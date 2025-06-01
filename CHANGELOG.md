@@ -1,6 +1,7 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.10.0-beta (WIP)
+- runs with java 11,17,21 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)
 - updated to eclipse rcp 4.23
 - updated httpclient to 5.1.3
 - removed auto reload of feeds without any data and error on viewing feed or the folder(s) feed is in [#118](https://github.com/Xyrio/RSSOwlnix/issues/118)
