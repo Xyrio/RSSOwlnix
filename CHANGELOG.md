@@ -8,7 +8,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 - added RSSOWLNIX_USER_AGENT system property to change the User-Agent used when requesting feeds to match demands of websites for popular browsers [#164](https://github.com/Xyrio/RSSOwlnix/issues/164)
 - changed name reverse sorting to reverse only word positions so that numbers are sorted as usual
 - change dead feedvalidator.org to validator.w3.org [#124](https://github.com/Xyrio/RSSOwlnix/issues/124)
-
+- fix BookMark.setLastRecentNewsDate(Date) not allowing null [#178](https://github.com/Xyrio/RSSOwlnix/issues/178)
 
 # 2.9.0-beta
 - runs also with java 15, **does not run with java 16 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)** 

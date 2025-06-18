@@ -94,7 +94,7 @@ public class DateUtils {
   }
 
   /**
-   * Works like getRecentData(INews news) with the difference of returning the
+   * Works like getRecentDate(INews news) with the difference of returning the
    * most recent date from a List of News.
    *
    * @param news A List of News to get the most recent Date from.
