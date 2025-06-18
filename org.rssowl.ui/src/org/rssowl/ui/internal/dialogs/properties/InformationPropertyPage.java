@@ -235,7 +235,7 @@ public class InformationPropertyPage implements IEntityPropertyPage {
             else if (SyncUtils.isSynchronized(bm))
               uri = new URI(SyncUtils.GOOGLE_READER_URL);
             else
-              uri = new URI("http://www.feedvalidator.org/check.cgi?url=" + URIUtils.urlEncode(URIUtils.toHTTP(bm.getFeedLinkReference().getLinkAsText()))); //$NON-NLS-1$
+              uri = new URI("https://validator.w3.org/feed/check.cgi?url=" + URIUtils.urlEncode(URIUtils.toHTTP(bm.getFeedLinkReference().getLinkAsText()))); //$NON-NLS-1$
 
             OpenInBrowserAction action = new OpenInBrowserAction();
             action.selectionChanged(null, new StructuredSelection(uri));
