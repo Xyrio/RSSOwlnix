@@ -63,8 +63,8 @@ public class NewsComparator extends ViewerComparator implements Comparator<INews
   private boolean fRightToLeftSorting;
 
   /* A cache for the Location Column */
-  private Map<Long, String> fMapBinIdToLocation = new HashMap<Long, String>();
-  private Map<String, String> fMapFeedLinkToLocation = new HashMap<String, String>();
+  private Map<Long, String> fMapBinIdToLocation = new HashMap<>();
+  private Map<String, String> fMapFeedLinkToLocation = new HashMap<>();
 
   /**
    * @return Returns the ascending.
@@ -280,8 +280,20 @@ public class NewsComparator extends ViewerComparator implements Comparator<INews
     if (!fRightToLeftSorting)
       result = compareByString(title1, title2);
     else
-      result = compareByString(new StringBuilder(title1).reverse().toString(), new StringBuilder(title2).reverse().toString());
+      result = compareByString(reverseWordwise(title1).toString(), reverseWordwise(title2).toString());
     return fAscending ? result : result * -1;
+  }
+
+  /** reverse word wise to keep numbers/words in order */
+  private String reverseWordwise(String s) {
+
+    String[] words = s.split("\\s"); //$NON-NLS-1$
+    StringBuilder sb = new StringBuilder();
+    for (int i = words.length - 1; i >= 0; i--) {
+      sb.append(words[i]);
+      sb.append(" "); //$NON-NLS-1$
+    }
+    return sb.toString();
   }
 
   private int compareByStatus(INews.State s1, INews.State s2) {
