@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.rssowl.lib.httpclient;singleton:=true
 Bundle-Version: 2.10.0.qualifier
 Eclipse-BuddyPolicy: registered
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-Localization: plugin
 Bundle-ClassPath: org.apache.httpcomponents.client5.httpclient5_5.5.0.jar,
  org.apache.httpcomponents.core5.httpcore5_5.3.4.jar,

@@ -15,7 +15,7 @@ Require-Bundle: org.rssowl.lib.db4o,
  org.slf4j.api;bundle-version="1.7.30"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: .
 Export-Package: org.rssowl.core,
  org.rssowl.core.connection,

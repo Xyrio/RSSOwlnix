@@ -21,7 +21,7 @@
     <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-console -consoleLog"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms15m -Xmx196m -DmultiInstance -Drssowl.http.debug=true -Dorg.apache.commons.logging.diagnostics.dest=STDOUT&#13;&#10;--add-modules=ALL-SYSTEM&#13;&#10;--add-opens=java.base/java.lang=ALL-UNNAMED&#13;&#10;--add-opens=java.base/java.util=ALL-UNNAMED&#13;&#10;-DRSSOWLNIX_USER_AGENT=&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0&quot;"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms15m -Xmx196m -DmultiInstance -Drssowl.http.debug=true -Dorg.apache.commons.logging.diagnostics.dest=STDOUT&#13;&#10;--add-opens java.base/java.lang=ALL-UNNAMED&#13;&#10;--add-opens java.base/java.util=ALL-UNNAMED&#13;&#10;--add-opens=java.base/sun.nio.ch=ALL-UNNAMED&#13;&#10;-DRSSOWLNIX_USER_AGENT=&quot;Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0&quot;"/>
     <stringAttribute key="pde.version" value="3.3"/>
     <stringAttribute key="product" value="org.rssowl.ui.product"/>
     <setAttribute key="selected_target_bundles">
