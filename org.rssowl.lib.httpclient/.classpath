@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="slf4j.api_1.7.36.jar"/>
-	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.client5.httpclient5_5.5.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.core5.httpcore5_5.3.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.core5.httpcore5-h2_5.3.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="slf4j.api_1.7.36.jar" sourcepath="slf4j.api.source_1.7.36.jar"/>
+	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.client5.httpclient5_5.5.0.jar" sourcepath="org.apache.httpcomponents.client5.httpclient5.source_5.5.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.core5.httpcore5_5.3.4.jar" sourcepath="org.apache.httpcomponents.core5.httpcore5.source_5.3.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.core5.httpcore5-h2_5.3.4.jar" sourcepath="org.apache.httpcomponents.core5.httpcore5-h2.source_5.3.4.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="module" value="true"/>

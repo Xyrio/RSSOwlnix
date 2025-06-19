@@ -572,7 +572,7 @@ public class URIUtils {
    * The JDK implementation of {@link URI} will return <code>null</code> for
    * urls that contain an underscore. This method will fall back to Apache
    * Commons version of
-   * {@link org.apache.http.client.utils.URIUtils#extractHost(URI)} to get the
+   * {@link org.apache.hc.client5.http.utils.URIUtils#extractHost(URI)} to get the
    * host information in this case.
    *
    * @param uri the {@link URI} to retrieve the host from.

@@ -54,10 +54,10 @@ By default, RSSOwl will not validate SSL connections. Use this extension point t
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  A class that extends &lt;samp&gt;org.apache.http.conn.socket.ConnectionSocketFactory&lt;/samp&gt;.
+                  A class that extends &lt;samp&gt;org.apache.hc.client5.http.socket.ConnectionSocketFactory&lt;/samp&gt;.
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn="org.apache.http.conn.socket.ConnectionSocketFactory:"/>
+                  <meta.attribute kind="java" basedOn="org.apache.hc.client5.http.socket.ConnectionSocketFactory:"/>
                </appinfo>
             </annotation>
          </attribute>
