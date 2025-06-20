@@ -32,11 +32,15 @@
         <setEntry value="com.sun.jna@default:default"/>
         <setEntry value="jakarta.servlet-api@default:default"/>
         <setEntry value="javax.annotation@default:default"/>
+        <setEntry value="javax.el-api@default:default"/>
         <setEntry value="javax.inject@default:default"/>
+        <setEntry value="javax.servlet.jsp-api@default:default"/>
         <setEntry value="org.apache.batik.constants@default:default"/>
         <setEntry value="org.apache.batik.css@default:default"/>
         <setEntry value="org.apache.batik.i18n@default:default"/>
         <setEntry value="org.apache.batik.util@default:default"/>
+        <setEntry value="org.apache.commons.collections@default:default"/>
+        <setEntry value="org.apache.commons.commons-beanutils@default:default"/>
         <setEntry value="org.apache.commons.commons-io@default:default"/>
         <setEntry value="org.apache.commons.jxpath@default:default"/>
         <setEntry value="org.apache.commons.logging@default:default"/>
@@ -113,6 +117,7 @@
         <setEntry value="org.eclipse.ui.workbench@default:default"/>
         <setEntry value="org.eclipse.ui@default:default"/>
         <setEntry value="org.eclipse.urischeme@default:default"/>
+        <setEntry value="org.jdom@default:default"/>
         <setEntry value="org.osgi.service.cm@default:default"/>
         <setEntry value="org.osgi.service.component.annotations@default:default"/>
         <setEntry value="org.osgi.service.component@default:default"/>
