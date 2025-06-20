@@ -142,7 +142,7 @@
         <setEntry value="org.w3c.dom.smil@default:default"/>
         <setEntry value="org.w3c.dom.svg@default:default"/>
         <setEntry value="slf4j.api@default:default"/>
-        <setEntry value="slf4j.nop@default:default"/>
+        <setEntry value="slf4j.simple@default:default"/>
     </setAttribute>
     <setAttribute key="selected_workspace_bundles">
         <setEntry value="org.rssowl.core@default:default"/>

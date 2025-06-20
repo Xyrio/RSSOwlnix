@@ -2,7 +2,7 @@ updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
 # 2.10.0-beta (WIP)
 - runs with java 17,21 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)
-- updated to eclipse rcp 4.28
+- updated to eclipse rcp 4.29
 - updated httpclient to 5.5
 - removed auto reload of feeds without any data and error on viewing feed or the folder(s) feed is in [#118](https://github.com/Xyrio/RSSOwlnix/issues/118)
 - added RSSOWLNIX_USER_AGENT system property to change the User-Agent used when requesting feeds to match demands of websites for popular browsers [#164](https://github.com/Xyrio/RSSOwlnix/issues/164)
