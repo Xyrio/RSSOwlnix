@@ -22,6 +22,6 @@ Require-Bundle: org.rssowl.lib.jdom,
  org.eclipse.jetty.security;bundle-version="9.4.5",
  slf4j.api;bundle-version="1.7.36"
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.rssowl.core.tests.Activator
 Automatic-Module-Name: org.rssowl.core.tests
