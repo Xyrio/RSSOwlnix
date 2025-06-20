@@ -65,8 +65,8 @@ import org.rssowl.core.persist.ISearch;
 import org.rssowl.core.persist.ISearchCondition;
 import org.rssowl.core.persist.ISearchField;
 import org.rssowl.core.persist.SearchSpecifier;
-import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.dao.IPreferenceDAO;
+import org.rssowl.core.persist.dao.OwlDAO;
 import org.rssowl.core.persist.event.NewsAdapter;
 import org.rssowl.core.persist.event.NewsEvent;
 import org.rssowl.core.persist.event.PreferenceEvent;
@@ -128,7 +128,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
   public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
     super(configurer);
     fResources = new LocalResourceManager(JFaceResources.getResources());
-    fTeasingNewsCache = new ArrayList<Long>();
+    fTeasingNewsCache = new ArrayList<>();
   }
 
   /*
@@ -152,7 +152,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     configurer.setShowPerspectiveBar(false);
     configurer.setShowStatusLine(true);
     configurer.setShowMenuBar(true);
-    configurer.setShowFastViewBars(false);
     configurer.setShowProgressIndicator(true);
     configurer.setTitle(Owl.APPLICATION_NAME);
 
@@ -768,7 +767,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
   private void onSingleClick(Shell shell) {
     NotificationService service = Controller.getDefault().getNotificationService();
-    List<INews> newsToShow = new ArrayList<INews>();
+    List<INews> newsToShow = new ArrayList<>();
     Mode mode = Mode.RECENT;
 
     /* Return early if Notifier already showing */
@@ -820,7 +819,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
       /* Sort by Id (simulate sorting by date) */
       List<SearchHit<NewsReference>> result = Owl.getPersistenceService().getModelSearch().searchNews(fTodaysNewsSearch);
-      Set<NewsReference> recentNews = new TreeSet<NewsReference>(new Comparator<NewsReference>() {
+      Set<NewsReference> recentNews = new TreeSet<>(new Comparator<NewsReference>() {
         @Override
         public int compare(NewsReference ref1, NewsReference ref2) {
           if (ref1.equals(ref2))

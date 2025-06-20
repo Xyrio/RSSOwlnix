@@ -12,8 +12,8 @@ Require-Bundle: org.rssowl.lib.db4o,
  org.eclipse.core.runtime,
  org.eclipse.core.net,
  org.eclipse.equinox.security,
- org.slf4j.api;bundle-version="1.7.30",
- org.apache.commons.logging;bundle-version="1.2.0"
+ org.apache.commons.logging;bundle-version="1.2.0",
+ slf4j.api;bundle-version="1.7.36"
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-11
