@@ -7,6 +7,10 @@
 	<version>5.1.3</version>
 	<packaging>pom</packaging>
 	
+	<properties>
+		<log4j_version>2.25.0</log4j_version>
+	</properties>
+	
 	<description>transform non osgi libs and each of their dependencies into osgi bundles in a p2 repository</description>
 
 	<!-- http://www.vogella.com/tutorials/EclipseJarToPlugin/article.html#convert-jar-files-to-osgi-bundles-with-the-p2-maven-plugin -->
@@ -25,16 +29,12 @@
 							<artifacts>
 								<!-- specify your depencies here -->
 								<!-- groupId:artifactId:version -->
-								<artifact>
-									<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
-									<id>org.apache.httpcomponents.client5:httpclient5:5.5</id>
-									<source>true</source>
-								</artifact>
-								<artifact>
-									<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
-									<id>commons-logging:commons-logging:1.3.5</id>
-									<source>true</source>
-								</artifact>
+								<artifact><id>org.apache.httpcomponents.client5:httpclient5:5.5</id><source>true</source></artifact>
+								<artifact><id>commons-logging:commons-logging:1.3.5</id><source>true</source></artifact>
+<!--								<artifact><id>org.apache.logging.log4j:log4j-api:${log4j_version}</id><source>true</source></artifact>-->
+<!--								<artifact><id>org.apache.logging.log4j:log4j-core:${log4j_version}</id><source>true</source></artifact>-->
+<!--								<artifact><id>org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}</id><source>true</source></artifact>-->
+<!--								<artifact><id>org.apache.logging.log4j:log4j-slf4j2:${log4j_version}</id><source>true</source></artifact>-->
 							</artifacts>
 						</configuration>
 					</execution>

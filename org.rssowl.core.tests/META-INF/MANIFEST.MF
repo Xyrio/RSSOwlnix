@@ -10,17 +10,15 @@ Require-Bundle: org.rssowl.lib.jdom,
  org.rssowl.lib.httpclient,
  org.rssowl.ui,
  org.rssowl.core,
- org.junit;bundle-version="4.12.0",
- org.eclipse.ui;bundle-version="3.109.0",
- org.eclipse.core.runtime;bundle-version="3.13.0",
- jakarta.servlet-api;bundle-version="4.0.0",
- org.eclipse.jetty.http;bundle-version="9.4.5",
- org.eclipse.jetty.servlet;bundle-version="9.4.5",
- org.eclipse.jetty.server;bundle-version="9.4.5",
- org.eclipse.jetty.io;bundle-version="9.4.5",
- org.eclipse.jetty.util;bundle-version="9.4.5",
- org.eclipse.jetty.security;bundle-version="9.4.5",
- slf4j.api;bundle-version="1.7.36"
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.junit,
+ org.eclipse.jetty.http,
+ org.eclipse.jetty.io,
+ org.eclipse.jetty.security,
+ org.eclipse.jetty.server,
+ org.eclipse.jetty.util,
+ slf4j.api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Activator: org.rssowl.core.tests.Activator

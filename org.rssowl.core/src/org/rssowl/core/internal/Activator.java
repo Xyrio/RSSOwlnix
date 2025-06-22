@@ -66,19 +66,31 @@ public class Activator extends Plugin {
     super.start(context);
     fContext = context;
     fVersion = fgPlugin.getBundle().getHeaders().get("Bundle-Version"); //$NON-NLS-1$
-    fNl= System.getProperty("line.separator"); //$NON-NLS-1$
+    fNl = System.getProperty("line.separator"); //$NON-NLS-1$
     if (!StringUtils.isSet(fNl))
-      fNl= "\n"; //$NON-NLS-1$
+      fNl = "\n"; //$NON-NLS-1$
 
-//    System.out.println(">>> sysout"); //$NON-NLS-1$
-//    Activator.getDefault().getLog().info(">>> info"); //$NON-NLS-1$
-//    Logger logger = LoggerFactory.getLogger(">>>name-bla"); //$NON-NLS-1$
-//    logger.info(">>> info slf4j"); //$NON-NLS-1$
-
+//  System.out.println(">>> sysout"); //$NON-NLS-1$
+//  Activator.getDefault().getLog().info(">>> info"); //$NON-NLS-1$
+//    {
+//      Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+//      logger.error(">>> error slf4j 1"); //$NON-NLS-1$
+//      logger.warn(">>> warn slf4j 1"); //$NON-NLS-1$
+//      logger.info(">>> info slf4j 1"); //$NON-NLS-1$
+//      logger.debug(">>> debug slf4j 1"); //$NON-NLS-1$
+//      logger.trace(">>> trace slf4j 1"); //$NON-NLS-1$
+//    }
     /* Use the LogBridge as Logger (RCP Only) */
     if (!InternalOwl.IS_ECLIPSE)
       System.setProperty("org.apache.commons.logging.Log", "org.rssowl.core.internal.LogBridge"); //$NON-NLS-1$ //$NON-NLS-2$
-
+//    {
+//      Logger logger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+//      logger.error(">>> error slf4j 2"); //$NON-NLS-1$
+//      logger.warn(">>> warn slf4j 2"); //$NON-NLS-1$
+//      logger.info(">>> info slf4j 2"); //$NON-NLS-1$
+//      logger.debug(">>> debug slf4j 2"); //$NON-NLS-1$
+//      logger.trace(">>> trace slf4j 2"); //$NON-NLS-1$
+//    }
     /* Load the Proxy Service */
     SafeRunner.run(new LoggingSafeRunnable() {
       @Override

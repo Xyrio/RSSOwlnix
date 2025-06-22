@@ -81,7 +81,7 @@ public class MiscUITests {
 
   @BeforeClass
   public static void setUpOnce() {
-    TestWebServer.required(true);
+    TestWebServer.start(true);
   }
 
   /**

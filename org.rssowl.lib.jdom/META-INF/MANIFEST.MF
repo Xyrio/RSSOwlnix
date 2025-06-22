@@ -13,7 +13,7 @@ Export-Package: .;version="1.1.0",
  org.jdom.output;version="1.1.0",
  org.jdom.transform;version="1.1.0",
  org.jdom.xpath;version="1.1.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Bundle-ClassPath: jdom-1.1.jar
 Automatic-Module-Name: org.rssowl.lib.jdom

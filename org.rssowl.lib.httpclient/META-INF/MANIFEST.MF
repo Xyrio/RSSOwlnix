@@ -5,14 +5,17 @@ Bundle-SymbolicName: org.rssowl.lib.httpclient;singleton:=true
 Bundle-Version: 2.10.0.qualifier
 Eclipse-BuddyPolicy: registered
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Bundle-ClassPath: org.apache.httpcomponents.client5.httpclient5_5.5.0.jar,
  org.apache.httpcomponents.core5.httpcore5_5.3.4.jar,
  org.apache.httpcomponents.core5.httpcore5-h2_5.3.4.jar,
- slf4j.api_1.7.36.jar
+ slf4j.api_1.7.36.jar,
+ org.apache.commons.commons-logging_1.3.5.jar
 Automatic-Module-Name: org.rssowl.lib.httpclient
-Export-Package: org.apache.hc.client5.http,
+Export-Package: org.apache.commons.logging,
+ org.apache.commons.logging.impl,
+ org.apache.hc.client5.http,
  org.apache.hc.client5.http.async,
  org.apache.hc.client5.http.async.methods,
  org.apache.hc.client5.http.auth,
@@ -84,4 +87,8 @@ Export-Package: org.apache.hc.client5.http,
  org.apache.hc.core5.reactor,
  org.apache.hc.core5.reactor.ssl,
  org.apache.hc.core5.ssl,
- org.apache.hc.core5.util
+ org.apache.hc.core5.util,
+ org.slf4j,
+ org.slf4j.event,
+ org.slf4j.helpers,
+ org.slf4j.spi

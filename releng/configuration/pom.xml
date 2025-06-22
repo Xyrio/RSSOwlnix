@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho.version>1.4.0</tycho.version>
+		<tycho.version>4.0.13</tycho.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Skip the deployment here, submodules can override this property -->
 		<!--maven.deploy.skip>true</maven.deploy.skip -->
@@ -23,7 +23,8 @@
 				<version>${tycho.version}</version>
 				<dependencies>
 					<dependency>
-						<groupId>org.eclipse.tycho.extras</groupId>
+<!--						<groupId>org.eclipse.tycho.extras</groupId>-->
+						<groupId>org.eclipse.tycho</groupId>
 						<artifactId>tycho-buildtimestamp-jgit</artifactId>
 						<version>${tycho.version}</version>
 					</dependency>
@@ -86,7 +87,7 @@
 			</plugin>
 			<!-- enable source feature generation -->
 			<!-- <plugin> -->
-			<!-- <groupId>org.eclipse.tycho.extras</groupId> -->
+			<!-- <groupId>org.eclipse.tycho</groupId> -->
 			<!-- <artifactId>tycho-source-feature-plugin</artifactId> -->
 			<!-- <version>${tycho.version}</version> -->
 			<!-- <executions> -->

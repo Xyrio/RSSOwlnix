@@ -386,13 +386,6 @@ litigation.
          unpack="false"/>
 
    <plugin
-         id="javax.inject"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.core.runtime"
          download-size="0"
          install-size="0"
@@ -408,6 +401,13 @@ litigation.
 
    <plugin
          id="org.apache.felix.scr"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="jakarta.inject.jakarta.inject-api"
          download-size="0"
          install-size="0"
          version="0.0.0"

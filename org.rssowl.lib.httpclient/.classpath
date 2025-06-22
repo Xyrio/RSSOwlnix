@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="org.apache.commons.commons-logging_1.3.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="slf4j.api_1.7.36.jar" sourcepath="slf4j.api.source_1.7.36.jar"/>
 	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.client5.httpclient5_5.5.0.jar" sourcepath="org.apache.httpcomponents.client5.httpclient5.source_5.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="org.apache.httpcomponents.core5.httpcore5_5.3.4.jar" sourcepath="org.apache.httpcomponents.core5.httpcore5.source_5.3.4.jar"/>

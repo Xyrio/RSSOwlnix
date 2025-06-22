@@ -16,7 +16,7 @@ Export-Package: org.apache.lucene;version="2.3.2",
  org.apache.lucene.store;version="2.3.2",
  org.apache.lucene.util;version="2.3.2"
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lucene-core-2.3.2.jar

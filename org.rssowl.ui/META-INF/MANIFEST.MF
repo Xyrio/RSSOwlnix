@@ -5,9 +5,10 @@ Bundle-SymbolicName: org.rssowl.ui; singleton:=true
 Bundle-Version: 2.10.0.qualifier
 Bundle-Activator: org.rssowl.ui.internal.Activator
 Bundle-Vendor: %Bundle-Vendor
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.rssowl.core,
  org.eclipse.core.runtime,
- org.rssowl.core
+ org.eclipse.core.jobs,
+ org.eclipse.ui
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Bundle-ClassPath: .

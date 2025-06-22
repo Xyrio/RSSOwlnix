@@ -249,6 +249,7 @@ litigation.
       <import feature="org.rssowl.dependencies" version="2.5.0.qualifier"/>
       <import feature="org.rssowl.dependencies.updater" version="2.5.0.qualifier"/>
       <import plugin="org.apache.felix.scr" version="2.1.24"/>
+      <import plugin="org.eclipse.core.jobs"/>
    </requires>
 
    <plugin

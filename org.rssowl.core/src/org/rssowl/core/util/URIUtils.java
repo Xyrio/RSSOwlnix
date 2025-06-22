@@ -335,8 +335,8 @@ public class URIUtils {
       int len = hostSegments.length;
 
       String hostOnly = hostPort.split(":")[0]; //$NON-NLS-1$
-      boolean isIP4 = InetAddressUtils.isIPv4Address(hostOnly);
-      boolean isIP6 = InetAddressUtils.isIPv6Address(hostOnly);
+      boolean isIP4 = InetAddressUtils.isIPv4(hostOnly);
+      boolean isIP6 = InetAddressUtils.isIPv6(hostOnly);
       if (len > 2 && !isIP4 && !isIP6 && !"www".equals(hostSegments[0])) //$NON-NLS-1$
         hostPort = hostSegments[len - 2] + "." + hostSegments[len - 1]; //$NON-NLS-1$
 

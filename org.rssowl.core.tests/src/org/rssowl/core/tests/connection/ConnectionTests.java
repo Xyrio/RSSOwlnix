@@ -36,7 +36,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.jetty.util.security.Constraint;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -90,7 +89,7 @@ public class ConnectionTests {
 
   @BeforeClass
   public static void setUpOnce() {
-    TestWebServer.required(true);
+    TestWebServer.start(true);
   }
 
   /**
@@ -233,7 +232,7 @@ public class ConnectionTests {
 
         //ones that expect exception first because success is remembered
         do_testProtectedFeed_WithAuth(isInMemory, feed2, credentials, "Other Directory", false); //wrong realm
-        do_testProtectedFeed_WithAuth(isInMemory, feed2, credentials, Constraint.__BASIC_AUTH + " Restricted Directory", true); //correct realm
+        do_testProtectedFeed_WithAuth(isInMemory, feed2, credentials, "BASIC Restricted Directory", true); //correct realm
 
         OwlDAO.delete(feed2);
         assertNull(conManager.getAuthCredentials(feed2.getLink(), null));
@@ -392,7 +391,8 @@ public class ConnectionTests {
   @Test
   @SuppressWarnings("nls")
   public void testConditionalGet() throws Exception {
-    URI feedUrl = new URI("http://rss.slashdot.org/Slashdot/slashdot/to");
+//    URI feedUrl = new URI("http://rss.slashdot.org/Slashdot/slashdot/to"); // error 500 internal server error
+    URI feedUrl = new URI(TestWebServer.rootHttp + "/feed/some_feed.xml"); // samer error 500 but only occasionally
     IFeed feed = new Feed(feedUrl);
     NotModifiedException e = null;
 
