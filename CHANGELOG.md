@@ -1,6 +1,6 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
-# 2.10.0-beta (WIP)
+# 2.10.0-beta
 - runs with java 17,21 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)
 - updated to eclipse rcp 4.30
 - updated httpclient to 5.5
