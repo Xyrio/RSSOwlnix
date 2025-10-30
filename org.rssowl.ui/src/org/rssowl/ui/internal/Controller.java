@@ -2036,7 +2036,7 @@ public class Controller {
           IStatus errorStatus = new Status(IStatus.ERROR, "org.rssowl.ui", IStatus.ERROR, error.getMessage(), error); //$NON-NLS-1$
           FatalOutOfMemoryErrorDialog dialog = new FatalOutOfMemoryErrorDialog(errorStatus);
           if (dialog.open() == IDialogConstants.HELP_ID)
-            Program.launch("https://github.com/Xyrio/RSSOwlnix/wiki/FAQ#item_6g"); //$NON-NLS-1$;
+            Program.launch(Owl.WIKI_URL + "/FAQ#item_6g"); //$NON-NLS-1$;
         }
 
         /* Serious problem - Exit (gives Shutdown Hook a chance to run) */

@@ -153,11 +153,11 @@ public class CBrowser {
       box.setText(Messages.CBrowser_ERROR_CREATE_BROWSER);
       box.setMessage(Messages.CBrowser_ERROR_CREATE_BROWSER_MSG);
       if (box.open() == SWT.OK)
-        BrowserUtils.openLinkExternal("https://github.com/Xyrio/RSSOwlnix/wiki/FAQ#item_6j"); //$NON-NLS-1$
+        BrowserUtils.openLinkExternal(Owl.WIKI_URL + "/FAQ#item_6j"); //$NON-NLS-1$
 
       throw e;
     }
-    fLinkHandler = new HashMap<String, ILinkHandler>();
+    fLinkHandler = new HashMap<>();
     hookListeners();
 
     /* Add custom Context Menu on OS where this is not supported */

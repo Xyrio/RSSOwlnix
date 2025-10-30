@@ -38,6 +38,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
+import org.rssowl.core.Owl;
 import org.rssowl.ui.internal.Activator;
 import org.rssowl.ui.internal.OwlUI;
 import org.rssowl.ui.internal.util.BrowserUtils;
@@ -324,11 +325,11 @@ public class TutorialPage extends WizardPage {
     linkContainer.setBackground(container.getBackground());
 
     /* Further Links */
-    createHyperLink(linkContainer, Messages.TutorialPage_FAQ, "https://github.com/Xyrio/RSSOwlnix/wiki/FAQ"); //$NON-NLS-1$
-    createHyperLink(linkContainer, Messages.TutorialPage_FORUMS, "https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
-    createHyperLink(linkContainer, Messages.TutorialPage_REPORT_BUGS, "https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
-    createHyperLink(linkContainer, Messages.TutorialPage_CONTACT, "https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
-    createHyperLink(linkContainer, Messages.TutorialPage_WEBSITE, "https://github.com/Xyrio/RSSOwlnix"); //$NON-NLS-1$
+    createHyperLink(linkContainer, Messages.TutorialPage_FAQ, Owl.WIKI_URL + "/FAQ"); //$NON-NLS-1$
+    createHyperLink(linkContainer, Messages.TutorialPage_FORUMS, Owl.ISSUES_URL);
+    createHyperLink(linkContainer, Messages.TutorialPage_REPORT_BUGS, Owl.ISSUES_URL);
+    createHyperLink(linkContainer, Messages.TutorialPage_CONTACT, Owl.ISSUES_URL);
+    createHyperLink(linkContainer, Messages.TutorialPage_WEBSITE, Owl.HOMEPAGE);
   }
 
   private StyledText createStyledText(Composite container) {
@@ -358,7 +359,7 @@ public class TutorialPage extends WizardPage {
   }
 
   private void applyRichText(String text, StyledText widget) {
-    List<StyleRange> ranges = new ArrayList<StyleRange>();
+    List<StyleRange> ranges = new ArrayList<>();
     StringBuilder buffer = new StringBuilder();
     StringReader reader = new StringReader(text);
     int character;

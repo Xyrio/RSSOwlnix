@@ -1,5 +1,8 @@
 updates feed: https://xyrio.github.io/RSSOwlnix-site/updates.rss
 
+# WIP
+- updated crash report email
+
 # 2.10.0-beta
 - runs with java 17,21 [#116](https://github.com/Xyrio/RSSOwlnix/issues/116)
 - updated to eclipse rcp 4.30

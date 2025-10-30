@@ -1415,7 +1415,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     helpMenu.add(new Action(Messages.ApplicationActionBarAdvisor_FAQ) {
       @Override
       public void run() {
-        BrowserUtils.openLinkExternal("https://github.com/Xyrio/RSSOwlnix/wiki/FAQ"); //$NON-NLS-1$
+        BrowserUtils.openLinkExternal(Owl.WIKI_URL + "/FAQ"); //$NON-NLS-1$
       }
     });
 
@@ -1423,7 +1423,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     helpMenu.add(new Action(Messages.ApplicationActionBarAdvisor_VISIT_FORUM) {
       @Override
       public void run() {
-        BrowserUtils.openLinkExternal("https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
+        BrowserUtils.openLinkExternal(Owl.ISSUES_URL);
       }
 
       @Override
@@ -1449,7 +1449,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     helpMenu.add(new Action(Messages.ApplicationActionBarAdvisor_REPORT_PROBLEMS) {
       @Override
       public void run() {
-        BrowserUtils.openLinkExternal("https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
+        BrowserUtils.openLinkExternal(Owl.ISSUES_URL);
       }
 
       @Override
@@ -1534,7 +1534,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     helpMenu.add(new Action(Messages.ApplicationActionBarAdvisor_HOMEPAGE) {
       @Override
       public void run() {
-        BrowserUtils.openLinkExternal("https://github.com/Xyrio/RSSOwlnix"); //$NON-NLS-1$
+        BrowserUtils.openLinkExternal(Owl.HOMEPAGE);
       }
     });
 

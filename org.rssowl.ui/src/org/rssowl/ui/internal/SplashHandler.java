@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.splash.AbstractSplashHandler;
+import org.rssowl.core.Owl;
 import org.rssowl.ui.internal.util.LayoutUtils;
 
 /**
@@ -94,7 +95,7 @@ public class SplashHandler extends AbstractSplashHandler {
     versionLabel.setLayoutData(new GridData(SWT.END, SWT.BEGINNING, true, false));
     versionLabel.setFont(fVersionFont);
     versionLabel.setForeground(fVersionColor);
-    versionLabel.setText(NLS.bind(Messages.SplashHandler_BUILD, "2.10.0-beta")); //$NON-NLS-1$
+    versionLabel.setText(NLS.bind(Messages.SplashHandler_BUILD, Owl.SPLASH_VERSION));
 
     /* Layout All */
     shell.layout(true, true);

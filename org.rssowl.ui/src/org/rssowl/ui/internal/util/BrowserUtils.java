@@ -408,11 +408,10 @@ public class BrowserUtils {
   }
 
   /**
-   * Opens the default mail application to send the error log after a crash
-   * occured.
+   * Opens the default mail application to send the error log after a crash occurred.
    */
   public static void sendErrorLog() {
-    String address = "rssowlnix@ich-habe-fertig.com"; //$NON-NLS-1$
+    String address = Owl.CRASH_REPORT_EMAIL;
     String subject = NLS.bind(Owl.APPLICATION_NAME + " Crash Report ({0})", CoreUtils.getUserAgent()); //$NON-NLS-1$
     String body = Messages.BrowserUtils_ATTACH_REPORT_ADVISE;
 
@@ -427,9 +426,9 @@ public class BrowserUtils {
    */
   public static void openHelpForum(IStatus errorStatus) {
     if (errorStatus != null && errorStatus.getException() instanceof OutOfMemoryError)
-      Program.launch("https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
+      Program.launch(Owl.ISSUES_URL);
     else
-      openLinkExternal("https://github.com/Xyrio/RSSOwlnix/issues"); //$NON-NLS-1$
+      openLinkExternal(Owl.ISSUES_URL);
   }
 
   /**
@@ -440,9 +439,9 @@ public class BrowserUtils {
    */
   public static void openFAQ(IStatus errorStatus) {
     if (errorStatus != null && errorStatus.getException() instanceof OutOfMemoryError)
-      Program.launch("https://github.com/Xyrio/RSSOwlnix/wiki/FAQ#item_6g"); //$NON-NLS-1$
+      Program.launch(Owl.WIKI_URL + "/FAQ#item_6g"); //$NON-NLS-1$
     else
-      openLinkExternal("https://github.com/Xyrio/RSSOwlnix/wiki/FAQ#item_6"); //$NON-NLS-1$
+      openLinkExternal(Owl.WIKI_URL + "/FAQ#item_6"); //$NON-NLS-1$
   }
 
 }
